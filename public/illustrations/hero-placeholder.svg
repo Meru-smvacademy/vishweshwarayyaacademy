@@ -1,0 +1,14 @@
+<svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration placeholder">
+  <circle cx="240" cy="240" r="220" fill="#0B1F3A" opacity="0.06"/>
+  <circle cx="240" cy="240" r="160" fill="#0B1F3A" opacity="0.08"/>
+  <circle cx="360" cy="120" r="26" fill="#C9A227" opacity="0.25"/>
+  <circle cx="100" cy="360" r="18" fill="#C9A227" opacity="0.3"/>
+  <g transform="translate(140,150)">
+    <path d="M100 0 L200 40 L100 80 L0 40 Z" fill="#0B1F3A"/>
+    <path d="M40 55 L40 100 Q100 130 160 100 L160 55 L100 75 Z" fill="#16335C"/>
+    <circle cx="196" cy="46" r="5" fill="#0B1F3A"/>
+    <line x1="196" y1="46" x2="196" y2="90" stroke="#0B1F3A" stroke-width="3"/>
+  </g>
+  <rect x="150" y="300" width="180" height="18" rx="9" fill="#C9A227" opacity="0.35"/>
+  <rect x="180" y="330" width="120" height="14" rx="7" fill="#0B1F3A" opacity="0.15"/>
+</svg>
