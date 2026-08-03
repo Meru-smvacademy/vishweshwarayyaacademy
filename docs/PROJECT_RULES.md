@@ -85,6 +85,7 @@ The full page set (build order is governed separately — see §12). This is the
 /about/faculty                     Faculty
 /about/infrastructure              Campus & Infrastructure
 /hostel                            Hostel & accommodation
+/philosophy                        Our Philosophy
 /tribute                           The Tribute — Sir M. Visvesvaraya
 /courses                           Courses hub
 /courses/[programSlug]             NEET · JEE · KCET · Foundation
@@ -289,3 +290,15 @@ These rules govern how AI-assisted development (Claude Code or any other assista
 - Do not start module *N+1* while module *N* is unapproved or has failing checks.
 - Do not scaffold pages "ahead of schedule" just because they're quick — every page still goes through Propose → Build → Verify → Present → Wait.
 - If a module turns out to be larger than expected, split it and get approval on the smaller pieces rather than quietly expanding scope.
+
+**Progress** (actual module numbering used during development, which reordered and extended the recommended list above):
+
+| Module | Scope | Status |
+|---|---|---|
+| 1 | Shared layout & navigation | ✅ Approved |
+| 2 | Homepage | ✅ Approved |
+| 3 | Our Philosophy (`/philosophy`) — added mid-stream, not in the original recommended order | ✅ Approved |
+| 4 | Academic Pathways / Courses hub (`/courses`) | ✅ Approved |
+| 5+ | Not yet started | — |
+
+Modules 3 and 4 were built from dedicated source-of-truth documents (`docs/BRAND_FOUNDATION.md`, `docs/COURSES_FOUNDATION.md`) per rule 2 — see `docs/CONTENT_CHECKLIST.md` for any content fields still pending correction within an otherwise-approved module.
