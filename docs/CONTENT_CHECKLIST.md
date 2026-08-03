@@ -10,6 +10,10 @@ Tracks every placeholder currently live on the homepage (see [PROJECT_RULES.md](
 | 2 | Homepage (`/`) | ✅ Approved |
 | 3 | Our Philosophy (`/philosophy`) | ✅ Approved (2026-08-03) |
 | 4 | Academic Pathways / Courses (`/courses`) | ✅ Approved (2026-08-03) — 3 content fields still pending correction, see item 10 |
+| 7 | SNT Scholarship (`/scholarship`) | ✅ Approved (2026-08-03) — 5 FAQ answers + website URL still pending, see item 11 |
+| 8 | Admissions (`/admissions`) | ✅ Approved (2026-08-03) — Required Documents still pending, see item 12 |
+| 9 | Gallery (`/gallery`) | ✅ Approved (2026-08-03) — all 8 categories still placeholders, see item 13 |
+| 10 | FAQ (`/faq`) | 🔶 Built, pending approval — fully resolved, no pending content, see item 14 |
 
 ---
 
@@ -82,6 +86,42 @@ Tracks every placeholder currently live on the homepage (see [PROJECT_RULES.md](
 - File: [academicPathways.ts](../src/content/academicPathways.ts) (the three fields are set to `null` — see `ProgramAccordion.tsx` for how that renders as a placeholder tag)
 - Note: all other content in `docs/COURSES_FOUNDATION.md` (Foundation Program, JEE Achievement Program, KCET Integrated Program, Learning Advantage, KRIT Academic Ecosystem, KRIT Counselling, Admission Journey) was clean and used verbatim.
 
+## 11. SNT Scholarship page — content status
+- [x] ~~Introduction through Important Dates (9 sections)~~ — resolved verbatim from `docs/SCHOLARSHIP_FOUNDATION.md` (2026-08-03)
+- [ ] FAQ answer — "Who can apply for the SNT Scholarship?"
+- [ ] FAQ answer — "Is the scholarship based on merit?"
+- [ ] FAQ answer — "Is there any application fee?"
+- [ ] FAQ answer — "How is the scholarship awarded?"
+- [ ] FAQ answer — "Can students from any school apply?"
+- [ ] Website URL — source document itself flags `www.sirmvacademy.com` as provisional ("or your final website address"); rendered as plain text, not a link, pending confirmation
+- Files: [scholarship.ts](../src/content/scholarship.ts), [ScholarshipFaq.tsx](../src/components/scholarship/ScholarshipFaq.tsx), [ScholarshipContact.tsx](../src/components/scholarship/ScholarshipContact.tsx)
+- Note: the 5 FAQ questions were provided with no answers in the source document — all 5 questions render with a pending-answer tag rather than an invented answer.
+
+## 12. Admissions page — content status
+- [x] ~~Admissions Open, Programs Offered, Admission Process~~ — resolved verbatim from `docs/ADMISSIONS_FOUNDATION.md` (2026-08-03)
+- [ ] Required Documents — no document list was ever supplied for Admissions; the source's "Required Documents" heading was overwritten by a misplaced copy of the Admission Process text (now corrected — see flag below). Section renders with a pending placeholder tag rather than borrowing the Scholarship page's document list, which is specific to scholarship applicants.
+- **Flag:** `docs/ADMISSIONS_FOUNDATION.md`'s "Admission Process" heading was left as literal `_Pending_`, while the actual 5-step process text was pasted under "Required Documents" (itself labeled with its own embedded "## Admission Process" heading). The 5 steps were moved to the correct "Admission Process" section based on that embedded label; "Required Documents" is now correctly empty pending real content.
+- **Flag:** the build instruction requested a "4-step" process timeline, but the approved source content has 5 distinct steps (Submit Enquiry → Attend Counselling → Choose Program → Complete Formalities → Begin Journey). All 5 were kept rather than cutting one to match the stated count — confirm if a step should be removed.
+- Files: [admissions.ts](../src/content/admissions.ts), [AdmissionProcessSection.tsx](../src/components/admissions/AdmissionProcessSection.tsx), [RequiredDocumentsSection.tsx](../src/components/admissions/RequiredDocumentsSection.tsx)
+
+## 13. Gallery page — content status
+- [x] ~~Introduction~~ — resolved verbatim from `docs/GALLERY_FOUNDATION.md` (2026-08-03)
+- [ ] Campus — photographs pending
+- [ ] Classrooms — photographs pending
+- [ ] Laboratories — photographs pending
+- [ ] Academic Activities — photographs pending
+- [ ] Scholarship Examination — photographs pending
+- [ ] Student Activities — photographs pending
+- [ ] Annual Day & Cultural Events — photographs pending
+- [ ] Results & Achievements — photographs pending
+- Files: [gallery.ts](../src/content/gallery.ts), [GalleryCategoryCard.tsx](../src/components/gallery/GalleryCategoryCard.tsx)
+- Note: `GalleryCategoryCard` accepts an optional `images` prop — supplying real photos later is a pure data change (pass `images` when calling it from `GalleryGrid.tsx`); no layout or component changes required. No stock photography was used anywhere on this page.
+
+## 14. FAQ page — content status
+- [x] ~~All 10 questions across 5 categories (Admissions, Courses, Scholarship, Hostel, Contact)~~ — resolved verbatim from `docs/FAQ_FOUNDATION.md` (2026-08-03)
+- Files: [faq.ts](../src/content/faq.ts), [FaqAccordion.tsx](../src/components/faq/FaqAccordion.tsx)
+- Note: `docs/FAQ_FOUNDATION.md` was clean and complete — no duplication or misplacement issues, unlike the Courses/Admissions source documents. Nothing is pending for this page.
+
 ---
 
-**Status:** 9 / 10 Philosophy items resolved (all Founder's Message flags now confirmed). Homepage items 1–8 remain outstanding. Academic Pathways (item 10) is built from `docs/COURSES_FOUNDATION.md` with 3 fields pending your correction of the source document.
+**Status:** 9 / 10 Philosophy items resolved (all Founder's Message flags now confirmed). Homepage items 1–8 remain outstanding. Academic Pathways (item 10) is built from `docs/COURSES_FOUNDATION.md` with 3 fields pending your correction of the source document. SNT Scholarship (item 11) is built with all prose sections resolved; 5 FAQ answers and 1 website URL still pending. Admissions (item 12) is built with Admissions Open / Programs Offered / Admission Process resolved; Required Documents pending real content. Gallery (item 13) is built with the Introduction resolved; all 8 categories await real photographs. FAQ (item 14) is fully resolved with no pending content.

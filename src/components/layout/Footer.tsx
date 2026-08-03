@@ -30,13 +30,27 @@ export default function Footer() {
               {group.heading}
             </p>
             <ul className="mt-3 flex flex-col gap-2">
-              {group.links.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-white/80 hover:text-white">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              {group.links.map((link) =>
+                link.isExternal ? (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-white/80 hover:text-white"
+                    >
+                      {link.label}
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </li>
+                ) : (
+                  <li key={link.href}>
+                    <Link href={link.href} className="text-sm text-white/80 hover:text-white">
+                      {link.label}
+                    </Link>
+                  </li>
+                )
+              )}
             </ul>
           </nav>
         ))}

@@ -1,4 +1,4 @@
-export type ContentBlock = { type: "p"; text: string } | { type: "ul"; items: string[] };
+import type { ContentBlock } from "@/content/shared";
 
 export type ProgramSection = ContentBlock[] | null;
 

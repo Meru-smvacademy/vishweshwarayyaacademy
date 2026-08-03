@@ -15,7 +15,7 @@ export default function Header() {
 
         <nav aria-label="Primary" className="hidden items-center gap-5 xl:flex">
           {NAV_LINKS.map((item) => {
-            if (item.isExternal) {
+            if (item.isExternal && item.prominent) {
               return (
                 <a
                   key={item.href}
@@ -27,6 +27,21 @@ export default function Header() {
                   {item.label}
                   <ExternalLinkIcon className="h-3.5 w-3.5" />
                   <span className="sr-only"> – opens {item.label}, an external platform, in a new tab</span>
+                </a>
+              );
+            }
+
+            if (item.isExternal) {
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-ink transition-colors hover:text-primary"
+                >
+                  {item.label}
+                  <span className="sr-only"> (opens in a new tab)</span>
                 </a>
               );
             }

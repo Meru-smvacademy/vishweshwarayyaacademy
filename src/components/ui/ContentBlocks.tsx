@@ -1,4 +1,4 @@
-import type { ContentBlock } from "@/content/academicPathways";
+import type { ContentBlock } from "@/content/shared";
 
 function renderInlineBold(text: string) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
@@ -19,9 +19,19 @@ export default function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
           return (
             <ul key={index} className="list-disc space-y-1.5 pl-5">
               {block.items.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item}>{renderInlineBold(item)}</li>
               ))}
             </ul>
+          );
+        }
+
+        if (block.type === "ol") {
+          return (
+            <ol key={index} className="list-decimal space-y-1.5 pl-5">
+              {block.items.map((item) => (
+                <li key={item}>{renderInlineBold(item)}</li>
+              ))}
+            </ol>
           );
         }
 

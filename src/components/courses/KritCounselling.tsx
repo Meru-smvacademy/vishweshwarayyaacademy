@@ -1,6 +1,6 @@
 import Container from "@/components/ui/Container";
 import SectionHeading from "@/components/ui/SectionHeading";
-import ContentBlocks from "@/components/courses/ContentBlocks";
+import ContentBlocks from "@/components/ui/ContentBlocks";
 import { KRIT_COUNSELLING } from "@/content/academicPathways";
 
 export default function KritCounselling() {

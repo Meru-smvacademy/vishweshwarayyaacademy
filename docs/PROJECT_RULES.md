@@ -82,7 +82,6 @@ The full page set (build order is governed separately — see §12). This is the
 ```
 /                                  Home
 /about                             Our Story / Vision
-/about/faculty                     Faculty
 /about/infrastructure              Campus & Infrastructure
 /hostel                            Hostel & accommodation
 /philosophy                        Our Philosophy
@@ -114,6 +113,7 @@ The full page set (build order is governed separately — see §12). This is the
 **Rules:**
 - URLs are lowercase, hyphenated, no dates, no IDs, max 3 segments, and are permanent — a slug change always ships with a 301 redirect.
 - Every route maps to one of a fixed set of templates (Landing, Content, Program, Listing, Detail, Form, Admin). A new page must reuse a template, not invent a one-off layout.
+- **No Faculty page.** Team information is intentionally not duplicated on this site. The nav item "Our Team" (header, mobile drawer, and footer) links externally to `https://www.kritprep.com/our-team` in a new tab. Do not build `/about/faculty` or any local team roster page.
 
 ---
 
@@ -169,7 +169,9 @@ If deeper integration (API sync, SSO, embedded widgets) is ever needed, it is a 
 
 The SNT (Scholarship-cum-Nurture Test) is the academy's highest-intent acquisition funnel — a test as the entry point, admissions counselling as the outcome.
 
-**Structure:**
+**Structure (as built, Module 7):** `/scholarship` is a single consolidated informational page — Introduction, About SNT Scholarship, Vision, Objectives, Eligibility, Scholarship Categories, Selection Process, Scholarship Benefits, Required Documents, Important Dates, FAQ, and Contact — built verbatim from `docs/SCHOLARSHIP_FOUNDATION.md`. `/scholarship/eligibility`, `/scholarship/apply`, and `/scholarship/status` from the original plan below were not built — Eligibility lives on the main page instead, and Apply/Status are deferred until an actual application form and lead-pipeline integration are scoped.
+
+**Original planned structure (superseded for now by the single-page build above):**
 ```
 /scholarship              Overview: value, award slabs, past awardees, deadline
 /scholarship/eligibility  Class-wise criteria, syllabus, pattern
@@ -178,7 +180,7 @@ The SNT (Scholarship-cum-Nurture Test) is the academy's highest-intent acquisiti
 ```
 
 **Rules:**
-- The application form captures the same core identity fields as the general enquiry form (name, phone, class, target exam) plus academic record — it feeds the same lead pipeline, not a separate silo.
+- The application form (once built) captures the same core identity fields as the general enquiry form (name, phone, class, target exam) plus academic record — it feeds the same lead pipeline, not a separate silo.
 - Award tiers/slabs are content, not hard-coded numbers in components — they must be editable without a code deploy once the admin module exists.
 - DPDP consent (and guardian consent for minors) is mandatory before submission — no exceptions.
 - `/scholarship/status` is a lookup surface only: reference number + phone, `noindex`, no listing/enumeration of other applicants.

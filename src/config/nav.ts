@@ -1,12 +1,14 @@
 export type NavChild = {
   label: string;
   href: string;
+  isExternal?: boolean;
 };
 
 export type NavLink = {
   label: string;
   href: string;
   isExternal?: boolean;
+  prominent?: boolean;
   children?: NavChild[];
 };
 
@@ -26,7 +28,7 @@ export const NAV_LINKS: NavLink[] = [
       { label: "Foundation", href: "/courses/foundation" },
     ],
   },
-  { label: "Faculty", href: "/about/faculty" },
+  { label: "Our Team", href: `${KRITPREP_URL}/our-team`, isExternal: true },
   { label: "Results", href: "/results" },
   { label: "Success Stories", href: "/results/stories" },
   { label: "SNT Scholarship", href: "/scholarship" },
@@ -34,7 +36,7 @@ export const NAV_LINKS: NavLink[] = [
   { label: "Hostel", href: "/hostel" },
   { label: "Gallery", href: "/gallery" },
   { label: "Contact", href: "/contact" },
-  { label: "KRITPrep", href: KRITPREP_URL, isExternal: true },
+  { label: "KRITPrep", href: KRITPREP_URL, isExternal: true, prominent: true },
 ];
 
 export const PRIMARY_CTA_LABEL = "Admission Enquiry";
@@ -50,7 +52,7 @@ export const FOOTER_LINK_GROUPS: FooterLinkGroup[] = [
     heading: "About",
     links: [
       { label: "Institution", href: "/about" },
-      { label: "Faculty", href: "/about/faculty" },
+      { label: "Our Team", href: `${KRITPREP_URL}/our-team`, isExternal: true },
       { label: "Campus", href: "/about/infrastructure" },
       { label: "Hostel", href: "/hostel" },
       { label: "Tribute Story", href: "/tribute" },

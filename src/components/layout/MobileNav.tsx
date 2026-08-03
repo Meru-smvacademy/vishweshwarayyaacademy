@@ -30,7 +30,7 @@ export default function MobileNav() {
         >
           <nav aria-label="Mobile" className="flex flex-col gap-1 px-4 py-6">
             {NAV_LINKS.map((item) => {
-              if (item.isExternal) {
+              if (item.isExternal && item.prominent) {
                 return (
                   <a
                     key={item.href}
@@ -43,6 +43,22 @@ export default function MobileNav() {
                     {item.label}
                     <ExternalLinkIcon className="h-4 w-4" />
                     <span className="sr-only"> – opens {item.label}, an external platform, in a new tab</span>
+                  </a>
+                );
+              }
+
+              if (item.isExternal) {
+                return (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={close}
+                    className="rounded-md px-3 py-3 text-base font-medium text-ink hover:bg-surface-muted"
+                  >
+                    {item.label}
+                    <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 );
               }

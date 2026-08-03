@@ -251,6 +251,96 @@ export function LaptopIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function ImageIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <circle cx="8.5" cy="9.5" r="1.5" />
+      <path d="m21 16-5.5-5.5a1 1 0 0 0-1.4 0L6 19" />
+    </svg>
+  );
+}
+
+export function FlaskIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M9 3h6M10 3v6.5L4.5 19a1.5 1.5 0 0 0 1.3 2.3h12.4a1.5 1.5 0 0 0 1.3-2.3L14 9.5V3" />
+      <path d="M7.5 15h9" />
+    </svg>
+  );
+}
+
+export function SparkleIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" />
+    </svg>
+  );
+}
+
+export function CheckCircleIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="m8.5 12.5 2.5 2.5 4.5-5" />
+    </svg>
+  );
+}
+
+export function CalendarIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <rect x="4" y="5" width="16" height="16" rx="1.5" />
+      <path d="M4 10h16M8 3v4M16 3v4" />
+    </svg>
+  );
+}
+
 export function MapPinIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg

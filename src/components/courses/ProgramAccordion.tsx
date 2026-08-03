@@ -1,4 +1,4 @@
-import ContentBlocks from "@/components/courses/ContentBlocks";
+import ContentBlocks from "@/components/ui/ContentBlocks";
 import PlaceholderTag from "@/components/ui/PlaceholderTag";
 import { ChevronDownIcon } from "@/components/ui/icons";
 import type { AcademicProgram, ProgramSection } from "@/content/academicPathways";
