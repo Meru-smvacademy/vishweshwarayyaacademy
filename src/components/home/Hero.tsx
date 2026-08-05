@@ -9,7 +9,7 @@ const BRANCHES = ["Lingasuguru", "Sindhanur"];
 export default function Hero() {
   return (
     <section className="border-b border-line bg-surface-muted">
-      <Container className="grid items-center gap-10 py-14 lg:grid-cols-2 lg:py-20">
+      <Container className="grid items-center gap-10 py-16 lg:!max-w-7xl lg:grid-cols-[1fr_1.25fr] lg:gap-14 lg:py-24">
         <div>
           <div className="flex flex-wrap gap-2">
             {BRANCHES.map((branch) => (
@@ -62,6 +62,7 @@ export default function Hero() {
             priority
             className="object-contain"
           />
+          <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-1/5 bg-gradient-to-r from-surface-muted to-transparent lg:block" />
         </div>
       </Container>
     </section>
