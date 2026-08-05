@@ -3,7 +3,7 @@ import type { ContentBlock } from "@/content/shared";
 export const INTRODUCTION: ContentBlock[] = [
   {
     type: "p",
-    text: "The **SNT Scholarship** is a tribute to the enduring vision of **Late Shri Sayabanna N. Tegginamani**, who believed that education has the power to transform lives and strengthen society. His lifelong commitment to learning and service continues to inspire every initiative of Sir M V Academy.",
+    text: "The **SNT Scholarship** is a tribute to the enduring vision of **Late Shri Sayabanna N. Tegginamani**, who believed that education has the power to transform lives and strengthen society. His lifelong commitment to learning and service continues to inspire every initiative of Visveshwarayya Academy.",
   },
   {
     type: "p",
@@ -14,7 +14,7 @@ export const INTRODUCTION: ContentBlock[] = [
 export const ABOUT: ContentBlock[] = [
   {
     type: "p",
-    text: "Inspired by this vision, **Sir M V NEET | JEE | KCET Academy** continues the mission of empowering students through quality education, academic excellence, and equal opportunities for every deserving learner.",
+    text: "Inspired by this vision, **Visveshwarayya NEET | JEE Academy** continues the mission of empowering students through quality education, academic excellence, and equal opportunities for every deserving learner.",
   },
   {
     type: "p",
@@ -40,7 +40,7 @@ export const OBJECTIVES: string[] = [
 export const ELIGIBILITY_INTRO: ContentBlock[] = [
   {
     type: "p",
-    text: "The SNT Scholarship is open to students who have successfully completed **Class 10** or **Class 12** and aspire to prepare for competitive examinations through Sir M V Academy.",
+    text: "The SNT Scholarship is open to students who have successfully completed **Class 10** or **Class 12** and aspire to prepare for competitive examinations through Visveshwarayya Academy.",
   },
   { type: "p", text: "Selection is based on performance in the **SNT Scholarship Examination**." },
 ];
@@ -60,7 +60,7 @@ export const CATEGORIES: ContentBlock[] = [
   },
   {
     type: "p",
-    text: "Depending on the merit secured, selected students may receive different levels of scholarship support toward their academic program at Sir M V Academy.",
+    text: "Depending on the merit secured, selected students may receive different levels of scholarship support toward their academic program at Visveshwarayya Academy.",
   },
   {
     type: "p",
@@ -145,8 +145,4 @@ export const CONTACT = {
   intro: "For scholarship enquiries, application support, or admission guidance, please contact:",
   closing:
     "Our admission team will be happy to assist you with the SNT Scholarship application process.",
-  website: {
-    value: "www.sirmvacademy.com",
-    note: "(pending confirmation of the final website address)",
-  },
 };

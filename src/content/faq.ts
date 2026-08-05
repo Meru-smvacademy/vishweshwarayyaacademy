@@ -73,15 +73,13 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
     items: [
       {
         question: "How can I contact the academy?",
-        answer: ["+91 96119 19028", "+91 89516 33963", "smvneet@gmail.com"],
+        answer: ["+91 96119 19028", "+91 89516 33963", "info@visveshwarayyaacademy.com"],
       },
       {
-        question: "Where is Sir M V Academy located?",
+        question: "Where is Visveshwarayya Academy located?",
         answer: [
-          "Opposite Annadane Gouda Hospital,",
-          "Raichur Bypass Road,",
-          "Lingasuguru – 584122,",
-          "Karnataka.",
+          "Lingasuguru Campus: Opposite Annadanegouda Hospital, Lingasuguru, Karnataka, India",
+          "Sindhanur Campus: Sri Kanakadasa Degree College Campus, Kustagi Road, Sindhanur – 584128, Raichur District, Karnataka, India",
         ],
       },
     ],

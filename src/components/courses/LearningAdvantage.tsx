@@ -7,7 +7,7 @@ export default function LearningAdvantage() {
     <section className="bg-surface-muted py-14 sm:py-20">
       <Container>
         <div className="mx-auto max-w-3xl">
-          <SectionHeading eyebrow="Our Advantage" title="The Sir M V Learning Advantage" align="left" />
+          <SectionHeading eyebrow="Our Advantage" title="The Visveshwarayya Learning Advantage" align="left" />
 
           <p className="mt-6 text-base leading-relaxed text-ink sm:text-lg">
             {LEARNING_ADVANTAGE.intro}

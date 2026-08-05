@@ -1,5 +1,5 @@
 import Container from "@/components/ui/Container";
-import GalleryCategoryCard from "@/components/gallery/GalleryCategoryCard";
+import CategoryImageCard from "@/components/ui/CategoryImageCard";
 import {
   BookIcon,
   BuildingIcon,
@@ -29,7 +29,7 @@ export default function GalleryGrid() {
       <Container>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {GALLERY_CATEGORIES.map((title, index) => (
-            <GalleryCategoryCard key={title} icon={ICONS[index]} title={title} />
+            <CategoryImageCard key={title} icon={ICONS[index]} title={title} />
           ))}
         </div>
       </Container>

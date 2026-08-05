@@ -54,17 +54,14 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="relative mx-auto aspect-square w-full max-w-sm">
+        <div className="relative mx-auto aspect-[5504/3072] w-full">
           <Image
-            src="/illustrations/hero-placeholder.svg"
-            alt="Illustration placeholder"
+            src="/images/hero/hero-illustration.png"
+            alt="A NEET aspirant in a white coat and a JEE aspirant carrying a laptop and blueprints, standing in front of a campus building"
             fill
             priority
             className="object-contain"
           />
-          <span className="absolute -bottom-2 left-1/2 -translate-x-1/2">
-            <PlaceholderTag label="Illustration placeholder" />
-          </span>
         </div>
       </Container>
     </section>

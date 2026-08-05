@@ -13,7 +13,14 @@ Tracks every placeholder currently live on the homepage (see [PROJECT_RULES.md](
 | 7 | SNT Scholarship (`/scholarship`) | ✅ Approved (2026-08-03) — 5 FAQ answers + website URL still pending, see item 11 |
 | 8 | Admissions (`/admissions`) | ✅ Approved (2026-08-03) — Required Documents still pending, see item 12 |
 | 9 | Gallery (`/gallery`) | ✅ Approved (2026-08-03) — all 8 categories still placeholders, see item 13 |
-| 10 | FAQ (`/faq`) | 🔶 Built, pending approval — fully resolved, no pending content, see item 14 |
+| 10 | FAQ (`/faq`) | ✅ Approved (2026-08-03) — fully resolved, no pending content, see item 14 |
+| — | P0 fix: Admission Enquiry form wired up (`/admission-enquiry`) | ✅ Approved (2026-08-03) |
+| 11 | Contact (`/contact`) | ✅ Approved (2026-08-03) — Office Hours timings + Maps embed pending, see item 15 |
+| 12 | Infrastructure (`/about/infrastructure`) | ✅ Approved (2026-08-03) — all 6 sections still placeholders, see item 16 |
+| 13 | Hostel (`/hostel`) | ✅ Approved (2026-08-03) — Boys'/Girls' Hostel photos pending, see item 17 |
+| 14 (About) | About (`/about`) | ✅ Approved |
+| 15 | Privacy Policy (`/legal/privacy`) | ⏳ Built (2026-08-04), pending approval — standard legal boilerplate customized with real contact details, see item 19 |
+| 16 | Terms & Conditions (`/legal/terms`) | ⏳ Built (2026-08-04), pending approval — standard legal boilerplate customized with real contact details, see item 20 |
 
 ---
 
@@ -122,6 +129,49 @@ Tracks every placeholder currently live on the homepage (see [PROJECT_RULES.md](
 - Files: [faq.ts](../src/content/faq.ts), [FaqAccordion.tsx](../src/components/faq/FaqAccordion.tsx)
 - Note: `docs/FAQ_FOUNDATION.md` was clean and complete — no duplication or misplacement issues, unlike the Courses/Admissions source documents. Nothing is pending for this page.
 
+## 15. Contact page — content status
+- [x] ~~Hero title/subtitle, Address, Phone Numbers, Email~~ — resolved verbatim, supplied directly in the build instruction (2026-08-03)
+- [ ] Office Hours — days confirmed (Monday – Saturday); exact timings not yet supplied. Rendered as "Office timings will be announced shortly" rather than inventing hours, and without a visible placeholder tag per the build instruction.
+- [ ] Google Maps embed — not yet supplied. Rendered as a clean bordered placeholder ("Map view will be added here"), no placeholder tag chip, easy to swap for a real embed later.
+- Files: [MapsSection.tsx](../src/components/contact/MapsSection.tsx), [OfficeHoursSection.tsx](../src/components/contact/OfficeHoursSection.tsx)
+- Note: per the build instruction, no `PlaceholderTag` component is shown anywhere on this page — both pending items are communicated through natural copy instead.
+
+## 16. Infrastructure page — content status
+- [ ] Campus — photographs pending
+- [ ] Smart Classrooms — photographs pending
+- [ ] Science Laboratories — photographs pending
+- [ ] Digital Learning — photographs pending
+- [ ] Library — photographs pending
+- [ ] Study Environment — photographs pending
+- Files: [infrastructure.ts](../src/content/infrastructure.ts), [InfrastructureGrid.tsx](../src/components/infrastructure/InfrastructureGrid.tsx)
+- Note: no facility descriptions were written for any section — only the 6 given section titles are shown, each with a placeholder image tile, to avoid describing facilities not confirmed to exist. `CategoryImageCard` (promoted from Gallery's page-specific card, now shared in `ui/`) accepts an optional `images` prop — supplying real campus photos later is a pure data change, no layout or component changes required. No stock photography was used.
+
+## 17. Hostel page — content status
+- [x] ~~Hero, About Our Hostels, Hostel Facilities (6 items), Student Life, Contact~~ — resolved verbatim, supplied directly in the build instruction (2026-08-03)
+- [ ] Boys' Hostel — photograph pending
+- [ ] Girls' Hostel — photograph pending
+- Files: [hostel.ts](../src/content/hostel.ts), [AccommodationSection.tsx](../src/components/hostel/AccommodationSection.tsx)
+- Note: no facility descriptions were invented beyond the 6 explicitly given (Safe and secure environment, Comfortable rooms, Study-friendly atmosphere, Nutritious meals, Clean drinking water, Regular supervision and discipline). Hostel enquiry phone numbers reuse the same shared academy contact numbers (no separate hostel-specific number was supplied).
+
+## 18. About page — content status
+- [ ] Hero intro, "Our Story" overview, and all four gateway summaries (Philosophy, Infrastructure, Our Team, SNT Scholarship) are original short copy synthesized from already-approved facts in `docs/BRAND_FOUNDATION.md`, `docs/SCHOLARSHIP_FOUNDATION.md`, and `src/content/infrastructure.ts` — no dedicated `ABOUT_FOUNDATION.md` was supplied for this module. Wording deliberately does not repeat Philosophy's "Our Beginning" prose (per the build instruction: "Do not duplicate the Philosophy page").
+- Files: [AboutHero.tsx](../src/components/about/AboutHero.tsx), [page.tsx](../src/app/about/page.tsx), [AboutGatewaySection.tsx](../src/components/about/AboutGatewaySection.tsx)
+- Note: reused `PhilosophySection` (Our Story), `AboutGatewaySection` (new, mirrors the existing `ScholarshipPreview`/`TributePreview` teaser pattern), and `AdmissionCta` (Final CTA — already the site's "Admission Enquiry + Call Now" banner) rather than building new one-off layouts.
+
+## 19. Privacy Policy page — content status
+- [x] ~~Email, Address~~ — resolved verbatim, supplied directly in the build instruction (2026-08-04); both match the already-live `ACADEMY_CONTACT` record in `src/content/contactInfo.ts`, reused via `ContactCard` rather than duplicated.
+- [ ] All 10 section bodies (Introduction through Contact Information) are standard privacy-policy boilerplate, grounded in what this website actually does (the Admission Enquiry form's fields, no payment collection, KRITPrep as the only external platform, no WhatsApp/SMS/analytics vendor confirmed as wired up) rather than invented claims. This is not sourced from a dedicated `PRIVACY_FOUNDATION.md` — flagged for your legal review before this page is treated as binding.
+- [ ] "Last updated: August 2026" reflects the build date, not a reviewed effective date — update if formal legal sign-off happens on a different date.
+- Files: [privacyPolicy.ts](../src/content/privacyPolicy.ts), [page.tsx](../src/app/legal/privacy/page.tsx), [LegalHero.tsx](../src/components/legal/LegalHero.tsx)
+- Note: reused `ProseSection`/`ContentBlocks` (the same components powering `/scholarship`'s prose sections), `ContactCard`, and `FinalCta` — no new one-off layout was built. `LegalHero` is named generically (not `PrivacyHero`) so `/legal/terms` can reuse it directly.
+
+## 20. Terms & Conditions page — content status
+- [x] ~~Academy contact details~~ — resolved, reused the same `ACADEMY_CONTACT` record via `ContactCard` (2026-08-04), no new address/email introduced.
+- [ ] All 10 section bodies (Acceptance of Terms through Contact Information) are standard terms-and-conditions boilerplate for a coaching institute, grounded in already-approved facts (no online fee payment exists on this site, SNT Scholarship's merit-based process per §7, KRITPrep as a separate platform per §6) rather than invented policy specifics (no disciplinary penalty schedule, no refund percentages, or fee amounts were stated, since none were supplied). Not sourced from a dedicated `TERMS_FOUNDATION.md` — flagged for your legal review before this page is treated as binding.
+- [ ] "Last updated: August 2026" reflects the build date, not a reviewed effective date.
+- Files: [termsConditions.ts](../src/content/termsConditions.ts), [page.tsx](../src/app/legal/terms/page.tsx)
+- Note: reuses the same `LegalHero`, `ProseSection`/`ContentBlocks`, `ContactCard`, and `FinalCta` components built for the Privacy Policy (Module 15) — no new components were introduced for this module.
+
 ---
 
-**Status:** 9 / 10 Philosophy items resolved (all Founder's Message flags now confirmed). Homepage items 1–8 remain outstanding. Academic Pathways (item 10) is built from `docs/COURSES_FOUNDATION.md` with 3 fields pending your correction of the source document. SNT Scholarship (item 11) is built with all prose sections resolved; 5 FAQ answers and 1 website URL still pending. Admissions (item 12) is built with Admissions Open / Programs Offered / Admission Process resolved; Required Documents pending real content. Gallery (item 13) is built with the Introduction resolved; all 8 categories await real photographs. FAQ (item 14) is fully resolved with no pending content.
+**Status:** 9 / 10 Philosophy items resolved (all Founder's Message flags now confirmed). Homepage items 1–8 remain outstanding. Academic Pathways (item 10) is built from `docs/COURSES_FOUNDATION.md` with 3 fields pending your correction of the source document. SNT Scholarship (item 11) is built with all prose sections resolved; 5 FAQ answers and 1 website URL still pending. Admissions (item 12) is built with Admissions Open / Programs Offered / Admission Process resolved; Required Documents pending real content. Gallery (item 13) is built with the Introduction resolved; all 8 categories await real photographs. FAQ (item 14) is fully resolved with no pending content. Contact (item 15) has all core info resolved; Office Hours timings and the Maps embed remain pending, shown as natural copy rather than placeholder tags. Infrastructure (item 16) has only structural section titles; all 6 sections await real campus photographs. Hostel (item 17) has all text content resolved; Boys'/Girls' Hostel photos remain pending.

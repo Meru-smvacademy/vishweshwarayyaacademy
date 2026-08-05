@@ -1,5 +1,5 @@
 export const ADMISSIONS_OPEN_TEXT =
-  "Admissions are now open for the academic year. Join Sir M V NEET | JEE | KCET Academy and begin your journey towards academic excellence through our Foundation, NEET, JEE, KCET, and Long-Term programs.";
+  "Admissions are now open for the academic year. Join Visveshwarayya NEET | JEE Academy and begin your journey towards academic excellence through our Foundation, NEET, JEE, KCET, and Long-Term programs.";
 
 export const PROGRAMS_OFFERED: string[] = [
   "Foundation Program (Classes 6–10)",

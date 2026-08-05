@@ -7,7 +7,7 @@ import AdmissionsContact from "@/components/admissions/AdmissionsContact";
 import FinalCta from "@/components/home/FinalCta";
 
 export const metadata: Metadata = {
-  title: "Admissions — Sir M V NEET | JEE | KCET Academy",
+  title: "Admissions — Visveshwarayya NEET | JEE Academy",
   description: "",
 };
 

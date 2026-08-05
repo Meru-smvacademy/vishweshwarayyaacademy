@@ -10,13 +10,13 @@ export default function Footer() {
     <footer className="border-t border-line bg-primary text-white">
       <Container className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
-          <p className="text-lg font-semibold">Sir M V NEET | JEE | KCET Academy</p>
+          <p className="text-lg font-semibold">Visveshwarayya NEET | JEE Academy</p>
           <p className="mt-2 text-sm text-white/80">Lingasuguru &amp; Sindhanuru</p>
           <a
             href={KRITPREP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-sm font-semibold text-primary transition-colors hover:bg-accent/20"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-sm font-semibold text-accent-light transition-colors hover:bg-accent/20 hover:text-white"
           >
             KRITPrep
             <ExternalLinkIcon className="h-3.5 w-3.5" />
@@ -58,7 +58,7 @@ export default function Footer() {
 
       <div className="border-t border-white/10">
         <Container className="flex flex-col gap-2 py-4 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {year} Sir M V NEET | JEE | KCET Academy. All rights reserved.</p>
+          <p>&copy; {year} Visveshwarayya NEET | JEE Academy. All rights reserved.</p>
           <div className="flex gap-4">
             <Link href="/legal/privacy" className="hover:text-white">
               Privacy Policy

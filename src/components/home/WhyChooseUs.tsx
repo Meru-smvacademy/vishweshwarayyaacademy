@@ -49,7 +49,7 @@ export default function WhyChooseUs() {
       <Container>
         <SectionHeading
           eyebrow="Why Choose Us"
-          title="Why Choose Sir M V NEET | JEE | KCET Academy"
+          title="Why Choose Visveshwarayya NEET | JEE Academy"
           placeholder
         />
 

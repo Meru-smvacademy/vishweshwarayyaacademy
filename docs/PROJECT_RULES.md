@@ -301,6 +301,20 @@ These rules govern how AI-assisted development (Claude Code or any other assista
 | 2 | Homepage | ✅ Approved |
 | 3 | Our Philosophy (`/philosophy`) — added mid-stream, not in the original recommended order | ✅ Approved |
 | 4 | Academic Pathways / Courses hub (`/courses`) | ✅ Approved |
-| 5+ | Not yet started | — |
+| — | Nav revision: Faculty replaced with an external "Our Team" link (KRITPrep) | ✅ Approved |
+| 7 | SNT Scholarship (`/scholarship`) | ✅ Approved |
+| 8 | Admissions (`/admissions`) | ✅ Approved |
+| 9 | Gallery (`/gallery`) | ✅ Approved |
+| 10 | FAQ (`/faq`) | ✅ Approved |
+| P0 | Admission Enquiry form wired up (`/admission-enquiry`) — fixed a sitewide 404 on the primary CTA, found during full-project QA | ✅ Approved |
+| 11 | Contact (`/contact`) | ✅ Approved |
+| 12 | Infrastructure (`/about/infrastructure`) | ✅ Approved |
+| 13 | Hostel (`/hostel`) | ✅ Approved |
+| — | P1 fix: `NEXT_PUBLIC_ACADEMY_PHONE` configured to the academy's primary number | ✅ Approved |
+| 14 (Tribute) | Tribute Story (`/tribute`) | ⏸ Blocked — `docs/TRIBUTE_FOUNDATION.md` created (structure only), awaiting factually-verifiable content on Sir M. Visvesvaraya per §8; page not yet built |
+| 14 (About) | About (`/about`) — number reused by the user's own instruction for this module; kept distinct from the blocked Tribute entry above rather than renumbering it | ✅ Approved |
+| 15 | Privacy Policy (`/legal/privacy`) | ✅ Built — pending approval; see `docs/CONTENT_CHECKLIST.md` item 19 |
+| 16 | Terms & Conditions (`/legal/terms`) | ✅ Built — pending approval; see `docs/CONTENT_CHECKLIST.md` item 20 |
+| 5 | Results & Success Stories (`/results`) | ⏸ Intentionally on hold — pending verified admission data in `docs/RESULTS_FOUNDATION.md` |
 
-Modules 3 and 4 were built from dedicated source-of-truth documents (`docs/BRAND_FOUNDATION.md`, `docs/COURSES_FOUNDATION.md`) per rule 2 — see `docs/CONTENT_CHECKLIST.md` for any content fields still pending correction within an otherwise-approved module.
+**Implementation phase: complete**, except Module 5 (Results) and Module 14/Tribute, both deliberately blocked pending real, verified content — see `docs/RESULTS_FOUNDATION.md` and `docs/TRIBUTE_FOUNDATION.md`. Modules 3, 4, 7–13, 14/About, 15, and 16 were built from dedicated source-of-truth documents or content supplied directly in-conversation per rule 2 — see `docs/CONTENT_CHECKLIST.md` for content fields still pending correction or real data within otherwise-approved modules. Note also that several nav/footer links (`/results`, `/results/stories`, `/tribute`, and the four `/courses/[slug]` deep links) point to pages not yet built — this is expected at this stage of the build order, not a defect. `/contact`, `/about/infrastructure`, `/hostel`, `/about`, `/legal/privacy`, and now `/legal/terms` are resolved as of Modules 11–13, 14/About, 15, and 16.

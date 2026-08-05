@@ -1,8 +1,7 @@
 import Container from "@/components/ui/Container";
 import SectionHeading from "@/components/ui/SectionHeading";
 import BranchCard from "@/components/home/BranchCard";
-
-const BRANCHES = ["Lingasuguru", "Sindhanuru"];
+import { ACADEMY_CONTACT } from "@/content/contactInfo";
 
 export default function Branches() {
   return (
@@ -11,8 +10,8 @@ export default function Branches() {
         <SectionHeading eyebrow="Our Branches" title="Visit Us" />
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          {BRANCHES.map((branch) => (
-            <BranchCard key={branch} name={branch} />
+          {ACADEMY_CONTACT.campuses.map((campus) => (
+            <BranchCard key={campus.name} name={campus.name} addressLines={campus.addressLines} />
           ))}
         </div>
       </Container>

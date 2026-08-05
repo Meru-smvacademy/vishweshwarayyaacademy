@@ -16,6 +16,9 @@
   --success: #1e7a46;
   --warning: #b45309;
   --danger: #b3261e;
+
+  --brand-heading: #112b5a;
+  --brand-tagline: #f47a20;
 }
 
 @theme inline {
@@ -34,9 +37,12 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
+  --color-brand-heading: var(--brand-heading);
+  --color-brand-tagline: var(--brand-tagline);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-manrope: var(--font-manrope);
 }
 
 body {

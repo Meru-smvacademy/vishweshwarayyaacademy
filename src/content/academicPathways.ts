@@ -16,7 +16,7 @@ export type AcademicProgram = {
 export const INTRODUCTION: ContentBlock[] = [
   {
     type: "p",
-    text: "Sir M V NEET | JEE | KCET Academy offers carefully designed Academic Pathways that support students at every stage of their educational journey.",
+    text: "Visveshwarayya NEET | JEE Academy offers carefully designed Academic Pathways that support students at every stage of their educational journey.",
   },
   {
     type: "p",
@@ -69,7 +69,7 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
     teachingMethodology: [
       {
         type: "p",
-        text: "The Foundation Program follows the same educational philosophy that defines every Sir M V Academy program.",
+        text: "The Foundation Program follows the same educational philosophy that defines every Visveshwarayya Academy program.",
       },
       {
         type: "p",
@@ -166,7 +166,7 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
     assessment: [
       {
         type: "p",
-        text: "Assessment at Sir M V Academy is designed to measure understanding, identify learning gaps, and guide continuous improvement rather than simply assigning marks.",
+        text: "Assessment at Visveshwarayya Academy is designed to measure understanding, identify learning gaps, and guide continuous improvement rather than simply assigning marks.",
       },
       { type: "p", text: "The NEET Achievement Program includes:" },
       {
@@ -604,7 +604,7 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
 
 export const LEARNING_ADVANTAGE = {
   intro:
-    "Every Academic Pathway at Sir M V Academy is built upon a common educational philosophy and a commitment to academic excellence.",
+    "Every Academic Pathway at Visveshwarayya Academy is built upon a common educational philosophy and a commitment to academic excellence.",
   leadIn: "Regardless of the program a student chooses, every learner benefits from:",
   items: [
     "Research-Driven Curriculum",
@@ -623,7 +623,7 @@ export const LEARNING_ADVANTAGE = {
 };
 
 export const KRIT_ECOSYSTEM = {
-  intro: "KRIT is the digital academic ecosystem developed by Sir M V Academy to extend learning beyond the classroom.",
+  intro: "KRIT is the digital academic ecosystem developed by Visveshwarayya Academy to extend learning beyond the classroom.",
   leadIn: "Every student benefits from technology-enabled academic support through:",
   groups: [
     {
@@ -684,9 +684,9 @@ export const KRIT_COUNSELLING: ContentBlock[] = [
 ];
 
 export const ADMISSION_JOURNEY = {
-  intro: "Every student at Sir M V Academy follows a carefully designed academic journey.",
+  intro: "Every student at Visveshwarayya Academy follows a carefully designed academic journey.",
   steps: [
-    "Admission to Sir M V Academy",
+    "Admission to Visveshwarayya Academy",
     "Research-Driven Learning",
     "Instructional Technology",
     "3D Interactive Learning",

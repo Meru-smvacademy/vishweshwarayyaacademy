@@ -11,7 +11,7 @@ export default function ScholarshipContact() {
           <SectionHeading eyebrow="Contact for Scholarship" title="Contact" align="left" />
         </div>
         <div className="mt-8">
-          <ContactCard intro={CONTACT.intro} closing={CONTACT.closing} website={CONTACT.website} />
+          <ContactCard intro={CONTACT.intro} closing={CONTACT.closing} />
         </div>
       </Container>
     </section>

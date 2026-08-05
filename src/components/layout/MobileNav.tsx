@@ -26,7 +26,7 @@ export default function MobileNav() {
       {open && (
         <div
           id="mobile-nav-drawer"
-          className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto bg-surface"
+          className="fixed inset-x-0 top-20 z-40 h-[calc(100vh-5rem)] overflow-y-auto bg-surface"
         >
           <nav aria-label="Mobile" className="flex flex-col gap-1 px-4 py-6">
             {NAV_LINKS.map((item) => {

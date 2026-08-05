@@ -250,7 +250,7 @@ export default function EnquiryForm() {
             aria-describedby={errors.consent ? "consent-error" : undefined}
           />
           <span>
-            I agree to be contacted by Sir M V NEET | JEE | KCET Academy regarding admissions, in
+            I agree to be contacted by Visveshwarayya NEET | JEE Academy regarding admissions, in
             line with the{" "}
             <a href="/legal/privacy" className="underline hover:text-primary">
               Privacy Policy

@@ -8,7 +8,7 @@ import AdmissionJourney from "@/components/courses/AdmissionJourney";
 import FinalCta from "@/components/home/FinalCta";
 
 export const metadata: Metadata = {
-  title: "Academic Pathways — Sir M V NEET | JEE | KCET Academy",
+  title: "Academic Pathways — Visveshwarayya NEET | JEE Academy",
   description: "",
 };
 

@@ -1,13 +1,13 @@
 import Button from "@/components/ui/Button";
-import PlaceholderTag from "@/components/ui/PlaceholderTag";
 import { MapPinIcon, PhoneIcon } from "@/components/ui/icons";
 import { ACADEMY_PHONE } from "@/config/nav";
 
 type BranchCardProps = {
   name: string;
+  addressLines: string[];
 };
 
-export default function BranchCard({ name }: BranchCardProps) {
+export default function BranchCard({ name, addressLines }: BranchCardProps) {
   return (
     <div className="rounded-lg border border-line bg-surface p-6">
       <div className="flex items-start gap-3">
@@ -15,15 +15,15 @@ export default function BranchCard({ name }: BranchCardProps) {
           <MapPinIcon className="h-5 w-5" />
         </span>
         <div>
-          <h3 className="text-base font-semibold text-primary">{name} Branch</h3>
+          <h3 className="text-base font-semibold text-primary">{name}</h3>
           <p className="mt-1 text-sm text-muted">
-            [Address placeholder — {name} branch, to be added]
+            {addressLines.map((line, index) => (
+              <span key={index} className="block">
+                {line}
+              </span>
+            ))}
           </p>
         </div>
-      </div>
-
-      <div className="mt-4">
-        <PlaceholderTag label="Address pending" />
       </div>
 
       <div className="mt-5">

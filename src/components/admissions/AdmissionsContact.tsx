@@ -8,7 +8,7 @@ export default function AdmissionsContact() {
     <section className="bg-surface-muted py-14 sm:py-20">
       <Container>
         <div className="mx-auto max-w-3xl">
-          <SectionHeading eyebrow="Contact" title="Contact" align="left" />
+          <SectionHeading title="Contact" align="left" />
         </div>
         <div className="mt-8">
           <ContactCard intro={CONTACT_INTRO} prominentCalls />

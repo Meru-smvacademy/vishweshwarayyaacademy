@@ -26,7 +26,7 @@ import {
 } from "@/content/scholarship";
 
 export const metadata: Metadata = {
-  title: "SNT Scholarship — Sir M V NEET | JEE | KCET Academy",
+  title: "SNT Scholarship — Visveshwarayya NEET | JEE Academy",
   description: "",
 };
 

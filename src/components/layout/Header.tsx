@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ACADEMY_PHONE, NAV_LINKS, PRIMARY_CTA_HREF, PRIMARY_CTA_LABEL } from "@/config/nav";
 import Button from "@/components/ui/Button";
@@ -8,12 +9,28 @@ import { ChevronDownIcon, ExternalLinkIcon, PhoneIcon } from "@/components/ui/ic
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
-      <Container className="flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="shrink-0 text-lg font-semibold text-primary">
-          Sir M V NEET | JEE | KCET Academy
+      <Container className="flex min-h-20 !max-w-none items-center justify-between !px-6 xl:min-h-24">
+        <Link href="/" className="flex shrink-0 items-center gap-3 xl:gap-4">
+          <Image
+            src="/branding/logo.svg"
+            alt=""
+            width={979}
+            height={1091}
+            priority
+            unoptimized
+            className="h-12 w-auto xl:h-[72px]"
+          />
+          <span className="flex flex-col justify-center leading-tight">
+            <span className="font-manrope text-[14px] font-extrabold uppercase tracking-[0.012em] text-brand-heading xl:text-[19px]">
+              Visveshwarayya
+            </span>
+            <span className="mt-0.5 font-manrope text-[9px] font-semibold uppercase tracking-[0.22em] text-brand-tagline xl:text-[11px]">
+              NEET | JEE Academy
+            </span>
+          </span>
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-5 xl:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-4 xl:flex">
           {NAV_LINKS.map((item) => {
             if (item.isExternal && item.prominent) {
               return (
@@ -83,7 +100,7 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-5 xl:flex">
+        <div className="hidden items-center gap-4 xl:flex">
           {ACADEMY_PHONE && (
             <a
               href={`tel:${ACADEMY_PHONE}`}

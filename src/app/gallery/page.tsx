@@ -4,7 +4,7 @@ import GalleryGrid from "@/components/gallery/GalleryGrid";
 import FinalCta from "@/components/home/FinalCta";
 
 export const metadata: Metadata = {
-  title: "Gallery — Sir M V NEET | JEE | KCET Academy",
+  title: "Gallery — Visveshwarayya NEET | JEE Academy",
   description: "",
 };
 
