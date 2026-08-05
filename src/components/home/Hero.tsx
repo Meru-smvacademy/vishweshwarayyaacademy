@@ -4,7 +4,7 @@ import Container from "@/components/ui/Container";
 import PlaceholderTag from "@/components/ui/PlaceholderTag";
 import { PRIMARY_CTA_HREF, PRIMARY_CTA_LABEL } from "@/config/nav";
 
-const BRANCHES = ["Lingasuguru", "Sindhanuru"];
+const BRANCHES = ["Lingasuguru", "Sindhanur"];
 
 export default function Hero() {
   return (
@@ -28,7 +28,7 @@ export default function Hero() {
 
           <p className="mt-4 max-w-xl text-base text-muted sm:text-lg">
             Structured classes, experienced faculty guidance, and a disciplined study environment
-            for Class 8–12 and repeater students, at our Lingasuguru and Sindhanuru campuses.
+            for Class 8–12 and repeater students, at our Lingasuguru and Sindhanur campuses.
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">

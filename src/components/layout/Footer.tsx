@@ -11,7 +11,7 @@ export default function Footer() {
       <Container className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
           <p className="text-lg font-semibold">Visveshwarayya NEET | JEE Academy</p>
-          <p className="mt-2 text-sm text-white/80">Lingasuguru &amp; Sindhanuru</p>
+          <p className="mt-2 text-sm text-white/80">Lingasuguru &amp; Sindhanur</p>
           <a
             href={KRITPREP_URL}
             target="_blank"

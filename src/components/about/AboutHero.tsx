@@ -10,7 +10,7 @@ export default function AboutHero() {
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-base text-muted sm:text-lg">
           Visveshwarayya NEET | JEE Academy is a dedicated coaching institution with campuses in
-          Lingasuguru and Sindhanuru, helping students from North Karnataka pursue NEET, JEE, and
+          Lingasuguru and Sindhanur, helping students from North Karnataka pursue NEET, JEE, and
           KCET success close to home.
         </p>
       </Container>
