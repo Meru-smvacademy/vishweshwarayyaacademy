@@ -136,7 +136,28 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
         ],
       },
     ],
-    teachingMethodology: null,
+    teachingMethodology: [
+      {
+        type: "p",
+        text: "The NEET Achievement Program follows a structured, student-centric teaching methodology designed to maximize conceptual understanding, problem-solving ability, and examination performance.",
+      },
+      { type: "p", text: "The methodology includes:" },
+      {
+        type: "ul",
+        items: [
+          "Concept-based classroom teaching by experienced faculty",
+          "Daily Practice Questions (DPQs)",
+          "Regular topic-wise assignments",
+          "Weekly, Monthly, and Grand Tests",
+          "CBT-based NEET mock examinations",
+          "Detailed performance analysis",
+          "Personalized mentoring and academic guidance",
+          "Dedicated doubt-solving sessions",
+          "Revision and crash test series before NEET",
+          "Continuous progress tracking with parent updates through KRIT",
+        ],
+      },
+    ],
     kritIntegration: [
       {
         type: "p",
@@ -426,7 +447,22 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
   {
     slug: "jee-long-term",
     name: "JEE Long-Term Program",
-    whoIsItFor: null,
+    whoIsItFor: [
+      {
+        type: "p",
+        text: "The JEE Long-Term Program is designed for students who have completed Class 12 (PUC II) and repeaters who are committed to securing admission into India's leading engineering colleges through JEE Main and JEE Advanced.",
+      },
+      { type: "p", text: "Suitable For:" },
+      {
+        type: "ul",
+        items: ["12th Passed Students", "Repeaters"],
+      },
+      { type: "p", text: "Target Examination:" },
+      {
+        type: "ul",
+        items: ["JEE Main", "JEE Advanced"],
+      },
+    ],
     objective: [
       {
         type: "p",
