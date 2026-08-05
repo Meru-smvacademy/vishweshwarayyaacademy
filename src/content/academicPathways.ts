@@ -192,7 +192,36 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
   {
     slug: "neet-long-term",
     name: "NEET Long-Term Program",
-    whoIsItFor: null,
+    whoIsItFor: [
+      {
+        type: "p",
+        text: "**Suitable For:** 12th Passed Students & Repeaters",
+      },
+      {
+        type: "p",
+        text: "**Target Examination:** NEET UG",
+      },
+      {
+        type: "p",
+        text: "A comprehensive long-term coaching program designed for 12th passed students and repeaters who are determined to secure admission to top medical colleges. The program focuses on conceptual clarity, disciplined preparation, regular practice, and continuous performance evaluation to maximize NEET success.",
+      },
+      { type: "p", text: "Key Highlights:" },
+      {
+        type: "ul",
+        items: [
+          "Comprehensive NEET UG Preparation",
+          "Experienced & Dedicated Faculty",
+          "Structured Academic Plan",
+          "Daily Practice Questions (DPQs)",
+          "Weekly & Grand Tests",
+          "Personalized Mentorship",
+          "Doubt Solving Sessions",
+          "Performance Analysis & Parent Updates",
+          "High-Quality Study Material",
+          "Scholarship Opportunities",
+        ],
+      },
+    ],
     objective: [
       {
         type: "p",
