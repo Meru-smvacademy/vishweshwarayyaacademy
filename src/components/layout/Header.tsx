@@ -10,7 +10,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
       <Container className="flex min-h-24 !max-w-none items-center justify-between gap-x-6 !px-8 xl:min-h-28 xl:!px-10 xl:gap-x-10">
-        <Link href="/" className="flex shrink-0 items-center gap-4 xl:gap-5">
+        <Link href="/" className="flex shrink-0 items-center gap-5 xl:gap-6">
           <Image
             src="/branding/logo.svg"
             alt=""
@@ -18,7 +18,7 @@ export default function Header() {
             height={1091}
             priority
             unoptimized
-            className="h-12 w-auto xl:h-[72px]"
+            className="h-14 w-auto shrink-0 self-center xl:h-[84px]"
           />
           <span className="flex flex-col justify-center leading-tight">
             <span className="font-manrope text-[14px] font-extrabold uppercase tracking-[0.012em] text-brand-heading xl:text-[19px]">
