@@ -9,8 +9,8 @@ import { ChevronDownIcon, ExternalLinkIcon, PhoneIcon } from "@/components/ui/ic
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
-      <Container className="flex min-h-20 !max-w-none items-center justify-between !px-6 xl:min-h-24">
-        <Link href="/" className="flex shrink-0 items-center gap-3 xl:gap-4">
+      <Container className="flex min-h-24 !max-w-none items-center justify-between gap-x-6 !px-8 xl:min-h-28 xl:!px-10 xl:gap-x-10">
+        <Link href="/" className="flex shrink-0 items-center gap-4 xl:gap-5">
           <Image
             src="/branding/logo.svg"
             alt=""
@@ -100,7 +100,7 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-4 xl:flex">
+        <div className="hidden items-center gap-5 xl:flex">
           {ACADEMY_PHONE && (
             <a
               href={`tel:${ACADEMY_PHONE}`}
