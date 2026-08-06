@@ -10,21 +10,22 @@ export type NavLink = {
   isExternal?: boolean;
   prominent?: boolean;
   children?: NavChild[];
+  desktopPrimary?: boolean;
 };
 
 export const KRITPREP_URL = process.env.NEXT_PUBLIC_KRITPREP_URL || "#";
 export const ACADEMY_PHONE = process.env.NEXT_PUBLIC_ACADEMY_PHONE || "";
 
 export const NAV_LINKS: NavLink[] = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Courses", href: "/courses" },
-  { label: "Admissions", href: "/admissions" },
+  { label: "Home", href: "/", desktopPrimary: true },
+  { label: "About", href: "/about", desktopPrimary: true },
+  { label: "Courses", href: "/courses", desktopPrimary: true },
+  { label: "Admissions", href: "/admissions", desktopPrimary: true },
   { label: "Our Team", href: `${KRITPREP_URL}/our-team`, isExternal: true },
   { label: "SNT Scholarship", href: "/scholarship" },
   { label: "Hostel", href: "/hostel" },
   { label: "Gallery", href: "/gallery" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact", href: "/contact", desktopPrimary: true },
   { label: "KRITPrep", href: KRITPREP_URL, isExternal: true, prominent: true },
 ];
 
