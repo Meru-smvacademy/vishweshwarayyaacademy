@@ -1,11 +1,19 @@
+export const PROGRAMS = [
+  "Foundation",
+  "NEET Achievement",
+  "NEET Long-Term",
+  "JEE Achievement",
+  "JEE Long-Term",
+  "KCET Integrated",
+];
+
 export type EnquiryFormValues = {
-  name: string;
+  studentName: string;
+  parentName: string;
   phone: string;
-  studentClass: string;
-  targetExam: string;
-  city: string;
+  qualification: string;
+  program: string;
   message: string;
-  consent: boolean;
   companyWebsite: string;
 };
 
@@ -22,28 +30,24 @@ export function normalizePhone(phone: string): string {
 export function validateEnquiry(values: EnquiryFormValues): EnquiryFieldErrors {
   const errors: EnquiryFieldErrors = {};
 
-  if (values.name.trim().length < 2) {
-    errors.name = "Enter the student's full name.";
+  if (values.studentName.trim().length < 2) {
+    errors.studentName = "Enter the student's full name.";
+  }
+
+  if (values.parentName.trim().length < 2) {
+    errors.parentName = "Enter the parent or guardian's full name.";
   }
 
   if (!PHONE_PATTERN.test(normalizePhone(values.phone))) {
     errors.phone = "Enter a valid 10-digit mobile number.";
   }
 
-  if (!values.studentClass) {
-    errors.studentClass = "Select the current class.";
+  if (!values.qualification) {
+    errors.qualification = "Select the current class.";
   }
 
-  if (!values.targetExam) {
-    errors.targetExam = "Select a target exam.";
-  }
-
-  if (!values.city.trim()) {
-    errors.city = "Enter your city.";
-  }
-
-  if (!values.consent) {
-    errors.consent = "Consent is required to submit an enquiry.";
+  if (!values.program) {
+    errors.program = "Select the program you're interested in.";
   }
 
   return errors;

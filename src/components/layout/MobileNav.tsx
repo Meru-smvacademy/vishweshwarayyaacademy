@@ -18,15 +18,15 @@ export default function MobileNav() {
         aria-controls="mobile-nav-drawer"
         aria-label={open ? "Close menu" : "Open menu"}
         onClick={() => setOpen((prev) => !prev)}
-        className="inline-flex h-11 w-11 items-center justify-center rounded-md text-ink hover:bg-surface-muted"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-md text-header-navy hover:bg-surface-muted"
       >
-        {open ? <CloseIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+        {open ? <CloseIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
       </button>
 
       {open && (
         <div
           id="mobile-nav-drawer"
-          className="fixed inset-x-0 top-24 z-40 max-h-[calc(100vh-6rem)] overflow-y-auto border-b border-line bg-surface shadow-lg"
+          className="fixed inset-x-0 top-16 z-40 max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-line bg-surface shadow-lg sm:top-[72px] sm:max-h-[calc(100vh-72px)]"
         >
           <nav aria-label="Mobile" className="flex flex-col gap-1 px-4 py-6">
             {NAV_LINKS.map((item) => {

@@ -1,19 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ACADEMY_PHONE, NAV_LINKS, PRIMARY_CTA_HREF, PRIMARY_CTA_LABEL } from "@/config/nav";
+import { NAV_LINKS, PRIMARY_CTA_HREF, PRIMARY_CTA_LABEL } from "@/config/nav";
 import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import MobileNav from "@/components/layout/MobileNav";
-import { ChevronDownIcon, ExternalLinkIcon, PhoneIcon } from "@/components/ui/icons";
+import { ArrowRightIcon, ChevronDownIcon, ExternalLinkIcon } from "@/components/ui/icons";
 
 const PRIMARY_NAV_LINKS = NAV_LINKS.filter((item) => item.desktopPrimary);
-const MORE_NAV_LINKS = NAV_LINKS.filter((item) => !item.desktopPrimary);
+const KRITPREP_LINK = NAV_LINKS.find((item) => item.prominent);
+const MORE_NAV_LINKS = NAV_LINKS.filter((item) => !item.desktopPrimary && !item.prominent);
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
-      <Container className="flex min-h-24 !max-w-none items-center justify-between gap-x-6 !px-8 xl:min-h-28 xl:!px-10 xl:gap-x-10">
-        <Link href="/" className="flex shrink-0 items-center gap-[18px] pl-5 xl:gap-[22px]">
+    <header className="sticky top-0 z-50 h-16 border-b border-header-border bg-header-bg shadow-[0px_1px_1.5px_0px_rgba(0,0,0,0.04)] sm:h-[72px] xl:h-[84px]">
+      <Container className="flex h-full !max-w-none items-center justify-between !px-5 sm:!px-6 xl:!px-12">
+        <Link href="/" className="flex shrink-0 items-center gap-[10px] sm:gap-[14px] xl:gap-[18px]">
           <Image
             src="/branding/logo.svg"
             alt=""
@@ -21,24 +22,30 @@ export default function Header() {
             height={1091}
             priority
             unoptimized
-            className="h-[61px] w-auto shrink-0 self-center xl:h-[91px]"
+            className="h-[43px] w-auto shrink-0 sm:h-[58px] xl:h-[69px]"
           />
-          <span className="flex flex-col justify-center leading-tight">
-            <span className="font-manrope text-[16.8px] font-extrabold uppercase tracking-[0.012em] text-brand-heading xl:text-[22.8px]">
-              Visveshwarayya
+          <span className="flex flex-col justify-center leading-none">
+            <span className="mb-[2px] font-outfit text-[7px] font-semibold uppercase tracking-[0.22em] text-header-muted sm:text-[8px] xl:text-[9px]">
+              Sir M
             </span>
-            <span className="mt-0.5 font-manrope text-[9.8px] font-extrabold uppercase tracking-[0.205em] text-brand-tagline xl:text-[12px]">
-              NEET | JEE Academy
+            <span className="font-outfit text-[18px] font-black tracking-[0.3px] text-header-navy sm:text-[25px] sm:tracking-[0.6px] xl:text-[37px] xl:tracking-[0.8px]">
+              Vishweshwarayya
+            </span>
+            <span className="mt-1 font-outfit text-[11px] font-bold uppercase leading-[1.2] tracking-[0.08em] sm:text-[12px]">
+              <span className="text-header-descriptor-navy">NEET</span>{" "}
+              <span className="text-header-descriptor-navy/35">|</span>{" "}
+              <span className="text-header-descriptor-navy">JEE</span>{" "}
+              <span className="text-header-gold">Academy</span>
             </span>
           </span>
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-6 xl:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-[44px] xl:flex">
           {PRIMARY_NAV_LINKS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="inline-flex items-center text-sm font-medium text-ink transition-colors duration-200 hover:text-primary"
+              className="font-sans text-[14px] font-medium text-header-muted transition-colors duration-200 hover:text-header-navy"
             >
               {item.label}
             </Link>
@@ -48,12 +55,12 @@ export default function Header() {
             <button
               type="button"
               aria-haspopup="true"
-              className="inline-flex items-center gap-1 text-sm font-medium text-ink transition-colors duration-200 hover:text-primary"
+              className="inline-flex items-center gap-1 font-sans text-[14px] font-medium text-header-muted transition-colors duration-200 hover:text-header-navy"
             >
               More
-              <ChevronDownIcon className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180" />
+              <ChevronDownIcon className="h-3 w-3 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180" />
             </button>
-            <div className="invisible absolute left-0 top-full z-10 mt-2 min-w-48 -translate-y-1 rounded-lg border border-line bg-surface py-2.5 opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+            <div className="invisible absolute left-0 top-full z-10 mt-2 min-w-48 -translate-y-1 rounded-lg border border-header-border bg-header-bg py-2.5 opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
               {MORE_NAV_LINKS.map((item) =>
                 item.isExternal ? (
                   <a
@@ -61,7 +68,7 @@ export default function Header() {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-4 py-2.5 text-sm text-ink transition-colors hover:bg-surface-muted"
+                    className="flex items-center gap-1.5 px-4 py-2.5 text-sm text-header-navy transition-colors hover:bg-surface-muted"
                   >
                     {item.label}
                     <ExternalLinkIcon className="h-3.5 w-3.5" />
@@ -71,7 +78,7 @@ export default function Header() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="block px-4 py-2.5 text-sm text-ink transition-colors hover:bg-surface-muted"
+                    className="block px-4 py-2.5 text-sm text-header-navy transition-colors hover:bg-surface-muted"
                   >
                     {item.label}
                   </Link>
@@ -81,22 +88,22 @@ export default function Header() {
           </div>
         </nav>
 
-        <div className="hidden items-center gap-6 xl:flex">
-          {ACADEMY_PHONE && (
+        <div className="hidden items-center gap-[28px] xl:flex">
+          {KRITPREP_LINK && (
             <a
-              href={`tel:${ACADEMY_PHONE}`}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-ink transition-colors duration-200 hover:text-primary"
+              href={KRITPREP_LINK.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 font-sans text-[15px] font-semibold text-header-muted/85 transition-colors duration-200 hover:text-header-navy"
             >
-              <PhoneIcon className="h-4 w-4 shrink-0" />
-              <span>{ACADEMY_PHONE}</span>
+              {KRITPREP_LINK.label}
+              <ExternalLinkIcon className="h-3.5 w-3.5" />
+              <span className="sr-only"> – opens KRITPrep, an external platform, in a new tab</span>
             </a>
           )}
-          <Button
-            href={PRIMARY_CTA_HREF}
-            variant="primary"
-            className="!rounded-lg !px-7 !py-3.5 !transition-all !duration-200 hover:-translate-y-0.5 hover:shadow-md"
-          >
+          <Button href={PRIMARY_CTA_HREF} variant="headerPrimary">
             {PRIMARY_CTA_LABEL}
+            <ArrowRightIcon className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
           </Button>
         </div>
 

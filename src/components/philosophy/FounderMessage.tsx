@@ -3,7 +3,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 
 const MESSAGE_PARAGRAPHS = [
   "Education is not merely a pathway to a profession it is a responsibility to society.",
-  "Every student who joins Visveshwarayya Academy comes with a dream. Our responsibility is to transform that dream into knowledge, confidence, character, and purpose. Success is not measured only by ranks or admissions, but by the positive impact our students create in the lives of others.",
+  "Every student who joins Vishweshwarayya Academy comes with a dream. Our responsibility is to transform that dream into knowledge, confidence, character, and purpose. Success is not measured only by ranks or admissions, but by the positive impact our students create in the lives of others.",
   "Our academy was established with the belief that quality education should never be limited by financial circumstances or geographical location. Through research-driven learning, instructional technology, innovative teaching methods, and a culture of discipline, we strive to prepare students who are not only successful in competitive examinations but also responsible citizens of our nation.",
 ];
 

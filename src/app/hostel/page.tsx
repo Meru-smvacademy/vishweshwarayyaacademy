@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import HostelHero from "@/components/hostel/HostelHero";
-import AccommodationSection from "@/components/hostel/AccommodationSection";
-import HostelFacilitiesSection from "@/components/hostel/HostelFacilitiesSection";
-import StudentLifeSection from "@/components/hostel/StudentLifeSection";
-import HostelContactSection from "@/components/hostel/HostelContactSection";
-import ProseSection from "@/components/ui/ProseSection";
-import AdmissionCta from "@/components/home/AdmissionCta";
-import { ABOUT_TEXT } from "@/content/hostel";
+import HostelFacilitiesGridSection from "@/components/hostel/HostelFacilitiesGridSection";
+import SeparateResidencesSection from "@/components/hostel/SeparateResidencesSection";
+import HostelFinalCtaSection from "@/components/hostel/HostelFinalCtaSection";
 
 export const metadata: Metadata = {
-  title: "Hostel Facilities — Visveshwarayya NEET | JEE Academy",
+  title: "Hostel Facilities — Vishweshwarayya NEET | JEE Academy",
   description: "",
 };
 
@@ -18,18 +14,11 @@ export default function HostelPage() {
     <>
       <HostelHero />
 
-      <ProseSection
-        eyebrow="About Our Hostels"
-        title="About Our Hostels"
-        blocks={[{ type: "p", text: ABOUT_TEXT }]}
-      />
+      <HostelFacilitiesGridSection />
 
-      <AccommodationSection />
-      <HostelFacilitiesSection />
-      <StudentLifeSection />
-      <HostelContactSection />
+      <SeparateResidencesSection />
 
-      <AdmissionCta />
+      <HostelFinalCtaSection />
     </>
   );
 }

@@ -62,12 +62,12 @@ export default function LearningEcosystem() {
     <section className="bg-surface-muted py-14 sm:py-20">
       <Container>
         <div className="mx-auto max-w-3xl">
-          <SectionHeading eyebrow="Our Ecosystem" title="The Visveshwarayya Learning Ecosystem" align="left" />
+          <SectionHeading eyebrow="Our Ecosystem" title="The Vishweshwarayya Learning Ecosystem" align="left" />
           <p className="mt-6 text-base leading-relaxed text-ink sm:text-lg">
             Education is a complete ecosystem not a classroom alone.
           </p>
           <p className="mt-4 text-base leading-relaxed text-ink sm:text-lg">
-            Visveshwarayya Academy has developed an integrated learning ecosystem where every stage of a
+            Vishweshwarayya Academy has developed an integrated learning ecosystem where every stage of a
             student&rsquo;s journey is connected.
           </p>
         </div>

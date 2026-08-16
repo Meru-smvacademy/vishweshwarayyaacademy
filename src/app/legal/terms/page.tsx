@@ -8,7 +8,7 @@ import FinalCta from "@/components/home/FinalCta";
 import { CONTACT_INTRO, LAST_UPDATED, TERMS_SECTIONS } from "@/content/termsConditions";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions — Visveshwarayya NEET | JEE Academy",
+  title: "Terms & Conditions — Vishweshwarayya NEET | JEE Academy",
   description: "",
 };
 

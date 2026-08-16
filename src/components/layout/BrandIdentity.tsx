@@ -18,7 +18,7 @@ export default function BrandIdentity({ className = "" }: BrandIdentityProps) {
       />
       <div className="flex flex-col justify-center">
         <span className="whitespace-nowrap font-manrope text-[22px] font-extrabold leading-[0.98] tracking-[-0.028em] -ml-[0.055em] text-brand-heading [font-feature-settings:'kern'_1] md:text-[28px] xl:text-[32px]">
-          VISVESHWARAYYA
+          VISHWESHWARAYYA
         </span>
         <span className="mt-[5px] whitespace-nowrap font-manrope text-[12px] font-extrabold leading-none tracking-[0.2835em] -mr-[0.2835em] text-brand-tagline md:mt-[6px] md:text-[14px] xl:mt-[7px] xl:text-[15px]">
           NEET | JEE ACADEMY

@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
 import AcademicPathwaysIntro from "@/components/courses/AcademicPathwaysIntro";
-import ProgramsSection from "@/components/courses/ProgramsSection";
+import ChooseYourPath from "@/components/courses/ChooseYourPath";
 import LearningAdvantage from "@/components/courses/LearningAdvantage";
-import KritEcosystem from "@/components/courses/KritEcosystem";
-import KritCounselling from "@/components/courses/KritCounselling";
-import AdmissionJourney from "@/components/courses/AdmissionJourney";
-import FinalCta from "@/components/home/FinalCta";
+import CoursesAdmissionCta from "@/components/courses/CoursesAdmissionCta";
 
 export const metadata: Metadata = {
-  title: "Academic Pathways — Visveshwarayya NEET | JEE Academy",
+  title: "Academic Pathways — Vishweshwarayya NEET | JEE Academy",
   description: "",
 };
 
@@ -16,12 +13,9 @@ export default function CoursesPage() {
   return (
     <>
       <AcademicPathwaysIntro />
-      <ProgramsSection />
+      <ChooseYourPath />
       <LearningAdvantage />
-      <KritEcosystem />
-      <KritCounselling />
-      <AdmissionJourney />
-      <FinalCta />
+      <CoursesAdmissionCta />
     </>
   );
 }

@@ -4,7 +4,7 @@ import FaqSection from "@/components/faq/FaqSection";
 import FinalCta from "@/components/home/FinalCta";
 
 export const metadata: Metadata = {
-  title: "FAQ — Visveshwarayya NEET | JEE Academy",
+  title: "FAQ — Vishweshwarayya NEET | JEE Academy",
   description: "",
 };
 

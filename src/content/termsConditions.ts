@@ -13,7 +13,7 @@ export const TERMS_SECTIONS: TermsSection[] = [
     blocks: [
       {
         type: "p",
-        text: "These Terms & Conditions govern your use of this website and your relationship with Visveshwarayya NEET | JEE Academy (\"we\", \"us\", or \"our\") as a prospective or enrolled student, or as a parent/guardian acting on a student's behalf.",
+        text: "These Terms & Conditions govern your use of this website and your relationship with Vishweshwarayya NEET | JEE Academy (\"we\", \"us\", or \"our\") as a prospective or enrolled student, or as a parent/guardian acting on a student's behalf.",
       },
       {
         type: "p",
@@ -77,7 +77,7 @@ export const TERMS_SECTIONS: TermsSection[] = [
     blocks: [
       {
         type: "p",
-        text: "Students enrolled at Visveshwarayya Academy are expected to:",
+        text: "Students enrolled at Vishweshwarayya Academy are expected to:",
       },
       {
         type: "ul",
@@ -113,7 +113,7 @@ export const TERMS_SECTIONS: TermsSection[] = [
     blocks: [
       {
         type: "p",
-        text: "The content on this website — including text, images, the academy name, and logo — is the property of Visveshwarayya NEET | JEE Academy and may not be copied, reproduced, or used without our prior written permission.",
+        text: "The content on this website — including text, images, the academy name, and logo — is the property of Vishweshwarayya NEET | JEE Academy and may not be copied, reproduced, or used without our prior written permission.",
       },
       {
         type: "p",

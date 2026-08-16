@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import GalleryHero from "@/components/gallery/GalleryHero";
-import GalleryGrid from "@/components/gallery/GalleryGrid";
-import FinalCta from "@/components/home/FinalCta";
+import GalleryPhotoGridSection from "@/components/gallery/GalleryPhotoGridSection";
 
 export const metadata: Metadata = {
-  title: "Gallery — Visveshwarayya NEET | JEE Academy",
+  title: "Gallery — Vishweshwarayya NEET | JEE Academy",
   description: "",
 };
 
@@ -12,8 +11,7 @@ export default function GalleryPage() {
   return (
     <>
       <GalleryHero />
-      <GalleryGrid />
-      <FinalCta />
+      <GalleryPhotoGridSection />
     </>
   );
 }

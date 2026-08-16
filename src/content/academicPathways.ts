@@ -13,21 +13,6 @@ export type AcademicProgram = {
   assessment?: ProgramSection;
 };
 
-export const INTRODUCTION: ContentBlock[] = [
-  {
-    type: "p",
-    text: "Visveshwarayya NEET | JEE Academy offers carefully designed Academic Pathways that support students at every stage of their educational journey.",
-  },
-  {
-    type: "p",
-    text: "From building strong fundamentals in school to preparing for competitive examinations and guiding students through college admissions, every program is built on research-driven learning, instructional technology, and continuous academic support.",
-  },
-  {
-    type: "p",
-    text: "Our Academic Pathways are designed not only to help students achieve excellent examination results but also to develop conceptual understanding, confidence, discipline, and lifelong learning skills.",
-  },
-];
-
 export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
   {
     slug: "foundation",
@@ -69,7 +54,7 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
     teachingMethodology: [
       {
         type: "p",
-        text: "The Foundation Program follows the same educational philosophy that defines every Visveshwarayya Academy program.",
+        text: "The Foundation Program follows the same educational philosophy that defines every Vishweshwarayya Academy program.",
       },
       {
         type: "p",
@@ -187,7 +172,7 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
     assessment: [
       {
         type: "p",
-        text: "Assessment at Visveshwarayya Academy is designed to measure understanding, identify learning gaps, and guide continuous improvement rather than simply assigning marks.",
+        text: "Assessment at Vishweshwarayya Academy is designed to measure understanding, identify learning gaps, and guide continuous improvement rather than simply assigning marks.",
       },
       { type: "p", text: "The NEET Achievement Program includes:" },
       {
@@ -667,100 +652,3 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
   },
 ];
 
-export const LEARNING_ADVANTAGE = {
-  intro:
-    "Every Academic Pathway at Visveshwarayya Academy is built upon a common educational philosophy and a commitment to academic excellence.",
-  leadIn: "Regardless of the program a student chooses, every learner benefits from:",
-  items: [
-    "Research-Driven Curriculum",
-    "Instructional Technology",
-    "3D Interactive Learning",
-    "Experienced Faculty Mentoring",
-    "Continuous Academic Assessment",
-    "KRIT Academic Ecosystem",
-    "Computer-Based Testing (CBT)",
-    "Performance Analytics",
-    "Personalised Academic Guidance",
-    "KRIT Counselling for College Admissions",
-  ],
-  closing:
-    "Our objective is not only to help students perform well in examinations but also to develop confident, disciplined, and responsible learners who are prepared for future success.",
-};
-
-export const KRIT_ECOSYSTEM = {
-  intro: "KRIT is the digital academic ecosystem developed by Visveshwarayya Academy to extend learning beyond the classroom.",
-  leadIn: "Every student benefits from technology-enabled academic support through:",
-  groups: [
-    {
-      title: "KRIT Learning",
-      items: ["Digital learning resources", "Recorded lectures", "Study materials", "Assignments"],
-    },
-    {
-      title: "KRIT CBT",
-      items: ["Computer-Based Tests", "Chapter tests", "Mock examinations", "Instant result generation"],
-    },
-    {
-      title: "KRIT Academic Report System",
-      items: [
-        "Digital marks cards",
-        "Academic progress reports",
-        "Parent-friendly performance reports",
-        "Student rankings",
-      ],
-    },
-    {
-      title: "KRIT Analytics",
-      items: ["Subject-wise analysis", "Chapter-wise analysis", "Performance trends", "Improvement tracking"],
-    },
-    {
-      title: "KRIT Counselling",
-      items: ["College guidance", "Counselling support", "Admission assistance", "Career guidance"],
-    },
-  ],
-  closing: "KRIT ensures that students receive continuous academic support from classroom learning to college admission.",
-};
-
-export const KRIT_COUNSELLING: ContentBlock[] = [
-  {
-    type: "p",
-    text: "Success is not measured only by examination results but by securing admission into the right institution.",
-  },
-  {
-    type: "p",
-    text: "KRIT Counselling is a dedicated platform that supports students after the declaration of NEET, JEE, and KCET results.",
-  },
-  { type: "p", text: "The platform provides:" },
-  {
-    type: "ul",
-    items: [
-      "Counselling guidance",
-      "College selection assistance",
-      "Option entry guidance",
-      "Seat planning support",
-      "Document verification guidance",
-      "Admission process support",
-      "Career guidance",
-    ],
-  },
-  {
-    type: "p",
-    text: "Our commitment to students continues beyond the examination until they successfully begin the next stage of their academic journey.",
-  },
-];
-
-export const ADMISSION_JOURNEY = {
-  intro: "Every student at Visveshwarayya Academy follows a carefully designed academic journey.",
-  steps: [
-    "Admission to Visveshwarayya Academy",
-    "Research-Driven Learning",
-    "Instructional Technology",
-    "3D Interactive Learning",
-    "KRIT Academic Ecosystem",
-    "Continuous Assessment & CBT",
-    "Performance Analytics",
-    "NEET / JEE / KCET Examination",
-    "KRIT Counselling",
-    "College Admission",
-  ],
-  closing: "Come to Learn. Go to Serve.",
-};

@@ -8,7 +8,7 @@ import FinalCta from "@/components/home/FinalCta";
 import { CONTACT_INTRO, LAST_UPDATED, PRIVACY_SECTIONS } from "@/content/privacyPolicy";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Visveshwarayya NEET | JEE Academy",
+  title: "Privacy Policy — Vishweshwarayya NEET | JEE Academy",
   description: "",
 };
 

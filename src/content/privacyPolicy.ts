@@ -13,7 +13,7 @@ export const PRIVACY_SECTIONS: PrivacySection[] = [
     blocks: [
       {
         type: "p",
-        text: "Visveshwarayya NEET | JEE Academy (\"we\", \"us\", or \"our\") operates this website to share information about our NEET, JEE, and KCET coaching programs and to allow prospective students and parents to enquire about admissions.",
+        text: "Vishweshwarayya NEET | JEE Academy (\"we\", \"us\", or \"our\") operates this website to share information about our NEET, JEE, and KCET coaching programs and to allow prospective students and parents to enquire about admissions.",
       },
       {
         type: "p",

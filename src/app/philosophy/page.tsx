@@ -6,7 +6,7 @@ import FounderMessage from "@/components/philosophy/FounderMessage";
 import FinalCta from "@/components/home/FinalCta";
 
 export const metadata: Metadata = {
-  title: "Our Philosophy — Visveshwarayya NEET | JEE Academy",
+  title: "Our Philosophy — Vishweshwarayya NEET | JEE Academy",
   description: "",
 };
 
@@ -20,7 +20,7 @@ export default function PhilosophyPage() {
         title="Why We Exist"
         paragraphs={[
           "Every talented student deserves an equal opportunity to pursue excellence, regardless of financial circumstances or geographical location.",
-          "Visveshwarayya NEET | JEE Academy was established to ensure that students from North Karnataka receive the same quality of education, academic guidance, and opportunities available in larger cities without having to leave their hometowns.",
+          "Vishweshwarayya NEET | JEE Academy was established to ensure that students from North Karnataka receive the same quality of education, academic guidance, and opportunities available in larger cities without having to leave their hometowns.",
           "We believe that talent exists everywhere. Opportunity should too.",
         ]}
       />
@@ -36,7 +36,7 @@ export default function PhilosophyPage() {
           "For many students in our region, the dream of becoming a doctor or an engineer ended immediately after Class 10—not because they lacked ability, but because affordable science education and competitive coaching were simply unavailable.",
           "Instead of accepting this reality, we chose to change it.",
           "For more than nine years, we researched how students from our educational environment learn, where they struggle, and how teaching can be redesigned to help them succeed.",
-          "That research became the foundation of Visveshwarayya Academy.",
+          "That research became the foundation of Vishweshwarayya Academy.",
         ]}
       />
 
@@ -46,7 +46,7 @@ export default function PhilosophyPage() {
         paragraphs={[
           "Learning is not about completing chapters.",
           "Learning is about creating understanding.",
-          "At Visveshwarayya Academy, every lesson is designed using Instructional Technology so that students actively understand, participate, apply, and remember concepts.",
+          "At Vishweshwarayya Academy, every lesson is designed using Instructional Technology so that students actively understand, participate, apply, and remember concepts.",
           "We believe students should never be passive listeners.",
           "They should become active learners.",
           "Instead of simply delivering lectures, we create learning experiences using instructional technology, interactive teaching methods, and continuous reinforcement so that every student develops deep conceptual understanding rather than memorizing information.",
@@ -60,10 +60,10 @@ export default function PhilosophyPage() {
         title="The Legacy That Inspires Us"
         quote="Empowering Students. Empowering the Nation."
         paragraphs={[
-          "Visveshwarayya Academy was built upon a legacy of educational service.",
+          "Vishweshwarayya Academy was built upon a legacy of educational service.",
           "Our founder, Ramesh Tegginamani, carried forward the lifelong belief of his father, Sayabanna N. Tegginamani, that education belongs to every child regardless of income or circumstance.",
           "Sayabanna N. Tegginamani donated his own land to establish a school so that children in his village would have access to education. That selfless act became the foundation of a lifelong commitment to educational service.",
-          "Today, every classroom, every student, every scholarship, and every success achieved at Visveshwarayya Academy continues that legacy of service through education.",
+          "Today, every classroom, every student, every scholarship, and every success achieved at Vishweshwarayya Academy continues that legacy of service through education.",
         ]}
       />
 

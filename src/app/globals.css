@@ -19,6 +19,43 @@
 
   --brand-heading: #112b5a;
   --brand-tagline: #f47a20;
+
+  /* Scholarship banner palette — exact hex values from the approved SNT
+     scholarship SVG source. Scoped to this section; distinct from
+     --primary/--accent, which use different exact hex values. */
+  --scholarship-navy: #163a63;
+  --scholarship-navy-light: #1e3a5f;
+  --scholarship-gold: #d4a853;
+  --scholarship-muted: #64748b;
+  --scholarship-cream: #fffdf7;
+  --scholarship-surface: #f5f5f5;
+
+  /* Footer accent gold — exact hex value from the approved premium-footer
+     Figma source, distinct from --scholarship-gold. The footer's navy
+     background reuses --scholarship-navy (#163a63), same exact value. */
+  --footer-gold: #c9a96e;
+
+  /* Header 25 palette — exact hex values from the approved Figma header
+     source. Distinct from --primary/--accent/--scholarship-navy. */
+  --header-navy: #171f38;
+  --header-amber: #d1941f;
+  --header-muted: #596170;
+  --header-bg: #fefdfc;
+  --header-border: #edebe8;
+
+  /* Descriptor two-tone treatment — "NEET | JEE" in a deeper navy than the
+     wordmark, "ACADEMY" in a brighter refined gold. Both distinct exact
+     values from --header-navy/--header-amber. */
+  --header-descriptor-navy: #0b1a3a;
+  --header-gold: #e3a72f;
+
+  /* Teaching-loop section palette — exact values from the approved
+     "Teaching That Adapts to the Learner" reference. Deliberately close
+     to --primary/--accent (the site's existing navy/gold identity) but
+     kept as distinct exact values, matching the approved source. */
+  --teaching-navy: #0d1b2e;
+  --teaching-amber: #d4882a;
+  --teaching-cream: #f2ede4;
 }
 
 @theme inline {
@@ -40,9 +77,33 @@
   --color-brand-heading: var(--brand-heading);
   --color-brand-tagline: var(--brand-tagline);
 
+  --color-scholarship-navy: var(--scholarship-navy);
+  --color-scholarship-navy-light: var(--scholarship-navy-light);
+  --color-scholarship-gold: var(--scholarship-gold);
+  --color-scholarship-muted: var(--scholarship-muted);
+  --color-scholarship-cream: var(--scholarship-cream);
+  --color-scholarship-surface: var(--scholarship-surface);
+  --color-footer-gold: var(--footer-gold);
+
+  --color-header-navy: var(--header-navy);
+  --color-header-amber: var(--header-amber);
+  --color-header-descriptor-navy: var(--header-descriptor-navy);
+  --color-header-gold: var(--header-gold);
+  --color-header-muted: var(--header-muted);
+  --color-header-bg: var(--header-bg);
+  --color-header-border: var(--header-border);
+
+  --color-teaching-navy: var(--teaching-navy);
+  --color-teaching-amber: var(--teaching-amber);
+  --color-teaching-cream: var(--teaching-cream);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-manrope: var(--font-manrope);
+  --font-inter: var(--font-inter);
+  --font-outfit: var(--font-outfit);
+  --font-fraunces: var(--font-fraunces);
+  --font-playfair-display: var(--font-playfair-display);
 }
 
 body {
@@ -53,4 +114,29 @@ body {
 
 summary::-webkit-details-marker {
   display: none;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+  }
+
+  .teaching-loop-dot animateMotion {
+    display: none;
+  }
 }

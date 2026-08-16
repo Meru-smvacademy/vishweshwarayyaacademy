@@ -21,8 +21,9 @@ export const NAV_LINKS: NavLink[] = [
   { label: "About", href: "/about", desktopPrimary: true },
   { label: "Courses", href: "/courses", desktopPrimary: true },
   { label: "Admissions", href: "/admissions", desktopPrimary: true },
-  { label: "Our Team", href: `${KRITPREP_URL}/our-team`, isExternal: true },
+  { label: "Founder", href: "/founder" },
   { label: "SNT Scholarship", href: "/scholarship" },
+  { label: "Results", href: "/results" },
   { label: "Hostel", href: "/hostel" },
   { label: "Gallery", href: "/gallery" },
   { label: "Contact", href: "/contact", desktopPrimary: true },
@@ -39,26 +40,32 @@ export type FooterLinkGroup = {
 
 export const FOOTER_LINK_GROUPS: FooterLinkGroup[] = [
   {
-    heading: "About",
+    heading: "Academy",
     links: [
-      { label: "Institution", href: "/about" },
+      { label: "About Us", href: "/about" },
       { label: "Our Team", href: `${KRITPREP_URL}/our-team`, isExternal: true },
       { label: "Campus", href: "/about/infrastructure" },
       { label: "Hostel", href: "/hostel" },
       { label: "Gallery", href: "/gallery" },
-      { label: "FAQ", href: "/faq" },
     ],
   },
   {
     heading: "Programs",
-    links: [{ label: "Courses", href: "/courses" }],
+    links: [
+      { label: "NEET", href: "/courses" },
+      { label: "JEE", href: "/courses" },
+      { label: "KCET", href: "/courses" },
+      { label: "Foundation", href: "/courses" },
+      { label: "SNT Scholarship", href: "/scholarship" },
+    ],
   },
   {
     heading: "Admissions",
     links: [
-      { label: "Apply Now", href: PRIMARY_CTA_HREF },
-      { label: "SNT Scholarship", href: "/scholarship" },
-      { label: "Contact", href: "/contact" },
+      { label: "Apply for Admission", href: PRIMARY_CTA_HREF },
+      { label: "Admission Process", href: "/admissions" },
+      { label: "Contact Us", href: "/contact" },
+      { label: "FAQ", href: "/faq" },
     ],
   },
 ];

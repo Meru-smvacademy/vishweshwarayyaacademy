@@ -8,7 +8,7 @@ export default function Logo({ className = "" }: LogoProps) {
   return (
     <Image
       src="/branding/logo.svg"
-      alt="Visveshwarayya NEET | JEE Academy"
+      alt="Vishweshwarayya NEET | JEE Academy"
       width={979}
       height={1091}
       priority

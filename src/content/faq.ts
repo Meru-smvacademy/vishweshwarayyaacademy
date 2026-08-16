@@ -73,12 +73,12 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
     items: [
       {
         question: "How can I contact the academy?",
-        answer: ["+91 96119 19028", "+91 89516 33963", "info@visveshwarayyaacademy.com"],
+        answer: ["+91 96119 19028", "+91 89516 33963", "info@vishweshwarayyaacademy.com"],
       },
       {
-        question: "Where is Visveshwarayya Academy located?",
+        question: "Where is Vishweshwarayya Academy located?",
         answer: [
-          "Lingasuguru Campus: Opposite Annadanegouda Hospital, Lingasuguru, Karnataka, India",
+          "Lingasuguru Campus: Sir M Visveshwarayya PU Science Arts Commerce College, Opposite to Annadanegowda Hospital, Raichuru Bypass Road, Lingasuguru, Karnataka, India",
           "Sindhanur Campus: Sri Kanakadasa Degree College Campus, Kustagi Road, Sindhanur – 584128, Raichur District, Karnataka, India",
         ],
       },

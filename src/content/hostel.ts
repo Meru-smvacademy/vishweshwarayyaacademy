@@ -1,5 +1,5 @@
 export const ABOUT_TEXT =
-  "Visveshwarayya Academy provides its own hostel facilities with separate accommodation for boys and girls.";
+  "Vishweshwarayya Academy provides its own hostel facilities with separate accommodation for boys and girls.";
 
 export const ACCOMMODATION: string[] = ["Boys' Hostel", "Girls' Hostel"];
 

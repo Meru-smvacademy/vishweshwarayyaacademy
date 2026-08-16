@@ -68,6 +68,22 @@ export function ExternalLinkIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function ArrowUpRightIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M16.9992 16.9992V7.0008H7.0008M16.9992 7.0008L7.0008 16.9992" />
+    </svg>
+  );
+}
+
 export function PhoneIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -520,6 +536,23 @@ export function UserCheckIcon(props: SVGProps<SVGSVGElement>) {
       <circle cx="9" cy="8" r="3.5" />
       <path d="M3 20c0-3 2.7-5.5 6-5.5s6 2.5 6 5.5" />
       <path d="m15.5 12 1.8 1.8L21 10" />
+    </svg>
+  );
+}
+
+export function ArrowRightIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M5 12h14M13 6l6 6-6 6" />
     </svg>
   );
 }
