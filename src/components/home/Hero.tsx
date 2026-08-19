@@ -212,12 +212,12 @@ export default function Hero() {
             }}
           >
             <Image
-              src="https://images.unsplash.com/photo-1770967004881-5e8795cb5fde?w=1200&h=900&fit=crop&auto=format"
-              alt="Sir M Vishweshwarayya NEET JEE Academy campus building"
+              src="/images/hero/hero-illustration.png"
+              alt="Illustration of NEET and JEE aspirants representing Sir M Vishweshwarayya NEET | JEE Academy's academic pathways"
               fill
               priority
               sizes="(max-width: 900px) 100vw, 50vw"
-              style={{ objectFit: "cover", objectPosition: "center top" }}
+              style={{ objectFit: "cover", objectPosition: "right center" }}
             />
 
             <div

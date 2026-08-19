@@ -2,6 +2,8 @@
 
 import { useState, type FormEvent, type ReactNode } from "react";
 import {
+  ACADEMIC_YEARS,
+  DEFAULT_ACADEMIC_YEAR,
   EDUCATION_COMPLETED_OPTIONS,
   SCHOLARSHIP_PATHWAYS,
   validateScholarshipApplication,
@@ -30,6 +32,7 @@ const initialValues: ScholarshipApplicationValues = {
   schoolCollegeName: "",
   nativePlace: "",
   phone: "",
+  academicYear: DEFAULT_ACADEMIC_YEAR,
   companyWebsite: "",
 };
 
@@ -86,6 +89,7 @@ export default function ScholarshipApplicationForm() {
   const [errors, setErrors] = useState<ScholarshipApplicationFieldErrors>({});
   const [status, setStatus] = useState<SubmitState>("idle");
   const [focused, setFocused] = useState<string | null>(null);
+  const [referenceNo, setReferenceNo] = useState<string | null>(null);
 
   function updateField<K extends keyof ScholarshipApplicationValues>(
     field: K,
@@ -100,7 +104,8 @@ export default function ScholarshipApplicationForm() {
       values.educationCompleted &&
       values.schoolCollegeName.trim() &&
       values.nativePlace.trim() &&
-      values.phone.trim()
+      values.phone.trim() &&
+      values.academicYear
   );
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -126,6 +131,8 @@ export default function ScholarshipApplicationForm() {
         throw new Error("Submission failed");
       }
 
+      const data = await response.json();
+      setReferenceNo(data.referenceNo ?? null);
       setStatus("success");
     } catch {
       setStatus("error");
@@ -135,6 +142,7 @@ export default function ScholarshipApplicationForm() {
   function resetForm() {
     setValues(initialValues);
     setErrors({});
+    setReferenceNo(null);
     setStatus("idle");
   }
 
@@ -153,10 +161,15 @@ export default function ScholarshipApplicationForm() {
           <h2 style={{ fontFamily: DISPLAY, color: NAVY }} className="mb-3 text-3xl font-semibold">
             Application Received
           </h2>
-          <p style={{ color: MUTED }} className="mb-8 text-base leading-relaxed">
+          <p style={{ color: MUTED }} className="mb-3 text-base leading-relaxed">
             Thank you, {values.studentName.split(" ")[0]}. We&apos;ve received your scholarship
             enquiry and will be in touch shortly.
           </p>
+          {referenceNo && (
+            <p style={{ fontFamily: SANS, fontSize: "13px", color: MUTED }} className="mb-8">
+              Reference number: <span style={{ fontWeight: 600, color: NAVY }}>{referenceNo}</span>
+            </p>
+          )}
           <button
             type="button"
             onClick={resetForm}
@@ -312,6 +325,28 @@ export default function ScholarshipApplicationForm() {
                   autoComplete="tel"
                   aria-invalid={Boolean(errors.phone)}
                 />
+              </Field>
+            </div>
+
+            <div>
+              <Field label="Academic Year" htmlFor="academicYear" isFocused={focused === "academicYear"} error={errors.academicYear}>
+                <select
+                  id="academicYear"
+                  value={values.academicYear}
+                  onChange={(e) => updateField("academicYear", e.target.value)}
+                  onFocus={() => setFocused("academicYear")}
+                  onBlur={() => setFocused(null)}
+                  className="w-full cursor-pointer appearance-none bg-transparent text-base font-light"
+                  style={{ fontFamily: SANS, color: NAVY }}
+                  aria-invalid={Boolean(errors.academicYear)}
+                >
+                  {ACADEMIC_YEARS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <ChevronIcon />
               </Field>
             </div>
 

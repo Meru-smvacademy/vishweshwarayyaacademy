@@ -6,11 +6,13 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import ContactCard from "@/components/ui/ContactCard";
 import FinalCta from "@/components/home/FinalCta";
 import { CONTACT_INTRO, LAST_UPDATED, TERMS_SECTIONS } from "@/content/termsConditions";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Terms & Conditions — Vishweshwarayya NEET | JEE Academy",
-  description: "",
-};
+  description: "The Terms & Conditions for Sir M Vishweshwarayya NEET | JEE Academy's website and admissions process.",
+  path: "/legal/terms",
+});
 
 export default function TermsPage() {
   return (

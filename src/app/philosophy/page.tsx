@@ -4,11 +4,14 @@ import PhilosophySection from "@/components/philosophy/PhilosophySection";
 import LearningEcosystem from "@/components/philosophy/LearningEcosystem";
 import FounderMessage from "@/components/philosophy/FounderMessage";
 import FinalCta from "@/components/home/FinalCta";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Our Philosophy — Vishweshwarayya NEET | JEE Academy",
-  description: "",
-};
+  description:
+    "The mission and teaching philosophy behind Sir M Vishweshwarayya NEET | JEE Academy — come to learn, go to serve.",
+  path: "/philosophy",
+});
 
 export default function PhilosophyPage() {
   return (

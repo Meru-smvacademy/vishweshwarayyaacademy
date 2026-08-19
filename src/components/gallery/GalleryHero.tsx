@@ -1,6 +1,6 @@
-"use client";
-
-import { useState, type CSSProperties } from "react";
+import { createClient } from "@/lib/supabase/server";
+import { getGalleryPhotoUrl } from "@/lib/supabase/storage";
+import GalleryHeroTile from "@/components/gallery/GalleryHeroTile";
 
 const DISPLAY = "var(--font-dm-serif-display), Georgia, serif";
 const SANS = "var(--font-inter), sans-serif";
@@ -9,117 +9,50 @@ const GROUND = "#0c0b09";
 const INK = "#f0ebe2";
 const ACCENT = "#c4a46b";
 
-type PhotoTileProps = {
-  label: string;
-  src?: string;
-  alt?: string;
-  style?: CSSProperties;
-  priority?: boolean;
-};
+// Fixed 6-tile mosaic composition — each position keeps its original label
+// even when no real photo is available yet, so the layout never depends on
+// exactly 6 published photos existing. Positions beyond the number of real,
+// published gallery photos fall back to the existing honest placeholder
+// (GalleryHeroTile already renders one whenever no src is passed) — no
+// photos are invented or duplicated to fill gaps.
+const TILE_LABELS = [
+  "01 — Classrooms",
+  "02 — Students",
+  "03 — Campus",
+  "04 — Lab",
+  "05 — Library",
+  "06 — Events",
+];
 
-function PhotoTile({ label, src, alt, style = {}, priority = false }: PhotoTileProps) {
-  const [loaded, setLoaded] = useState(false);
+type HeroPhoto = { src: string; alt: string };
 
-  return (
-    <div style={{ position: "relative", overflow: "hidden", background: "#1c1a16", ...style }}>
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E\")",
-          backgroundSize: "200px 200px",
-          zIndex: 1,
-          pointerEvents: "none",
-        }}
-      />
+async function getHeroPhotos(): Promise<HeroPhoto[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("gallery_photos")
+    .select("id, title, photo_path")
+    .eq("is_published", true)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: true })
+    .limit(TILE_LABELS.length);
 
-      {src ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={alt ?? label}
-          loading={priority ? "eager" : "lazy"}
-          onLoad={() => setLoaded(true)}
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            opacity: loaded ? 1 : 0,
-            transition: "opacity 0.6s ease",
-            zIndex: 2,
-          }}
-        />
-      ) : (
-        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              inset: 0,
-              backgroundImage:
-                "repeating-linear-gradient(-45deg, transparent, transparent 18px, rgba(240,235,226,0.03) 18px, rgba(240,235,226,0.03) 19px)",
-            }}
-          />
-          <span
-            style={{
-              fontFamily: SANS,
-              fontSize: "9px",
-              fontWeight: 500,
-              letterSpacing: "0.18em",
-              color: "rgba(240,235,226,0.22)",
-              textTransform: "uppercase",
-              userSelect: "none",
-              position: "relative",
-              zIndex: 1,
-              textAlign: "center",
-              padding: "0 1rem",
-              lineHeight: 1.6,
-            }}
-          >
-            Academy
-            <br />
-            Photograph
-          </span>
-        </div>
-      )}
+  if (error || !data) {
+    return [];
+  }
 
-      <span
-        style={{
-          position: "absolute",
-          top: "12px",
-          left: "14px",
-          fontFamily: SANS,
-          fontSize: "8px",
-          fontWeight: 600,
-          letterSpacing: "0.2em",
-          textTransform: "uppercase",
-          color: "rgba(196,164,107,0.55)",
-          zIndex: 10,
-          pointerEvents: "none",
-        }}
-      >
-        {label}
-      </span>
-
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "radial-gradient(ellipse at center, transparent 55%, rgba(12,11,9,0.55) 100%)",
-          zIndex: 3,
-          pointerEvents: "none",
-        }}
-      />
-    </div>
-  );
+  const photos: HeroPhoto[] = [];
+  for (const row of data) {
+    const src = getGalleryPhotoUrl(row.photo_path);
+    if (!src) continue;
+    photos.push({ src, alt: row.title });
+  }
+  return photos;
 }
 
-export default function GalleryHero() {
+export default async function GalleryHero() {
+  const photos = await getHeroPhotos();
+  const tiles = TILE_LABELS.map((label, i) => ({ label, photo: photos[i] }));
+
   return (
     <section
       className="gallery-hero"
@@ -247,12 +180,12 @@ export default function GalleryHero() {
             alignItems: "stretch",
           }}
         >
-          <PhotoTile label="01 — Classrooms" priority style={{ gridColumn: "1 / 3", gridRow: "1" }} />
-          <PhotoTile label="02 — Students" style={{ gridColumn: "3", gridRow: "1 / 3" }} />
-          <PhotoTile label="03 — Campus" style={{ gridColumn: "1", gridRow: "2" }} />
-          <PhotoTile label="04 — Lab" style={{ gridColumn: "2", gridRow: "2" }} />
-          <PhotoTile label="05 — Library" style={{ gridColumn: "1 / 3", gridRow: "3" }} />
-          <PhotoTile label="06 — Events" style={{ gridColumn: "3", gridRow: "3" }} />
+          <GalleryHeroTile label={tiles[0].label} src={tiles[0].photo?.src} alt={tiles[0].photo?.alt} priority style={{ gridColumn: "1 / 3", gridRow: "1" }} />
+          <GalleryHeroTile label={tiles[1].label} src={tiles[1].photo?.src} alt={tiles[1].photo?.alt} style={{ gridColumn: "3", gridRow: "1 / 3" }} />
+          <GalleryHeroTile label={tiles[2].label} src={tiles[2].photo?.src} alt={tiles[2].photo?.alt} style={{ gridColumn: "1", gridRow: "2" }} />
+          <GalleryHeroTile label={tiles[3].label} src={tiles[3].photo?.src} alt={tiles[3].photo?.alt} style={{ gridColumn: "2", gridRow: "2" }} />
+          <GalleryHeroTile label={tiles[4].label} src={tiles[4].photo?.src} alt={tiles[4].photo?.alt} style={{ gridColumn: "1 / 3", gridRow: "3" }} />
+          <GalleryHeroTile label={tiles[5].label} src={tiles[5].photo?.src} alt={tiles[5].photo?.alt} style={{ gridColumn: "3", gridRow: "3" }} />
         </div>
       </div>
 

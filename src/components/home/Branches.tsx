@@ -31,7 +31,7 @@ export default function Branches() {
           </p>
         </div>
 
-        <div className="mt-8 flex flex-col gap-8 sm:flex-row">
+        <div className="mt-8 flex flex-col gap-8 xl:flex-row">
           {CAMPUSES.map((campus) => (
             <BranchCard key={campus.name} {...campus} />
           ))}

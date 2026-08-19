@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { KRITPREP_URL } from "@/config/nav";
+import { createClient } from "@/lib/supabase/server";
+import { getFacultyPhotoUrl } from "@/lib/supabase/storage";
 
 const NAVY = "#0C1B2E";
 const AMBER = "#A8762A";
@@ -9,14 +11,6 @@ const CREAM = "#EAE0CC";
 const FRAUNCES = "var(--font-fraunces), Georgia, serif";
 const SOURCE_SANS = "var(--font-source-sans-3), sans-serif";
 
-// Locked placeholder portrait pool — kept until real faculty photographs are
-// supplied. Self-hosted (not hotlinked) per the project's existing image
-// architecture; same photos/order as the approved design.
-const PHOTOS = Array.from(
-  { length: 15 },
-  (_, i) => `/images/faculty/portrait-${String(i).padStart(2, "0")}.jpg`,
-);
-
 const LABEL_SIZES = {
   sm: { name: "9px", sub: "8.5px", pad: "16px 14px", ghost: "28px" },
   md: { name: "10px", sub: "9px", pad: "20px 18px", ghost: "36px" },
@@ -25,16 +19,65 @@ const LABEL_SIZES = {
 
 type LabelSize = keyof typeof LABEL_SIZES;
 
+type FacultyTile = {
+  id: string;
+  name: string;
+  label: string;
+  photoUrl: string;
+};
+
+// Fetches published faculty with a photo, split into the two campus walls
+// this composition is built around. Faculty with no campus assigned, no
+// photo, or is_published = false are intentionally excluded — never shown
+// publicly. Ordered display_order ASC then created_at ASC, per-campus.
+async function getPublishedFaculty(): Promise<{ lingasuguru: FacultyTile[]; sindhanur: FacultyTile[] }> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("faculty")
+    .select("id, name, subject, designation, photo_path, campus")
+    .eq("is_published", true)
+    .in("campus", ["Lingasuguru", "Sindhanur"])
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error || !data) {
+    return { lingasuguru: [], sindhanur: [] };
+  }
+
+  const lingasuguru: FacultyTile[] = [];
+  const sindhanur: FacultyTile[] = [];
+
+  for (const row of data) {
+    const photoUrl = getFacultyPhotoUrl(row.photo_path);
+    if (!photoUrl) continue; // this is a photo wall — skip faculty with no photo yet
+
+    const tile: FacultyTile = {
+      id: row.id,
+      name: row.name,
+      label: row.subject ? `${row.subject} · ${row.designation}` : row.designation,
+      photoUrl,
+    };
+
+    if (row.campus === "Lingasuguru") {
+      lingasuguru.push(tile);
+    } else if (row.campus === "Sindhanur") {
+      sindhanur.push(tile);
+    }
+  }
+
+  return { lingasuguru, sindhanur };
+}
+
 // Hover treatment (amber rule, image scale/filter) is driven by CSS
 // group-hover — visually identical to the approved design's per-slot hover
 // state, without needing client-side JS for what is purely a `:hover` effect.
 function PortraitSlot({
-  photo,
+  faculty,
   index,
   labelSize = "sm",
   gradientHeight = 100,
 }: {
-  photo: string;
+  faculty: FacultyTile;
   index: number;
   labelSize?: LabelSize;
   gradientHeight?: number;
@@ -60,8 +103,8 @@ function PortraitSlot({
 
       {/* Photo */}
       <Image
-        src={photo}
-        alt={`Faculty portrait placeholder ${index + 1}`}
+        src={faculty.photoUrl}
+        alt={faculty.name}
         fill
         sizes="(min-width: 880px) 25vw, 50vw"
         className="scale-100 object-cover object-[center_top] [filter:saturate(0.82)_brightness(0.88)] group-hover:scale-[1.038] group-hover:[filter:saturate(1)_brightness(1.04)]"
@@ -83,7 +126,7 @@ function PortraitSlot({
           className="m-0 mb-[3px] uppercase"
           style={{ fontFamily: SOURCE_SANS, fontSize: fs.name, fontWeight: 600, letterSpacing: "0.15em", color: AMBER2 }}
         >
-          Faculty Name
+          {faculty.name}
         </p>
         <p
           className="m-0 uppercase"
@@ -95,7 +138,7 @@ function PortraitSlot({
             color: "rgba(234,224,204,0.62)",
           }}
         >
-          Subject · Designation
+          {faculty.label}
         </p>
       </div>
     </div>
@@ -152,61 +195,77 @@ function CampusDivider({ number, name }: { number: string; name: string }) {
   );
 }
 
-// Lingasuguru — 10-portrait composition (3 · 4 · 3 tiers)
-function LingasugurWall({ photos }: { photos: string[] }) {
+// Lingasuguru — up to 10-portrait composition (3 · 4 · 3 tiers). Renders
+// only the tiles that have real, published faculty — a slot with no
+// corresponding faculty member simply doesn't render, rather than inventing
+// or duplicating data to fill the original 10-slot design.
+function LingasugurWall({ faculty }: { faculty: FacultyTile[] }) {
   return (
     <div className="flex flex-col gap-[10px]">
       <div className="grid grid-cols-2 gap-[10px] min-[880px]:grid-cols-[1fr_1.32fr_1fr]">
-        {[0, 1, 2].map((i) => (
-          <div key={i} className="relative" style={{ aspectRatio: "3/4" }}>
-            <PortraitSlot photo={photos[i]} index={i} labelSize={i === 1 ? "lg" : "md"} gradientHeight={i === 1 ? 130 : 100} />
-          </div>
-        ))}
+        {[0, 1, 2].map((i) =>
+          faculty[i] ? (
+            <div key={faculty[i].id} className="relative" style={{ aspectRatio: "3/4" }}>
+              <PortraitSlot faculty={faculty[i]} index={i} labelSize={i === 1 ? "lg" : "md"} gradientHeight={i === 1 ? 130 : 100} />
+            </div>
+          ) : null,
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-[10px] min-[880px]:grid-cols-4">
-        {[3, 4, 5, 6].map((i) => (
-          <div key={i} className="relative" style={{ aspectRatio: "4/5" }}>
-            <PortraitSlot photo={photos[i]} index={i} labelSize="sm" gradientHeight={85} />
-          </div>
-        ))}
+        {[3, 4, 5, 6].map((i) =>
+          faculty[i] ? (
+            <div key={faculty[i].id} className="relative" style={{ aspectRatio: "4/5" }}>
+              <PortraitSlot faculty={faculty[i]} index={i} labelSize="sm" gradientHeight={85} />
+            </div>
+          ) : null,
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-[10px] min-[880px]:grid-cols-3">
-        {[7, 8, 9].map((i) => (
-          <div key={i} className="relative" style={{ aspectRatio: "3/4" }}>
-            <PortraitSlot photo={photos[i]} index={i} labelSize="md" gradientHeight={100} />
-          </div>
-        ))}
+        {[7, 8, 9].map((i) =>
+          faculty[i] ? (
+            <div key={faculty[i].id} className="relative" style={{ aspectRatio: "3/4" }}>
+              <PortraitSlot faculty={faculty[i]} index={i} labelSize="md" gradientHeight={100} />
+            </div>
+          ) : null,
+        )}
       </div>
     </div>
   );
 }
 
-// Sindhanur — 5-portrait composition (2 · 3)
-function SindhanurWall({ photos }: { photos: string[] }) {
+// Sindhanur — up to 5-portrait composition (2 · 3). Same partial-fill
+// behavior as LingasugurWall above.
+function SindhanurWall({ faculty }: { faculty: FacultyTile[] }) {
   return (
     <div className="flex flex-col gap-[10px]">
       <div className="grid grid-cols-2 gap-[10px] min-[880px]:grid-cols-[1.1fr_1fr]">
-        {[0, 1].map((i) => (
-          <div key={i} className="relative" style={{ aspectRatio: "3/4" }}>
-            <PortraitSlot photo={photos[i]} index={i} labelSize={i === 0 ? "lg" : "md"} gradientHeight={i === 0 ? 130 : 110} />
-          </div>
-        ))}
+        {[0, 1].map((i) =>
+          faculty[i] ? (
+            <div key={faculty[i].id} className="relative" style={{ aspectRatio: "3/4" }}>
+              <PortraitSlot faculty={faculty[i]} index={i} labelSize={i === 0 ? "lg" : "md"} gradientHeight={i === 0 ? 130 : 110} />
+            </div>
+          ) : null,
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-[10px] min-[880px]:grid-cols-3">
-        {[2, 3, 4].map((i) => (
-          <div key={i} className="relative" style={{ aspectRatio: "4/5" }}>
-            <PortraitSlot photo={photos[i]} index={i} labelSize="sm" gradientHeight={90} />
-          </div>
-        ))}
+        {[2, 3, 4].map((i) =>
+          faculty[i] ? (
+            <div key={faculty[i].id} className="relative" style={{ aspectRatio: "4/5" }}>
+              <PortraitSlot faculty={faculty[i]} index={i} labelSize="sm" gradientHeight={90} />
+            </div>
+          ) : null,
+        )}
       </div>
     </div>
   );
 }
 
-export default function TheFaculty() {
+export default async function TheFaculty() {
+  const { lingasuguru, sindhanur } = await getPublishedFaculty();
+
   return (
     <section className="relative w-full overflow-hidden" style={{ backgroundColor: NAVY, fontFamily: SOURCE_SANS }}>
       {/* Subtle noise texture */}
@@ -271,34 +330,40 @@ export default function TheFaculty() {
         </div>
 
         {/* Lingasuguru */}
-        <div style={{ marginBottom: "clamp(48px,6vw,84px)" }}>
-          <CampusDivider number="01" name="Lingasuguru" />
-          <LingasugurWall photos={PHOTOS.slice(0, 10)} />
-        </div>
+        {lingasuguru.length > 0 && (
+          <div style={{ marginBottom: "clamp(48px,6vw,84px)" }}>
+            <CampusDivider number="01" name="Lingasuguru" />
+            <LingasugurWall faculty={lingasuguru} />
+          </div>
+        )}
 
-        {/* Inter-campus bridge */}
-        <div className="mb-[clamp(40px,5vw,68px)] flex items-center gap-5">
-          <div className="h-px flex-1" style={{ backgroundColor: `${CREAM}10` }} />
-          <span
-            style={{
-              fontFamily: FRAUNCES,
-              fontStyle: "italic",
-              fontWeight: 300,
-              fontSize: "clamp(10px,1.1vw,13px)",
-              color: `${CREAM}28`,
-              letterSpacing: "0.1em",
-            }}
-          >
-            ✦
-          </span>
-          <div className="h-px flex-1" style={{ backgroundColor: `${CREAM}10` }} />
-        </div>
+        {/* Inter-campus bridge — only meaningful when both walls have content */}
+        {lingasuguru.length > 0 && sindhanur.length > 0 && (
+          <div className="mb-[clamp(40px,5vw,68px)] flex items-center gap-5">
+            <div className="h-px flex-1" style={{ backgroundColor: `${CREAM}10` }} />
+            <span
+              style={{
+                fontFamily: FRAUNCES,
+                fontStyle: "italic",
+                fontWeight: 300,
+                fontSize: "clamp(10px,1.1vw,13px)",
+                color: `${CREAM}28`,
+                letterSpacing: "0.1em",
+              }}
+            >
+              ✦
+            </span>
+            <div className="h-px flex-1" style={{ backgroundColor: `${CREAM}10` }} />
+          </div>
+        )}
 
         {/* Sindhanur */}
-        <div style={{ marginBottom: "clamp(48px,6vw,84px)" }}>
-          <CampusDivider number="02" name="Sindhanur" />
-          <SindhanurWall photos={PHOTOS.slice(10, 15)} />
-        </div>
+        {sindhanur.length > 0 && (
+          <div style={{ marginBottom: "clamp(48px,6vw,84px)" }}>
+            <CampusDivider number="02" name="Sindhanur" />
+            <SindhanurWall faculty={sindhanur} />
+          </div>
+        )}
 
         {/* Footer CTA */}
         <div

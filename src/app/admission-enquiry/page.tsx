@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import EnquiryForm from "@/components/enquiry/EnquiryForm";
 import { PROGRAMS } from "@/lib/validation/enquiry";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Admission Enquiry — Vishweshwarayya NEET | JEE Academy",
-  description: "",
-};
+  description:
+    "Send an admission enquiry to Sir M Vishweshwarayya NEET | JEE Academy and hear back from our team about NEET, JEE and KCET programs at the Lingasuguru and Sindhanur campuses.",
+  path: "/admission-enquiry",
+});
 
 const NAVY = "#0f1f3d";
 const GOLD = "#c9993f";

@@ -19,25 +19,22 @@ const PROGRAMS = [
     number: "01",
     program: "Foundation",
     title: "Build Strong Foundations",
-    image:
-      "https://images.unsplash.com/photo-1483546416237-76fd26bbcdd1?w=900&h=640&fit=crop&auto=format",
-    alt: "Pencil resting on an open book, academic study",
+    image: "/images/academic-pathways/foundation.png",
+    alt: "Illustration representing academic foundation — graduation cap, books and core subject symbols",
   },
   {
     number: "02",
     program: "NEET",
     title: "Medical Excellence",
-    image:
-      "https://images.unsplash.com/photo-1676313496812-f8fc7c4304cf?w=900&h=640&fit=crop&auto=format",
-    alt: "Stethoscope resting on medical study books",
+    image: "/images/academic-pathways/neet.png",
+    alt: "Illustration representing medical studies — stethoscope, DNA helix and microscope",
   },
   {
     number: "03",
     program: "JEE",
     title: "Engineering Excellence",
-    image:
-      "https://images.unsplash.com/photo-1764740109279-c7a8abd78821?w=900&h=640&fit=crop&auto=format",
-    alt: "Engineering desk with laptop, blueprints and technical tools",
+    image: "/images/academic-pathways/jee.png",
+    alt: "Illustration representing engineering studies — rocket launch with engineering iconography",
   },
 ];
 
