@@ -7,6 +7,10 @@ export const SCHOLARSHIP_PATHWAYS = [
 
 export const EDUCATION_COMPLETED_OPTIONS = ["Class 10", "Class 12"];
 
+export const ACADEMIC_YEARS = ["2026–27", "2027–28"];
+
+export const DEFAULT_ACADEMIC_YEAR = ACADEMIC_YEARS[0];
+
 export type ScholarshipApplicationValues = {
   studentName: string;
   applyingFor: string;
@@ -14,6 +18,7 @@ export type ScholarshipApplicationValues = {
   schoolCollegeName: string;
   nativePlace: string;
   phone: string;
+  academicYear: string;
   companyWebsite: string;
 };
 
@@ -54,6 +59,10 @@ export function validateScholarshipApplication(
 
   if (!PHONE_PATTERN.test(normalizePhone(values.phone))) {
     errors.phone = "Enter a valid 10-digit mobile number.";
+  }
+
+  if (!ACADEMIC_YEARS.includes(values.academicYear)) {
+    errors.academicYear = "Select the academic year.";
   }
 
   return errors;

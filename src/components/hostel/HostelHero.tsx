@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { PRIMARY_CTA_HREF } from "@/config/nav";
 
@@ -158,23 +157,64 @@ export default function HostelHero() {
         </footer>
       </div>
 
-      {/* Right panel — Hostel view */}
-      <div className="hostel-hero-image relative" style={{ overflow: "hidden", backgroundColor: GROUND }}>
-        <Image
-          src="https://images.unsplash.com/photo-1782814246975-97b553e56e2a?w=1400&h=1800&fit=crop&auto=format&q=85"
-          alt="Clean, modern hostel room with study desk, laptop and window — residential living space"
-          fill
-          priority
-          sizes="(max-width: 900px) 100vw, 50vw"
-          style={{ objectFit: "cover", objectPosition: "center" }}
-        />
+      {/* Right panel — Hostel view. No real hostel photograph is available yet; this is a
+          deliberate, honest placeholder (matching the pattern used for infrastructure and
+          gallery items awaiting photos) rather than stock imagery presented as if it were
+          the real hostel. */}
+      <div
+        className="hostel-hero-image relative"
+        style={{ overflow: "hidden", backgroundColor: GROUND, display: "flex", alignItems: "center", justifyContent: "center" }}
+      >
+        <svg
+          aria-hidden="true"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <pattern id="hostel-placeholder-grid" width="56" height="56" patternUnits="userSpaceOnUse">
+              <path d="M 56 0 L 0 0 0 56" fill="none" stroke="rgba(200,150,62,0.08)" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#hostel-placeholder-grid)" />
+        </svg>
+
+        <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem", padding: "0 2rem", textAlign: "center" }}>
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={AMBER} strokeWidth="1.1" opacity={0.6}>
+            <path d="M3 21V9.5L12 3l9 6.5V21" strokeLinejoin="round" />
+            <path d="M8 21v-7h8v7" strokeLinejoin="round" />
+          </svg>
+          <span
+            style={{
+              fontFamily: BODY,
+              fontSize: "0.6875rem",
+              fontWeight: 500,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: AMBER,
+              opacity: 0.75,
+            }}
+          >
+            Hostel Photography
+          </span>
+          <span
+            style={{
+              fontFamily: BODY,
+              fontSize: "0.6875rem",
+              fontWeight: 400,
+              letterSpacing: "0.04em",
+              color: MUTED,
+            }}
+          >
+            Real photographs coming soon.
+          </span>
+        </div>
 
         <div
           style={{
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(to right, #0D1117 0%, rgba(13,17,23,0.6) 25%, rgba(13,17,23,0.15) 55%, transparent 100%)",
+              "linear-gradient(to right, #0D1117 0%, rgba(13,17,23,0.35) 25%, rgba(13,17,23,0.1) 55%, transparent 100%)",
             pointerEvents: "none",
           }}
         />
@@ -182,11 +222,10 @@ export default function HostelHero() {
           style={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(to top, rgba(13,17,23,0.9) 0%, transparent 40%)",
+            background: "linear-gradient(to top, rgba(13,17,23,0.65) 0%, transparent 40%)",
             pointerEvents: "none",
           }}
         />
-        <div style={{ position: "absolute", inset: 0, background: "rgba(13,17,23,0.25)", pointerEvents: "none" }} />
 
         <div
           style={{

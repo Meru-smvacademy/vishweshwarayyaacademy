@@ -1,73 +1,69 @@
-"use client";
+import { createClient } from "@/lib/supabase/server";
+import { getInfrastructurePhotoUrl } from "@/lib/supabase/storage";
+import InfraItem from "@/components/infrastructure/InfraItem";
+import { INFRASTRUCTURE_AREAS } from "@/content/infrastructure";
 
-import { useState } from "react";
-import InfrastructureImagePlaceholder from "@/components/infrastructure/InfrastructureImagePlaceholder";
-import { INFRASTRUCTURE_AREAS, type InfrastructureArea } from "@/content/infrastructure";
-
-const NAVY = "#0c1a2e";
-const IVORY = "#f4efe5";
 const GOLD = "#b8933c";
-
-const DISPLAY = "var(--font-playfair-display), Georgia, serif";
-const SANS = "var(--font-inter), sans-serif";
+const IVORY = "#f4efe5";
 const MONO = "var(--font-dm-mono), 'Courier New', monospace";
 
-const ASPECT_MAP: Record<InfrastructureArea["size"], string> = {
-  large: "3 / 4",
-  medium: "4 / 3",
-  wide: "16 / 7",
-};
+type CategoryContent = { description: string | null; imageUrl: string | null };
 
-function InfraItem({ area }: { area: InfrastructureArea }) {
-  const [hovered, setHovered] = useState(false);
+// The public page has exactly one card per approved category — it always
+// has, and isn't being redesigned into a flexible list. When more than one
+// published item shares a category, the first one (by display_order, then
+// created_at) is the representative shown here; any others in that same
+// category aren't shown on this page, since there's no slot for them.
+async function getRepresentativeByCategory(): Promise<Record<string, CategoryContent>> {
+  const supabase = await createClient();
 
-  return (
-    <article
-      style={{ display: "flex", flexDirection: "column" }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <div style={{ width: "100%", height: "1px", backgroundColor: NAVY, opacity: 0.2, marginBottom: "1rem" }} />
+  const { data: items, error } = await supabase
+    .from("infrastructure_items")
+    .select("id, category, description")
+    .eq("is_published", true)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: true });
 
-      <div style={{ display: "flex", alignItems: "baseline", gap: "1rem", marginBottom: "0.75rem" }}>
-        <span style={{ fontFamily: MONO, fontSize: "10px", letterSpacing: "0.25em", color: GOLD, lineHeight: 1, flexShrink: 0 }}>
-          {area.num}
-        </span>
-        <h3
-          style={{
-            fontFamily: DISPLAY,
-            fontSize: "1.125rem",
-            fontWeight: 500,
-            letterSpacing: "0.04em",
-            color: NAVY,
-            textTransform: "uppercase",
-            lineHeight: 1,
-            margin: 0,
-          }}
-        >
-          {area.title}
-        </h3>
-      </div>
+  if (error || !items || items.length === 0) {
+    return {};
+  }
 
-      <InfrastructureImagePlaceholder label={area.title} aspectRatio={ASPECT_MAP[area.size]} className="mb-4" />
+  const representativeByCategory = new Map<string, { id: string; description: string | null }>();
+  for (const item of items) {
+    if (!representativeByCategory.has(item.category)) {
+      representativeByCategory.set(item.category, { id: item.id, description: item.description });
+    }
+  }
 
-      <p style={{ fontFamily: SANS, fontSize: "0.875rem", color: "#4a4a4a", lineHeight: 1.6, margin: "1rem 0 0.75rem" }}>
-        {area.description}
-      </p>
+  const representativeIds = Array.from(representativeByCategory.values()).map((entry) => entry.id);
 
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", opacity: hovered ? 1 : 0, transition: "opacity 0.3s" }}>
-        <span style={{ fontFamily: MONO, fontSize: "10px", letterSpacing: "0.2em", color: GOLD, textTransform: "uppercase" }}>
-          Explore
-        </span>
-        <span style={{ color: GOLD, fontSize: "12px" }} aria-hidden="true">
-          →
-        </span>
-      </div>
-    </article>
-  );
+  const { data: photos } = await supabase
+    .from("infrastructure_photos")
+    .select("infrastructure_id, photo_path")
+    .in("infrastructure_id", representativeIds)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  const firstPhotoPathByItemId = new Map<string, string>();
+  for (const photo of photos ?? []) {
+    if (!firstPhotoPathByItemId.has(photo.infrastructure_id)) {
+      firstPhotoPathByItemId.set(photo.infrastructure_id, photo.photo_path);
+    }
+  }
+
+  const result: Record<string, CategoryContent> = {};
+  for (const [category, { id, description }] of representativeByCategory) {
+    result[category] = {
+      description: description?.trim() ? description.trim() : null,
+      imageUrl: getInfrastructurePhotoUrl(firstPhotoPathByItemId.get(id) ?? null),
+    };
+  }
+
+  return result;
 }
 
-export default function InfrastructureGrid() {
+export default async function InfrastructureGrid() {
+  const representativeByCategory = await getRepresentativeByCategory();
   const [campus, smartClassrooms, scienceLabs, digitalLearning, library, studyEnvironment] = INFRASTRUCTURE_AREAS;
 
   return (
@@ -81,18 +77,42 @@ export default function InfrastructureGrid() {
         </div>
 
         <div className="infra-row-1" style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem", marginBottom: "3rem" }}>
-          <InfraItem area={campus} />
-          <InfraItem area={smartClassrooms} />
-          <InfraItem area={scienceLabs} />
+          <InfraItem
+            area={campus}
+            description={representativeByCategory[campus.title]?.description ?? null}
+            imageUrl={representativeByCategory[campus.title]?.imageUrl ?? null}
+          />
+          <InfraItem
+            area={smartClassrooms}
+            description={representativeByCategory[smartClassrooms.title]?.description ?? null}
+            imageUrl={representativeByCategory[smartClassrooms.title]?.imageUrl ?? null}
+          />
+          <InfraItem
+            area={scienceLabs}
+            description={representativeByCategory[scienceLabs.title]?.description ?? null}
+            imageUrl={representativeByCategory[scienceLabs.title]?.imageUrl ?? null}
+          />
         </div>
 
         <div style={{ marginBottom: "3rem" }}>
-          <InfraItem area={digitalLearning} />
+          <InfraItem
+            area={digitalLearning}
+            description={representativeByCategory[digitalLearning.title]?.description ?? null}
+            imageUrl={representativeByCategory[digitalLearning.title]?.imageUrl ?? null}
+          />
         </div>
 
         <div className="infra-row-3" style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }}>
-          <InfraItem area={library} />
-          <InfraItem area={studyEnvironment} />
+          <InfraItem
+            area={library}
+            description={representativeByCategory[library.title]?.description ?? null}
+            imageUrl={representativeByCategory[library.title]?.imageUrl ?? null}
+          />
+          <InfraItem
+            area={studyEnvironment}
+            description={representativeByCategory[studyEnvironment.title]?.description ?? null}
+            imageUrl={representativeByCategory[studyEnvironment.title]?.imageUrl ?? null}
+          />
         </div>
       </div>
 

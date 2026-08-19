@@ -6,11 +6,13 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import ContactCard from "@/components/ui/ContactCard";
 import FinalCta from "@/components/home/FinalCta";
 import { CONTACT_INTRO, LAST_UPDATED, PRIVACY_SECTIONS } from "@/content/privacyPolicy";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy — Vishweshwarayya NEET | JEE Academy",
-  description: "",
-};
+  description: "The Privacy Policy for Sir M Vishweshwarayya NEET | JEE Academy's website and admissions process.",
+  path: "/legal/privacy",
+});
 
 export default function PrivacyPolicyPage() {
   return (

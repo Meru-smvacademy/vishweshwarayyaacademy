@@ -21,9 +21,8 @@ import {
   Source_Sans_3,
   Work_Sans,
 } from "next/font/google";
-import Header from "@/components/layout/Header";
-import SiteFooter from "@/components/layout/SiteFooter";
-import StickyMobileCta from "@/components/layout/StickyMobileCta";
+import PublicChrome from "@/components/layout/PublicChrome";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -151,8 +150,25 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: "Vishweshwarayya NEET | JEE Academy",
-  description: "",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: "%s",
+  },
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: "/",
+    siteName: SITE_NAME,
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({
@@ -171,12 +187,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <Header />
-        <main id="main-content" className="pb-24 xl:pb-0">
-          {children}
-        </main>
-        <SiteFooter />
-        <StickyMobileCta />
+        <PublicChrome>{children}</PublicChrome>
       </body>
     </html>
   );
