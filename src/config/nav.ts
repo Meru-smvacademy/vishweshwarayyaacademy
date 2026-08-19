@@ -13,7 +13,7 @@ export type NavLink = {
   desktopPrimary?: boolean;
 };
 
-export const KRITPREP_URL = process.env.NEXT_PUBLIC_KRITPREP_URL || "#";
+export const KRITPREP_URL = process.env.NEXT_PUBLIC_KRITPREP_URL || "https://www.kritprep.com";
 export const ACADEMY_PHONE = process.env.NEXT_PUBLIC_ACADEMY_PHONE || "";
 
 export const NAV_LINKS: NavLink[] = [

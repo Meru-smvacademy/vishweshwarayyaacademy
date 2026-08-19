@@ -8,7 +8,12 @@ import { ChevronDownIcon, CloseIcon, ExternalLinkIcon, MenuIcon } from "@/compon
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
-  const close = () => setOpen(false);
+  // Deferred by a tick: closing synchronously in the same click that
+  // triggers a <Link>'s navigation can unmount the drawer (and the link
+  // being clicked) before Next.js finishes handling the click, which
+  // intermittently cancels the navigation on a fast tap. Closing one tick
+  // later lets the navigation start first, every time.
+  const close = () => setTimeout(() => setOpen(false), 0);
 
   return (
     <div className="xl:hidden">
@@ -38,7 +43,7 @@ export default function MobileNav() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={close}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-2 text-base font-semibold text-primary hover:bg-accent/20"
+                    className="touch-manipulation inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-2 text-base font-semibold text-primary hover:bg-accent/20"
                   >
                     {item.label}
                     <ExternalLinkIcon className="h-4 w-4" />
@@ -55,7 +60,7 @@ export default function MobileNav() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={close}
-                    className="rounded-md px-3 py-3 text-base font-medium text-ink hover:bg-surface-muted"
+                    className="touch-manipulation rounded-md px-3 py-3 text-base font-medium text-ink hover:bg-surface-muted"
                   >
                     {item.label}
                     <span className="sr-only"> (opens in a new tab)</span>
@@ -76,7 +81,7 @@ export default function MobileNav() {
                           key={child.href}
                           href={child.href}
                           onClick={close}
-                          className="rounded-md px-3 py-2 text-sm text-muted hover:bg-surface-muted hover:text-ink"
+                          className="touch-manipulation rounded-md px-3 py-2 text-sm text-muted hover:bg-surface-muted hover:text-ink"
                         >
                           {child.label}
                         </Link>
@@ -91,7 +96,7 @@ export default function MobileNav() {
                   key={item.href}
                   href={item.href}
                   onClick={close}
-                  className="rounded-md px-3 py-3 text-base font-medium text-ink hover:bg-surface-muted"
+                  className="touch-manipulation rounded-md px-3 py-3 text-base font-medium text-ink hover:bg-surface-muted"
                 >
                   {item.label}
                 </Link>
