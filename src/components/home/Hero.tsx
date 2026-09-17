@@ -3,13 +3,30 @@ import { PRIMARY_CTA_HREF } from "@/config/nav";
 
 const NAVY = "#0d2249";
 const ORANGE = "#e8640c";
-const ORANGE_LIGHT = "#f97d2a";
 const BG = "#f8fbff";
 
 const DISPLAY = "var(--font-playfair-display), Georgia, serif";
 const BODY = "var(--font-poppins), system-ui, sans-serif";
 
 const LOCATIONS = ["Lingasuguru", "Sindhanur"];
+
+const STUDENT_ALT = "Student at Sir M Vishweshwarayya Academy";
+
+// Two strongest portraits become the overlapping corner cards.
+const FEATURED_STUDENTS = [
+  { src: "/images/hero/student-1.webp", objectPosition: "50% 34%" },
+  { src: "/images/hero/student-5.webp", objectPosition: "50% 32%" },
+];
+
+// Remaining portraits run as overlapping circles along the bottom edge.
+const CIRCLE_STUDENTS = [
+  { src: "/images/hero/student-2.webp", objectPosition: "50% 36%" },
+  { src: "/images/hero/student-4.webp", objectPosition: "50% 38%" },
+  { src: "/images/hero/student-3.webp", objectPosition: "50% 40%" },
+  { src: "/images/hero/student-6.webp", objectPosition: "50% 42%" },
+];
+
+const ALL_STUDENTS = [FEATURED_STUDENTS[0], ...CIRCLE_STUDENTS, FEATURED_STUDENTS[1]];
 
 function PinIcon() {
   return (
@@ -170,90 +187,98 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Right: campus image */}
-        <div className="hero-image-col" style={{ position: "relative", minHeight: 560, display: "flex", alignItems: "center" }}>
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              bottom: 0,
-              width: "38%",
-              background: `linear-gradient(to right, ${BG} 0%, rgba(248,251,255,0) 100%)`,
-              zIndex: 2,
-              pointerEvents: "none",
-            }}
-          />
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: "28%",
-              background: `linear-gradient(to top, ${BG} 0%, rgba(248,251,255,0) 100%)`,
-              zIndex: 2,
-              pointerEvents: "none",
-            }}
-          />
-
-          <div
-            className="hero-image-frame"
-            style={{
-              width: "100%",
-              height: 560,
-              borderRadius: 12,
-              overflow: "hidden",
-              backgroundColor: "#c5d0e0",
-              boxShadow: "0 24px 64px rgba(13,34,73,0.16), 0 4px 16px rgba(13,34,73,0.09)",
-              position: "relative",
-            }}
-          >
-            <Image
-              src="/images/hero/hero-illustration.png"
-              alt="Illustration of NEET and JEE aspirants representing Sir M Vishweshwarayya NEET | JEE Academy's academic pathways"
-              fill
-              priority
-              sizes="(max-width: 900px) 100vw, 50vw"
-              style={{ objectFit: "cover", objectPosition: "right center" }}
-            />
-
+        {/* Right: campus photography */}
+        <div className="hero-image-col" style={{ position: "relative", minHeight: 616, display: "flex", alignItems: "center" }}>
+          <div className="hero-image-stack" style={{ position: "relative", width: "100%", height: 560 }}>
             <div
-              aria-hidden="true"
+              className="hero-image-frame"
               style={{
                 position: "absolute",
                 inset: 0,
-                background: "linear-gradient(180deg, rgba(13,34,73,0.04) 0%, rgba(13,34,73,0.24) 100%)",
-              }}
-            />
-
-            <div
-              style={{
-                position: "absolute",
-                bottom: 28,
-                left: 28,
-                zIndex: 3,
-                backgroundColor: "rgba(9,22,48,0.87)",
-                backdropFilter: "blur(10px)",
-                WebkitBackdropFilter: "blur(10px)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderLeft: `3px solid ${ORANGE}`,
-                padding: "0.75rem 1.1rem",
-                borderRadius: 5,
+                borderRadius: 12,
+                overflow: "hidden",
+                backgroundColor: "#c5d0e0",
+                boxShadow: "0 24px 64px rgba(13,34,73,0.16), 0 4px 16px rgba(13,34,73,0.09)",
               }}
             >
-              <div style={{ fontSize: "0.46rem", fontWeight: 700, color: ORANGE_LIGHT, letterSpacing: "0.22em", textTransform: "uppercase", lineHeight: 1, marginBottom: 2 }}>
-                Sir M
-              </div>
-              <div style={{ fontFamily: DISPLAY, fontSize: "0.95rem", fontWeight: 700, color: "#ffffff", letterSpacing: "0.06em", lineHeight: 1.1 }}>
-                VISHWESHWARAYYA
-              </div>
-              <div style={{ fontSize: "0.48rem", fontWeight: 600, color: ORANGE_LIGHT, letterSpacing: "0.2em", textTransform: "uppercase", marginTop: 4, opacity: 0.9 }}>
-                NEET | JEE ACADEMY
-              </div>
+              <Image
+                src="/images/hero/campus-building.webp"
+                alt="Sir M Vishweshwarayya Academy campus building"
+                width={1600}
+                height={535}
+                priority
+                sizes="(max-width: 900px) 100vw, 50vw"
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 50%" }}
+              />
+
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "linear-gradient(180deg, rgba(13,34,73,0.04) 0%, rgba(13,34,73,0.24) 100%)",
+                }}
+              />
+
             </div>
+
+            {/* Overlapping portrait cards (>=768px) */}
+            <div className="hero-card hero-card-bl" style={{ position: "absolute", left: -20, bottom: 78, zIndex: 4 }}>
+              <Image
+                src={FEATURED_STUDENTS[0].src}
+                alt={STUDENT_ALT}
+                width={600}
+                height={750}
+                loading="lazy"
+                sizes="(max-width: 900px) 104px, 136px"
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: FEATURED_STUDENTS[0].objectPosition }}
+              />
+            </div>
+            <div className="hero-card hero-card-tr" style={{ position: "absolute", right: -18, top: 44, zIndex: 4 }}>
+              <Image
+                src={FEATURED_STUDENTS[1].src}
+                alt={STUDENT_ALT}
+                width={600}
+                height={750}
+                loading="lazy"
+                sizes="(max-width: 900px) 104px, 136px"
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: FEATURED_STUDENTS[1].objectPosition }}
+              />
+            </div>
+
+            {/* Overlapping circles along the bottom edge (>=768px) */}
+            <div className="hero-circle-row" style={{ position: "absolute", right: 26, bottom: -26, zIndex: 4, display: "flex" }}>
+              {CIRCLE_STUDENTS.map((student, i) => (
+                <div key={student.src} className="hero-circle" style={{ marginLeft: i === 0 ? 0 : -18 }}>
+                  <Image
+                    src={student.src}
+                    alt={STUDENT_ALT}
+                    width={600}
+                    height={750}
+                    loading="lazy"
+                    sizes="(max-width: 900px) 58px, 76px"
+                    style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: student.objectPosition }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile (<768px): 3 x 2 grid below the building */}
+          <div className="hero-student-grid">
+            {ALL_STUDENTS.map((student) => (
+              <div key={student.src} className="hero-student-tile">
+                <Image
+                  src={student.src}
+                  alt={STUDENT_ALT}
+                  width={600}
+                  height={750}
+                  loading="lazy"
+                  sizes="30vw"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: student.objectPosition }}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -281,16 +306,86 @@ export default function Hero() {
           color: #ffffff !important;
           transform: translateY(-1px);
         }
+        .hero-card {
+          width: 136px;
+          height: 180px;
+          border-radius: 14px;
+          overflow: hidden;
+          border: 4px solid #ffffff;
+          background-color: #ffffff;
+          box-shadow: 0 14px 34px rgba(13,34,73,0.22), 0 2px 8px rgba(13,34,73,0.12);
+        }
+        .hero-circle {
+          width: 76px;
+          height: 76px;
+          border-radius: 50%;
+          overflow: hidden;
+          border: 3px solid #ffffff;
+          background-color: #ffffff;
+          box-shadow: 0 8px 20px rgba(13,34,73,0.22);
+        }
+        .hero-student-grid {
+          display: none;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px;
+          width: 100%;
+          margin-top: 14px;
+        }
+        .hero-student-tile {
+          aspect-ratio: 1 / 1;
+          border-radius: 12px;
+          overflow: hidden;
+          background-color: #e6ecf5;
+          box-shadow: 0 6px 18px rgba(13,34,73,0.14);
+        }
         @media (max-width: 900px) {
           .hero-grid {
             grid-template-columns: 1fr !important;
             padding-top: 2rem !important;
           }
           .hero-image-col {
-            min-height: 300px !important;
+            min-height: 400px !important;
           }
-          .hero-image-frame {
-            height: 300px !important;
+          .hero-image-stack {
+            height: 340px !important;
+          }
+          .hero-card {
+            width: 104px;
+            height: 138px;
+            border-width: 3px;
+          }
+          .hero-card-bl {
+            bottom: 58px !important;
+            left: -14px !important;
+          }
+          .hero-card-tr {
+            top: 30px !important;
+            right: -12px !important;
+          }
+          .hero-circle {
+            width: 58px;
+            height: 58px;
+            border-width: 3px;
+          }
+          .hero-circle-row {
+            right: 18px !important;
+            bottom: -18px !important;
+          }
+        }
+        @media (max-width: 767px) {
+          .hero-image-col {
+            display: block !important;
+            min-height: 0 !important;
+          }
+          .hero-image-stack {
+            height: 220px !important;
+          }
+          .hero-card,
+          .hero-circle-row {
+            display: none !important;
+          }
+          .hero-student-grid {
+            display: grid;
           }
         }
       `}</style>
