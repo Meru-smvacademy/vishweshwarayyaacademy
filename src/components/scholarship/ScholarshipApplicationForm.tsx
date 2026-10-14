@@ -1,19 +1,35 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { SNT_EXAM } from "@/content/scholarship";
+import {
+  SNT_CONSENT_TEXT,
+  SNT_MEDIUMS,
+  SNT_PHOTO_MAX_BYTES,
+  SNT_PHOTO_MAX_HEIGHT,
+  SNT_PHOTO_MAX_WIDTH,
+  SNT_PHOTO_MIN_SIDE,
+  SNT_PHOTO_TYPES,
+  SNT_RULES_PDF_PATH,
+  sntRegistrationPath,
+} from "@/lib/snt/constants";
 import {
   ACADEMIC_YEARS,
   DEFAULT_ACADEMIC_YEAR,
   EDUCATION_COMPLETED_OPTIONS,
   SCHOLARSHIP_PATHWAYS,
-  validateScholarshipApplication,
-  type ScholarshipApplicationFieldErrors,
-  type ScholarshipApplicationValues,
 } from "@/lib/validation/scholarshipApplication";
+import {
+  validateSntRegistration,
+  type SntRegistrationFieldErrors,
+  type SntRegistrationValues,
+} from "@/lib/validation/sntRegistration";
 
 const NAVY = "#0F1E3C";
 const GOLD = "#C4922A";
-const MUTED = "#6B7A90";
 const MUTED_LABEL = "#8A95A5";
 const RULE = "#DDD6CC";
 const CARD_BORDER = "#E2DAD0";
@@ -25,7 +41,7 @@ const CREAM = "#F9F6F0";
 const DISPLAY = "var(--font-playfair-display), Georgia, serif";
 const SANS = "var(--font-outfit), system-ui, sans-serif";
 
-const initialValues: ScholarshipApplicationValues = {
+const initialValues: SntRegistrationValues = {
   studentName: "",
   applyingFor: "",
   educationCompleted: "",
@@ -34,9 +50,71 @@ const initialValues: ScholarshipApplicationValues = {
   phone: "",
   academicYear: DEFAULT_ACADEMIC_YEAR,
   companyWebsite: "",
+  parentName: "",
+  medium: "",
+  whatsapp: "",
+  dob: "",
+  centre: "",
+  rulesAccepted: false,
+  consentGiven: false,
 };
 
-type SubmitState = "idle" | "submitting" | "success" | "error";
+type SubmitState = "idle" | "submitting" | "error";
+
+type PreparedPhoto = { blob: Blob; previewUrl: string };
+
+function decodeImage(file: File): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const image = new window.Image();
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(image);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("not an image"));
+    };
+    image.src = url;
+  });
+}
+
+// Decoding the file proves it is a real image (a renamed PDF or text file fails
+// here); re-encoding through a canvas then strips metadata and caps the size.
+async function preparePhoto(file: File): Promise<PreparedPhoto> {
+  if (!SNT_PHOTO_TYPES.includes(file.type)) {
+    throw new Error("Upload a JPG or PNG photo.");
+  }
+  if (file.size > SNT_PHOTO_MAX_BYTES) {
+    throw new Error("The photo must be 4 MB or smaller.");
+  }
+
+  let image: HTMLImageElement;
+  try {
+    image = await decodeImage(file);
+  } catch {
+    throw new Error("This file is not a valid image. Upload a JPG or PNG photo.");
+  }
+
+  const { naturalWidth: width, naturalHeight: height } = image;
+  if (width < SNT_PHOTO_MIN_SIDE || height < SNT_PHOTO_MIN_SIDE) {
+    throw new Error("The photo is too small. Upload a clearer passport photo.");
+  }
+
+  const scale = Math.min(1, SNT_PHOTO_MAX_WIDTH / width, SNT_PHOTO_MAX_HEIGHT / height);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.floor(width * scale));
+  canvas.height = Math.max(1, Math.floor(height * scale));
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Could not process the photo. Try a different browser.");
+  context.fillStyle = "#FFFFFF";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.88));
+  if (!blob) throw new Error("Could not process the photo. Try a different browser.");
+  return { blob, previewUrl: URL.createObjectURL(blob) };
+}
 
 function ChevronIcon() {
   return (
@@ -85,17 +163,40 @@ function Field({
 }
 
 export default function ScholarshipApplicationForm() {
-  const [values, setValues] = useState<ScholarshipApplicationValues>(initialValues);
-  const [errors, setErrors] = useState<ScholarshipApplicationFieldErrors>({});
+  const router = useRouter();
+  const [values, setValues] = useState<SntRegistrationValues>(initialValues);
+  const [errors, setErrors] = useState<SntRegistrationFieldErrors>({});
   const [status, setStatus] = useState<SubmitState>("idle");
   const [focused, setFocused] = useState<string | null>(null);
-  const [referenceNo, setReferenceNo] = useState<string | null>(null);
+  const [photo, setPhoto] = useState<PreparedPhoto | null>(null);
+  const [isPreparingPhoto, setIsPreparingPhoto] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  function updateField<K extends keyof ScholarshipApplicationValues>(
-    field: K,
-    value: ScholarshipApplicationValues[K]
-  ) {
+  useEffect(() => {
+    return () => {
+      if (photo) URL.revokeObjectURL(photo.previewUrl);
+    };
+  }, [photo]);
+
+  function updateField<K extends keyof SntRegistrationValues>(field: K, value: SntRegistrationValues[K]) {
     setValues((prev) => ({ ...prev, [field]: value }));
+  }
+
+  async function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    setIsPreparingPhoto(true);
+    try {
+      setPhoto(await preparePhoto(file));
+      setErrors((prev) => ({ ...prev, photo: undefined }));
+    } catch (error) {
+      setPhoto(null);
+      setErrors((prev) => ({ ...prev, photo: (error as Error).message }));
+    } finally {
+      setIsPreparingPhoto(false);
+    }
   }
 
   const isComplete = Boolean(
@@ -105,82 +206,56 @@ export default function ScholarshipApplicationForm() {
       values.schoolCollegeName.trim() &&
       values.nativePlace.trim() &&
       values.phone.trim() &&
-      values.academicYear
+      values.academicYear &&
+      values.parentName.trim() &&
+      values.medium &&
+      values.dob &&
+      values.centre &&
+      values.rulesAccepted &&
+      values.consentGiven &&
+      photo
   );
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const fieldErrors = validateScholarshipApplication(values);
+    const fieldErrors = validateSntRegistration(values);
+    if (!photo) {
+      fieldErrors.photo = "Upload the student's passport photo.";
+    }
     setErrors(fieldErrors);
 
-    if (Object.keys(fieldErrors).length > 0) {
+    if (Object.keys(fieldErrors).length > 0 || !photo) {
       return;
     }
 
     setStatus("submitting");
+    setSubmitError(null);
+
+    const body = new FormData();
+    for (const [key, value] of Object.entries(values)) {
+      body.append(key, String(value));
+    }
+    body.append("photo", photo.blob, "photo.jpg");
 
     try {
-      const response = await fetch("/api/scholarship-application", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch("/api/scholarship/register", { method: "POST", body });
+      const data = await response.json().catch(() => ({}));
 
-      if (!response.ok) {
-        throw new Error("Submission failed");
+      if (response.status === 422 && data.errors) {
+        setErrors(data.errors);
+        setStatus("idle");
+        return;
+      }
+      if (!response.ok || typeof data.id !== "string") {
+        throw new Error(data.error ?? "Submission failed");
       }
 
-      const data = await response.json();
-      setReferenceNo(data.referenceNo ?? null);
-      setStatus("success");
+      router.push(`${sntRegistrationPath(data.id)}?pay=1`);
     } catch {
+      setSubmitError("Something went wrong while submitting. Please try again, or call us directly.");
       setStatus("error");
     }
-  }
-
-  function resetForm() {
-    setValues(initialValues);
-    setErrors({});
-    setReferenceNo(null);
-    setStatus("idle");
-  }
-
-  if (status === "success") {
-    return (
-      <div style={{ fontFamily: SANS, backgroundColor: CREAM }} className="flex min-h-screen items-center justify-center px-4">
-        <div className="mx-auto max-w-md text-center">
-          <div
-            className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full"
-            style={{ backgroundColor: GOLD }}
-          >
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <path d="M5 14l7 7L23 8" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <h2 style={{ fontFamily: DISPLAY, color: NAVY }} className="mb-3 text-3xl font-semibold">
-            Application Received
-          </h2>
-          <p style={{ color: MUTED }} className="mb-3 text-base leading-relaxed">
-            Thank you, {values.studentName.split(" ")[0]}. We&apos;ve received your scholarship
-            enquiry and will be in touch shortly.
-          </p>
-          {referenceNo && (
-            <p style={{ fontFamily: SANS, fontSize: "13px", color: MUTED }} className="mb-8">
-              Reference number: <span style={{ fontWeight: 600, color: NAVY }}>{referenceNo}</span>
-            </p>
-          )}
-          <button
-            type="button"
-            onClick={resetForm}
-            style={{ color: GOLD, borderColor: GOLD }}
-            className="rounded-full border px-6 py-2 text-sm font-medium transition-all hover:opacity-70"
-          >
-            Submit another application
-          </button>
-        </div>
-      </div>
-    );
   }
 
   return (
@@ -208,6 +283,62 @@ export default function ScholarshipApplicationForm() {
         >
           <div className="grid grid-cols-1 gap-x-8 gap-y-7 px-6 py-8 sm:grid-cols-2 sm:px-10 sm:py-10">
             <div className="sm:col-span-2">
+              <span
+                className="mb-3 block text-xs font-medium uppercase tracking-widest"
+                style={{ fontFamily: SANS, color: errors.photo ? ERROR : MUTED_LABEL, letterSpacing: "0.1em" }}
+              >
+                Student Passport Photo
+              </span>
+              <div className="flex items-center gap-5">
+                <div
+                  className="relative flex h-32 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg"
+                  style={{ border: `1.5px dashed ${errors.photo ? ERROR : photo ? GOLD : RULE}`, backgroundColor: STRIP_BG }}
+                >
+                  {photo ? (
+                    <Image
+                      src={photo.previewUrl}
+                      alt="Preview of the uploaded student photo"
+                      fill
+                      unoptimized
+                      sizes="96px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <circle cx="12" cy="9" r="4" stroke={MUTED_LABEL} strokeWidth="1.3" />
+                      <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" stroke={MUTED_LABEL} strokeWidth="1.3" strokeLinecap="round" />
+                    </svg>
+                  )}
+                </div>
+                <div className="flex flex-col items-start gap-2">
+                  <label
+                    htmlFor="photo"
+                    className="inline-flex min-h-[44px] cursor-pointer items-center rounded-full border px-5 text-sm font-medium transition-all hover:opacity-70"
+                    style={{ fontFamily: SANS, color: GOLD, borderColor: GOLD }}
+                  >
+                    {isPreparingPhoto ? "Processing…" : photo ? "Change photo" : "Upload photo"}
+                  </label>
+                  <input
+                    id="photo"
+                    type="file"
+                    accept="image/jpeg,image/png"
+                    onChange={handlePhotoChange}
+                    className="sr-only"
+                    aria-invalid={Boolean(errors.photo)}
+                  />
+                  <p style={{ fontFamily: SANS, color: "#9AA3B0" }} className="text-xs font-light leading-snug">
+                    Recent passport-size photo · JPG or PNG · max 4 MB. It will be printed on the hall ticket.
+                  </p>
+                </div>
+              </div>
+              {errors.photo && (
+                <p role="alert" style={{ fontFamily: SANS, fontSize: "12px", color: ERROR, margin: "8px 0 0" }}>
+                  {errors.photo}
+                </p>
+              )}
+            </div>
+
+            <div className="sm:col-span-2">
               <Field label="Student Name" htmlFor="studentName" isFocused={focused === "studentName"} error={errors.studentName}>
                 <input
                   id="studentName"
@@ -221,6 +352,23 @@ export default function ScholarshipApplicationForm() {
                   style={{ fontFamily: SANS, color: NAVY }}
                   autoComplete="name"
                   aria-invalid={Boolean(errors.studentName)}
+                />
+              </Field>
+            </div>
+
+            <div className="sm:col-span-2">
+              <Field label="Parent / Guardian Name" htmlFor="parentName" isFocused={focused === "parentName"} error={errors.parentName}>
+                <input
+                  id="parentName"
+                  type="text"
+                  placeholder="Father, mother or guardian"
+                  value={values.parentName}
+                  onChange={(e) => updateField("parentName", e.target.value)}
+                  onFocus={() => setFocused("parentName")}
+                  onBlur={() => setFocused(null)}
+                  className="w-full bg-transparent text-base font-light placeholder:opacity-40"
+                  style={{ fontFamily: SANS, color: NAVY }}
+                  aria-invalid={Boolean(errors.parentName)}
                 />
               </Field>
             </div>
@@ -276,6 +424,31 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div className="sm:col-span-2">
+              <Field label="Medium of Studying" htmlFor="medium" isFocused={focused === "medium"} error={errors.medium}>
+                <select
+                  id="medium"
+                  value={values.medium}
+                  onChange={(e) => updateField("medium", e.target.value)}
+                  onFocus={() => setFocused("medium")}
+                  onBlur={() => setFocused(null)}
+                  className="w-full cursor-pointer appearance-none bg-transparent text-base font-light"
+                  style={{ fontFamily: SANS, color: values.medium ? NAVY : `${NAVY}66` }}
+                  aria-invalid={Boolean(errors.medium)}
+                >
+                  <option value="" disabled hidden>
+                    Select medium
+                  </option>
+                  {SNT_MEDIUMS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <ChevronIcon />
+              </Field>
+            </div>
+
+            <div className="sm:col-span-2">
               <Field label="School / College Name" htmlFor="schoolCollegeName" isFocused={focused === "schoolCollegeName"} error={errors.schoolCollegeName}>
                 <input
                   id="schoolCollegeName"
@@ -310,6 +483,22 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div>
+              <Field label="Date of Birth" htmlFor="dob" isFocused={focused === "dob"} error={errors.dob}>
+                <input
+                  id="dob"
+                  type="date"
+                  value={values.dob}
+                  onChange={(e) => updateField("dob", e.target.value)}
+                  onFocus={() => setFocused("dob")}
+                  onBlur={() => setFocused(null)}
+                  className="w-full bg-transparent text-base font-light"
+                  style={{ fontFamily: SANS, color: values.dob ? NAVY : `${NAVY}66` }}
+                  aria-invalid={Boolean(errors.dob)}
+                />
+              </Field>
+            </div>
+
+            <div>
               <Field label="Phone Number" htmlFor="phone" isFocused={focused === "phone"} error={errors.phone}>
                 <input
                   id="phone"
@@ -324,6 +513,24 @@ export default function ScholarshipApplicationForm() {
                   style={{ fontFamily: SANS, color: NAVY }}
                   autoComplete="tel"
                   aria-invalid={Boolean(errors.phone)}
+                />
+              </Field>
+            </div>
+
+            <div>
+              <Field label="WhatsApp Number (optional)" htmlFor="whatsapp" isFocused={focused === "whatsapp"} error={errors.whatsapp}>
+                <input
+                  id="whatsapp"
+                  type="tel"
+                  inputMode="tel"
+                  placeholder="Same as phone number"
+                  value={values.whatsapp}
+                  onChange={(e) => updateField("whatsapp", e.target.value)}
+                  onFocus={() => setFocused("whatsapp")}
+                  onBlur={() => setFocused(null)}
+                  className="w-full bg-transparent text-base font-light placeholder:opacity-40"
+                  style={{ fontFamily: SANS, color: NAVY }}
+                  aria-invalid={Boolean(errors.whatsapp)}
                 />
               </Field>
             </div>
@@ -350,6 +557,80 @@ export default function ScholarshipApplicationForm() {
               </Field>
             </div>
 
+            <div>
+              <Field label="Exam Centre" htmlFor="centre" isFocused={focused === "centre"} error={errors.centre}>
+                <select
+                  id="centre"
+                  value={values.centre}
+                  onChange={(e) => updateField("centre", e.target.value)}
+                  onFocus={() => setFocused("centre")}
+                  onBlur={() => setFocused(null)}
+                  className="w-full cursor-pointer appearance-none bg-transparent text-base font-light"
+                  style={{ fontFamily: SANS, color: values.centre ? NAVY : `${NAVY}66` }}
+                  aria-invalid={Boolean(errors.centre)}
+                >
+                  <option value="" disabled hidden>
+                    Select centre
+                  </option>
+                  {SNT_EXAM.centres.map((centre) => (
+                    <option key={centre.value} value={centre.value}>
+                      {centre.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronIcon />
+              </Field>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label htmlFor="rulesAccepted" className="flex min-h-[44px] cursor-pointer items-start gap-3">
+                <input
+                  id="rulesAccepted"
+                  type="checkbox"
+                  checked={values.rulesAccepted}
+                  onChange={(e) => updateField("rulesAccepted", e.target.checked)}
+                  className="mt-0.5 h-5 w-5 flex-shrink-0 cursor-pointer"
+                  style={{ accentColor: NAVY }}
+                  aria-invalid={Boolean(errors.rulesAccepted)}
+                />
+                <span style={{ fontFamily: SANS, color: NAVY }} className="text-sm font-light leading-relaxed">
+                  I have read the{" "}
+                  <Link
+                    href={SNT_RULES_PDF_PATH}
+                    target="_blank"
+                    rel="noopener"
+                    className="font-medium underline underline-offset-2"
+                    style={{ color: GOLD }}
+                  >
+                    rules and regulations
+                  </Link>
+                </span>
+              </label>
+              {errors.rulesAccepted && (
+                <p style={{ fontFamily: SANS, fontSize: "12px", color: ERROR, margin: "4px 0 0 32px" }}>{errors.rulesAccepted}</p>
+              )}
+            </div>
+
+            <div className="sm:col-span-2">
+              <label htmlFor="consentGiven" className="flex min-h-[44px] cursor-pointer items-start gap-3">
+                <input
+                  id="consentGiven"
+                  type="checkbox"
+                  checked={values.consentGiven}
+                  onChange={(e) => updateField("consentGiven", e.target.checked)}
+                  className="mt-0.5 h-5 w-5 flex-shrink-0 cursor-pointer"
+                  style={{ accentColor: NAVY }}
+                  aria-invalid={Boolean(errors.consentGiven)}
+                />
+                <span style={{ fontFamily: SANS, color: NAVY }} className="text-sm font-light leading-relaxed">
+                  {SNT_CONSENT_TEXT}
+                </span>
+              </label>
+              {errors.consentGiven && (
+                <p style={{ fontFamily: SANS, fontSize: "12px", color: ERROR, margin: "4px 0 0 32px" }}>{errors.consentGiven}</p>
+              )}
+            </div>
+
             <div aria-hidden="true" className="absolute left-[-9999px] h-px w-px overflow-hidden">
               <label htmlFor="companyWebsite">Leave this field empty</label>
               <input
@@ -370,11 +651,12 @@ export default function ScholarshipApplicationForm() {
           >
             <div className="max-w-xs">
               <p style={{ fontFamily: SANS, color: "#9AA3B0" }} className="text-xs font-light leading-snug">
-                This is a quick first enquiry. Our team will revert back to you shortly.
+                Registration fee ₹{SNT_EXAM.feeRupees} is paid in the next step. Your hall ticket is issued only after
+                the payment is confirmed.
               </p>
-              {status === "error" && (
+              {status === "error" && submitError && (
                 <p role="alert" style={{ fontFamily: SANS, fontSize: "12px", color: ERROR, marginTop: "8px" }}>
-                  Something went wrong while submitting. Please try again, or call us directly.
+                  {submitError}
                 </p>
               )}
             </div>
@@ -390,7 +672,7 @@ export default function ScholarshipApplicationForm() {
                 letterSpacing: "0.03em",
               }}
             >
-              {status === "submitting" ? "Sending…" : "Apply for Scholarship"}
+              {status === "submitting" ? "Saving…" : `Register & Pay ₹${SNT_EXAM.feeRupees}`}
               {status !== "submitting" && (
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

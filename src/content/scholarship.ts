@@ -141,6 +141,45 @@ export const FAQS: ScholarshipFaqItem[] = [
   { question: "Can students from any school apply?", answer: null },
 ];
 
+// ---------------------------------------------------------------------------
+// SNT Scholarship Exam — details printed on the hall ticket and shown on the
+// registration pages. Every value marked TODO is a placeholder that the office
+// must replace before registrations open.
+// ---------------------------------------------------------------------------
+
+export type SntExamCentre = {
+  value: "Lingasugur" | "Sindhanur";
+  label: string;
+  address: string;
+};
+
+export const SNT_EXAM = {
+  name: "SNT SCHOLARSHIP EXAM",
+  academyName: "Sir M Vishweshwarayya NEET | JEE Academy",
+  campusNames: "Lingasugur Campus  ·  Sindhanur Campus",
+  feeRupees: 500,
+  examDate: "TODO: exam date (e.g. Sunday, 15 March 2026)",
+  reportingTime: "TODO: reporting time (e.g. 9:00 AM)",
+  duration: "TODO: exam duration (e.g. 2 hours, 10:00 AM – 12:00 PM)",
+  lastDateOfRegistration: "TODO: last date of registration",
+  scholarshipDetails:
+    "TODO: scholarship / prize details (e.g. ranks 1–10: 100% tuition waiver; ranks 11–50: 50%).",
+  centres: [
+    {
+      value: "Lingasugur",
+      label: "Lingasugur",
+      address: "TODO: full exam-centre address for Lingasugur",
+    },
+    {
+      value: "Sindhanur",
+      label: "Sindhanur",
+      address: "TODO: full exam-centre address for Sindhanur",
+    },
+  ] satisfies SntExamCentre[],
+  documentsNotice:
+    "Bring to the exam hall: (1) this hall ticket, (2) school/college ID card, (3) Aadhaar card. If you do not have a school/college ID card, bring a certificate from your Head Master stating that you are studying in that class. Students without these documents may not be allowed to write the exam.",
+};
+
 export const CONTACT = {
   intro: "For scholarship enquiries, application support, or admission guidance, please contact:",
   closing:
