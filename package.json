@@ -15,6 +15,7 @@
     "@supabase/supabase-js": "^2.112.3",
     "next": "15.5.22",
     "pdf-lib": "^1.17.1",
+    "razorpay": "^2.9.6",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },

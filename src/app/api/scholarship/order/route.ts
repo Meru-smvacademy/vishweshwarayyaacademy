@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { SNT_EXAM } from "@/content/scholarship";
 import { isSntRegistrationOpen } from "@/lib/snt/examSchedule";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createKalbanttOrder } from "@/lib/snt/kalbanttPay";
+import { createSntRazorpayOrder, describeRazorpayError, razorpayKeyId } from "@/lib/snt/razorpay";
 import { getSntRegistration, isUuid } from "@/lib/snt/registrations";
 
 export const runtime = "nodejs";
@@ -26,39 +26,42 @@ export async function POST(request: Request) {
   if (registration.status === "paid") {
     return NextResponse.json({ status: "paid", error: "This registration is already paid." }, { status: 409 });
   }
-  // Callbacks for payments already in flight are still honoured by
-  // payment-status; only new payment attempts stop when the exam begins.
+  // Webhooks for payments already in flight are still honoured; only new
+  // payment attempts stop when the exam begins.
   if (!isSntRegistrationOpen(SNT_EXAM)) {
     return NextResponse.json({ closed: true, error: SNT_EXAM.registrationClosedMessage }, { status: 403 });
   }
 
   let order;
   try {
-    order = await createKalbanttOrder(registration.id);
+    // The amount is fixed in config (SNT_AMOUNT_PAISE); nothing from the request body is used.
+    order = await createSntRazorpayOrder(registration.id);
   } catch (error) {
-    console.error("Could not create SNT order:", error);
+    console.error("Could not create SNT Razorpay order:", { registrationId: registration.id, error: describeRazorpayError(error) });
     return NextResponse.json(
       { error: "The payment service is not reachable right now. Please try again in a minute." },
       { status: 502 },
     );
   }
 
-  // Only the latest order is kept. Moving a failed registration back to
-  // pending lets the browser poll for the outcome of this new attempt.
+  // Only the latest order is kept on the row. The webhook validates a payment
+  // against Razorpay's own order record, so a payment on an earlier order of
+  // the same registration is still recognised.
   const { error } = await createAdminClient()
     .from("scholarship_registrations")
-    .update({ order_id: order.orderId, status: "pending" })
+    .update({ order_id: order.id, status: "pending" })
     .eq("id", registration.id)
     .neq("status", "paid");
 
   if (error) {
-    console.error("Could not store SNT order id:", error);
+    console.error("Could not store SNT order id:", { registrationId: registration.id, error: error.message });
     return NextResponse.json({ error: "Could not start the payment. Please try again." }, { status: 500 });
   }
 
   return NextResponse.json({
-    order_id: order.orderId,
-    amount_paise: order.amountPaise,
+    razorpay_order_id: order.id,
+    key_id: razorpayKeyId(),
+    amount_paise: order.amount,
     currency: order.currency,
     student_name: registration.student_name,
     phone: registration.phone,

@@ -103,6 +103,12 @@ export type SntRegistration = {
   order_id: string | null;
   payment_id: string | null;
   transfer_id: string | null;
+  razorpay_fee_paise: number | null;
+  razorpay_tax_paise: number | null;
+  transfer_amount_paise: number | null;
+  transfer_status: "pending" | "processing" | "done" | "failed" | null;
+  transfer_attempts: number;
+  transfer_last_error: string | null;
   created_at: string;
   paid_at: string | null;
 };

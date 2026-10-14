@@ -50,6 +50,18 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata" });
 }
 
+function rupees(paise: number | null): string {
+  return paise === null ? "—" : `₹${(paise / 100).toFixed(2)}`;
+}
+
+function TransferCell({ registration }: { registration: SntRegistration }) {
+  if (registration.status !== "paid") return <span style={{ color: "rgba(248,243,232,0.3)" }}>—</span>;
+  if (registration.transfer_id) {
+    return <span style={{ fontFamily: "var(--font-geist-mono), monospace", color: IVORY_100 }}>{registration.transfer_id}</span>;
+  }
+  return <span style={{ color: "#E57373" }}>Not transferred ({registration.transfer_status ?? "pending"})</span>;
+}
+
 function ConsentCell({ registration }: { registration: SntRegistration }) {
   if (!registration.consent_given) {
     return <span style={{ color: "#E57373" }}>No consent</span>;
@@ -91,7 +103,7 @@ export default function SntRegistrationList({
     );
   }
 
-  const columns = ["", "Hall Ticket", "Student", "Phone", "Class", "Medium", "Centre", "Status", "Consent", "Registered", ""];
+  const columns = ["", "Hall Ticket", "Student", "Phone", "Class", "Medium", "Centre", "Status", "Paid", "Razorpay Fee", "Transferred", "Transfer", "Consent", "Registered", ""];
 
   return (
     <div>
@@ -143,6 +155,14 @@ export default function SntRegistrationList({
                 <td style={cell}>
                   <StatusBadge status={r.status} />
                 </td>
+                <td style={{ ...cell, whiteSpace: "nowrap" }}>{r.status === "paid" ? rupees(r.amount_paise) : "—"}</td>
+                <td style={{ ...cell, whiteSpace: "nowrap" }}>{rupees(r.razorpay_fee_paise)}</td>
+                <td style={{ ...cell, whiteSpace: "nowrap", color: r.transfer_amount_paise ? "#8FCB90" : cell.color }}>
+                  {rupees(r.transfer_amount_paise)}
+                </td>
+                <td style={{ ...cell, fontSize: 12, whiteSpace: "nowrap" }}>
+                  <TransferCell registration={r} />
+                </td>
                 <td style={{ ...cell, fontSize: 12.5, whiteSpace: "nowrap" }}>
                   <ConsentCell registration={r} />
                 </td>
@@ -172,6 +192,12 @@ export default function SntRegistrationList({
               <span style={{ fontFamily: SANS, fontSize: 11.5 }}>
                 <ConsentCell registration={r} />
               </span>
+              {r.status === "paid" && (
+                <span style={{ fontFamily: SANS, fontSize: 11.5, color: "rgba(248,243,232,0.6)" }}>
+                  Paid {rupees(r.amount_paise)} · Fee {rupees(r.razorpay_fee_paise)} · To academy {rupees(r.transfer_amount_paise)} ·{" "}
+                  <TransferCell registration={r} />
+                </span>
+              )}
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
                 <a href={`tel:+91${r.phone}`} style={{ fontFamily: SANS, fontSize: 13, color: GOLD_500, textDecoration: "none" }}>
                   {r.phone}

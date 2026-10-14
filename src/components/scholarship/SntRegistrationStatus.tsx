@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SNT_EXAM } from "@/content/scholarship";
-import { sntTicketPath, type SntStatus } from "@/lib/snt/constants";
+import { SNT_BATCH, SNT_PRODUCT, sntTicketPath, type SntStatus } from "@/lib/snt/constants";
 
 const NAVY = "#0F1E3C";
 const GOLD = "#C4922A";
@@ -147,13 +147,6 @@ export default function SntRegistrationStatus({
     setError(null);
     setPhase("starting");
 
-    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
-    if (!keyId) {
-      setError("Online payment is not configured yet. Please contact the academy.");
-      setPhase("idle");
-      return;
-    }
-
     try {
       const response = await fetch("/api/scholarship/order", {
         method: "POST",
@@ -169,18 +162,23 @@ export default function SntRegistrationStatus({
       }
       if (!response.ok) throw new Error(data.error ?? "Could not start the payment.");
 
+      const keyId: string | undefined = data.key_id ?? process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+      if (!keyId) throw new Error("Online payment is not configured yet. Please contact the academy.");
+
       await loadCheckout();
       if (!window.Razorpay) throw new Error("Could not load the payment window.");
 
       const checkout = new window.Razorpay({
         key: keyId,
-        order_id: data.order_id,
+        order_id: data.razorpay_order_id,
         amount: data.amount_paise,
         currency: data.currency,
         name: SNT_EXAM.academyName,
         description: "SNT Scholarship Exam registration fee",
         prefill: { name: data.student_name, contact: `+91${data.phone}` },
-        notes: { registration_id: registrationId },
+        // The webhook routes payments by these notes; Razorpay copies checkout
+        // notes onto the payment. Authority still comes from the order record.
+        notes: { product: SNT_PRODUCT, batch: SNT_BATCH, registration_id: registrationId },
         theme: { color: NAVY },
         handler: startPolling,
         modal: {

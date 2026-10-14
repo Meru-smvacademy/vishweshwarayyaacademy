@@ -6,13 +6,17 @@ import { parseSntAdminFilters, sntAdminFilterOps, sntAdminFilterQueryString } fr
 import SntRegistrationFilters from "@/components/admin/snt/SntRegistrationFilters";
 import SntRegistrationList from "@/components/admin/snt/SntRegistrationList";
 import SntRegistrationTotals, { type SntTotals } from "@/components/admin/snt/SntRegistrationTotals";
+import SntUnresolvedTransfers from "@/components/admin/snt/SntUnresolvedTransfers";
 import { IVORY_100, DISPLAY, SANS } from "@/components/admin/tokens";
 
 export const dynamic = "force-dynamic";
 
 const PHOTO_URL_TTL_SECONDS = 60 * 60;
 
-type CountRow = Pick<SntRegistration, "status" | "medium" | "education_completed" | "amount_paise">;
+type CountRow = Pick<
+  SntRegistration,
+  "status" | "medium" | "education_completed" | "amount_paise" | "razorpay_fee_paise" | "transfer_amount_paise"
+>;
 
 function computeTotals(rows: CountRow[]): SntTotals {
   const paid = rows.filter((row) => row.status === "paid");
@@ -25,6 +29,8 @@ function computeTotals(rows: CountRow[]): SntTotals {
     pending: rows.filter((row) => row.status === "pending").length,
     failed: rows.filter((row) => row.status === "failed").length,
     collectedPaise: paid.reduce((sum, row) => sum + row.amount_paise, 0),
+    feesPaise: paid.reduce((sum, row) => sum + (row.razorpay_fee_paise ?? 0), 0),
+    transferredPaise: paid.reduce((sum, row) => sum + (row.transfer_amount_paise ?? 0), 0),
     paidByMedium: countBy("medium", SNT_MEDIUMS),
     paidByClass: countBy("education_completed", ["Class 10", "Class 12"]),
   };
@@ -52,12 +58,21 @@ export default async function AdminSntScholarshipPage({
   // but respect class/medium/search so the office can slice counts.
   let totalsQuery = supabase
     .from("scholarship_registrations")
-    .select("status, medium, education_completed, amount_paise");
+    .select("status, medium, education_completed, amount_paise, razorpay_fee_paise, transfer_amount_paise");
   const totalsOps = sntAdminFilterOps({ ...filters, status: "" });
   for (const [column, value] of totalsOps.eq) totalsQuery = totalsQuery.eq(column, value);
   if (totalsOps.or) totalsQuery = totalsQuery.or(totalsOps.or);
 
-  const [listResult, totalsResult] = await Promise.all([listQuery, totalsQuery]);
+  // Captured payments whose net amount has not reached the academy yet. Never
+  // filtered, so nothing unresolved can be hidden by the current filters.
+  const unresolvedQuery = supabase
+    .from("scholarship_registrations")
+    .select("*")
+    .eq("status", "paid")
+    .is("transfer_id", null)
+    .order("paid_at", { ascending: true });
+
+  const [listResult, totalsResult, unresolvedResult] = await Promise.all([listQuery, totalsQuery, unresolvedQuery]);
 
   const registrations = (listResult.data ?? []) as SntRegistration[];
   const error = listResult.error ?? totalsResult.error;
@@ -103,6 +118,8 @@ export default async function AdminSntScholarshipPage({
           Export to Excel (CSV)
         </a>
       </div>
+
+      {!error && <SntUnresolvedTransfers registrations={(unresolvedResult.data ?? []) as SntRegistration[]} />}
 
       {!error && <SntRegistrationTotals totals={computeTotals((totalsResult.data ?? []) as CountRow[])} />}
 

@@ -22,13 +22,21 @@ const COLUMNS: { header: string; value: (r: SntRegistration) => string | number 
   { header: "Exam Centre", value: (r) => r.centre },
   { header: "Consent Given", value: (r) => (r.consent_given ? "Yes" : "No") },
   { header: "Consent At (IST)", value: (r) => toIst(r.consent_at) },
-  { header: "Amount (Rs)", value: (r) => r.amount_paise / 100 },
+  { header: "Amount Paid (Rs)", value: (r) => (r.status === "paid" ? rupees(r.amount_paise) : null) },
+  { header: "Razorpay Fee incl. GST (Rs)", value: (r) => rupees(r.razorpay_fee_paise) },
+  { header: "of which GST (Rs)", value: (r) => rupees(r.razorpay_tax_paise) },
+  { header: "Transferred to Academy (Rs)", value: (r) => rupees(r.transfer_amount_paise) },
+  { header: "Transfer Status", value: (r) => (r.status === "paid" ? (r.transfer_status ?? "pending") : null) },
   { header: "Payment ID", value: (r) => r.payment_id },
   { header: "Order ID", value: (r) => r.order_id },
   { header: "Transfer ID", value: (r) => r.transfer_id },
   { header: "Registered At (IST)", value: (r) => toIst(r.created_at) },
   { header: "Paid At (IST)", value: (r) => (r.paid_at ? toIst(r.paid_at) : null) },
 ];
+
+function rupees(paise: number | null): string | null {
+  return paise === null ? null : (paise / 100).toFixed(2);
+}
 
 function toIst(iso: string): string {
   return new Date(iso).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: false });
@@ -67,9 +75,22 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  const rows = (data ?? []) as SntRegistration[];
+  const paid = rows.filter((r) => r.status === "paid");
+  const sum = (pick: (r: SntRegistration) => number | null) => paid.reduce((total, r) => total + (pick(r) ?? 0), 0);
+  const totalsRow = COLUMNS.map((c) => {
+    if (c.header === "Hall Ticket No") return "TOTAL (paid)";
+    if (c.header === "Amount Paid (Rs)") return rupees(sum((r) => r.amount_paise));
+    if (c.header === "Razorpay Fee incl. GST (Rs)") return rupees(sum((r) => r.razorpay_fee_paise));
+    if (c.header === "of which GST (Rs)") return rupees(sum((r) => r.razorpay_tax_paise));
+    if (c.header === "Transferred to Academy (Rs)") return rupees(sum((r) => r.transfer_amount_paise));
+    return null;
+  });
+
   const lines = [
     COLUMNS.map((c) => csvCell(c.header)).join(","),
-    ...((data ?? []) as SntRegistration[]).map((r) => COLUMNS.map((c) => csvCell(c.value(r))).join(",")),
+    ...rows.map((r) => COLUMNS.map((c) => csvCell(c.value(r))).join(",")),
+    totalsRow.map(csvCell).join(","),
   ];
   const date = new Date().toISOString().slice(0, 10);
 

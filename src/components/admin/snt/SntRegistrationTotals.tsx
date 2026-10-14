@@ -6,6 +6,8 @@ export type SntTotals = {
   pending: number;
   failed: number;
   collectedPaise: number;
+  feesPaise: number;
+  transferredPaise: number;
   paidByMedium: { label: string; count: number }[];
   paidByClass: { label: string; count: number }[];
 };
@@ -26,6 +28,10 @@ const labelStyle: React.CSSProperties = {
   textTransform: "uppercase",
   color: "rgba(248,243,232,0.45)",
 };
+
+function rupees(paise: number): string {
+  return `₹${(paise / 100).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
 
 function Stat({ label, value, accent }: { label: string; value: string; accent?: string }) {
   return (
@@ -60,7 +66,9 @@ export default function SntRegistrationTotals({ totals }: { totals: SntTotals })
         <Stat label="Paid" value={String(totals.paid)} accent="#8FCB90" />
         <Stat label="Pending" value={String(totals.pending)} accent={GOLD_500} />
         <Stat label="Failed" value={String(totals.failed)} accent="#E57373" />
-        <Stat label="Collected" value={`₹${(totals.collectedPaise / 100).toLocaleString("en-IN")}`} />
+        <Stat label="Amount paid" value={rupees(totals.collectedPaise)} />
+        <Stat label="Razorpay fees" value={rupees(totals.feesPaise)} />
+        <Stat label="Transferred to academy" value={rupees(totals.transferredPaise)} accent="#8FCB90" />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
         <Breakdown title="Paid by medium" items={totals.paidByMedium} />
