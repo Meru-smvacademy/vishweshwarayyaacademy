@@ -5,20 +5,22 @@
 // The office can edit the text below without touching any PDF code: each
 // string is one numbered rule, and long rules wrap automatically.
 //
-// TODO(office): every rule below is a PLACEHOLDER written by the developer.
-// Replace them all with the academy's official rules before going live.
+// TODO(office): Kannada translation. This file holds English only. Adding
+// Kannada needs a translated string per rule here AND a Kannada font (e.g.
+// Noto Sans Kannada) in src/assets/fonts — the current PDF fonts have no
+// Kannada glyphs.
 
 export const SCHOLARSHIP_RULES_TITLE = "Rules and Regulations";
 
 export const SCHOLARSHIP_RULES: string[] = [
-  "TODO: Candidates must report at the examination centre by the reporting time printed on the hall ticket. Late entry may not be permitted.",
-  "TODO: Candidates must bring this hall ticket, their school/college ID card (or a certificate from their Head Master) and their Aadhaar card.",
-  "TODO: Mobile phones, smart watches, calculators and other electronic devices are not allowed inside the examination hall.",
-  "TODO: Candidates must write the examination only at the centre printed on the hall ticket.",
-  "TODO: Any form of malpractice will lead to immediate disqualification.",
-  "TODO: The registration fee is non-refundable.",
-  "TODO: The decision of the academy regarding results and scholarship awards is final.",
+  "Bring this hall ticket, your school/college ID card and your Aadhaar card to the exam hall. If you do not have a school/college ID card, bring a certificate from your Head Master stating the class you are studying in. Students without these documents may not be allowed to write the exam.",
+  "Report at the exam centre 30 minutes before the reporting time printed on this hall ticket. Students arriving after the exam begins will not be admitted.",
+  "Bring your own blue or black ball pen and a writing pad. Nothing will be shared in the hall.",
+  "Mobile phones, smart watches, calculators, bluetooth devices, books and notes are not allowed inside the exam hall.",
+  "The question paper will be in the medium of study you selected while registering. This cannot be changed at the centre.",
+  "Follow the invigilator's instructions at all times, and do not leave the hall before the exam ends. Copying, impersonation or any other malpractice will lead to disqualification without refund.",
+  "Keep this hall ticket safely until the results are announced and the scholarship is confirmed. The ₹500 registration fee is non-refundable and non-transferable.",
 ];
 
 export const SCHOLARSHIP_RULES_FOOTNOTE =
-  "TODO: Replace with the academy's closing note (for example, who to contact with questions about these rules).";
+  "The exam date, reporting time or centre may change. Any change will be sent by SMS/WhatsApp to the mobile number given at registration and announced on sirmv.academy. In all matters of eligibility, evaluation and award of scholarships, the decision of Sir M V NEET & JEE Academy is final.";
