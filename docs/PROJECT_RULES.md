@@ -94,7 +94,8 @@ The full page set (build order is governed separately — see §12). This is the
 /results/stories/[slug]            Success story detail
 /scholarship                       SNT Scholarship overview
 /scholarship/eligibility           Eligibility & pattern
-/scholarship/apply                 Application form
+/scholarship/apply                 Paid SNT exam registration form
+/scholarship/registration/[id]     Registration status, Pay now, hall ticket download (noindex)
 /scholarship/status                Status lookup (noindex)
 /gallery                           Gallery hub
 /gallery/[albumSlug]                Album detail
@@ -169,7 +170,9 @@ If deeper integration (API sync, SSO, embedded widgets) is ever needed, it is a 
 
 The SNT (Scholarship-cum-Nurture Test) is the academy's highest-intent acquisition funnel — a test as the entry point, admissions counselling as the outcome.
 
-**Structure (as built, Module 7):** `/scholarship` is a single consolidated informational page — Introduction, About SNT Scholarship, Vision, Objectives, Eligibility, Scholarship Categories, Selection Process, Scholarship Benefits, Required Documents, Important Dates, FAQ, and Contact — built verbatim from `docs/SCHOLARSHIP_FOUNDATION.md`. `/scholarship/eligibility`, `/scholarship/apply`, and `/scholarship/status` from the original plan below were not built — Eligibility lives on the main page instead, and Apply/Status are deferred until an actual application form and lead-pipeline integration are scoped.
+**Structure (as built, Module 7):** `/scholarship` is a single consolidated informational page — Introduction, About SNT Scholarship, Vision, Objectives, Eligibility, Scholarship Categories, Selection Process, Scholarship Benefits, Required Documents, Important Dates, FAQ, and Contact — built verbatim from `docs/SCHOLARSHIP_FOUNDATION.md`. `/scholarship/eligibility` and `/scholarship/status` from the original plan below were not built — Eligibility lives on the main page instead.
+
+**SNT exam registration (as built, Module 17):** `/scholarship/apply` is a paid registration for the SNT Scholarship Exam. On submit the registration is saved as `pending` in `scholarship_registrations` (migration 0007); the student then pays ₹500 and receives a hall ticket number (`SNT26-00001`…) and a 2-page A4 hall-ticket PDF. `/scholarship/registration/[id]` is the per-registration status page (Pay now while pending/failed; download while paid). Admin: `/admin/scholarship`.
 
 **Original planned structure (superseded for now by the single-page build above):**
 ```
@@ -182,7 +185,11 @@ The SNT (Scholarship-cum-Nurture Test) is the academy's highest-intent acquisiti
 **Rules:**
 - The application form (once built) captures the same core identity fields as the general enquiry form (name, phone, class, target exam) plus academic record — it feeds the same lead pipeline, not a separate silo.
 - Award tiers/slabs are content, not hard-coded numbers in components — they must be editable without a code deploy once the admin module exists.
-- DPDP consent (and guardian consent for minors) is mandatory before submission — no exceptions.
+- DPDP consent (and guardian consent for minors) is mandatory before submission — no exceptions. For SNT registrations this is the required consent checkbox, stored as `consent_given` + `consent_at`; the database rejects any row without it.
+- **Payment boundary:** the Razorpay secret key never exists in this project. Kalbantt's payment service holds all Razorpay credentials, creates orders (`/api/scholarship/order` calls it server-to-server with a fixed amount) and applies the Razorpay Route transfer to the academy's linked account. Payment outcomes arrive only via the HMAC-signed callback `POST /api/scholarship/payment-status`; the browser polls and never decides the outcome.
+- A hall ticket number and PDF exist only for a captured payment. Numbers are issued inside one database transaction (locked counter row) and are unique and gapless.
+- Student photos live in the private `snt-photos` bucket and are served only through signed URLs or server-rendered PDFs. Aadhaar numbers are never collected.
+- Exam details and rules are content, not code: `src/content/scholarship.ts` (`SNT_EXAM`) and `src/content/scholarship-rules.ts`.
 - `/scholarship/status` is a lookup surface only: reference number + phone, `noindex`, no listing/enumeration of other applicants.
 - Every applicant, awarded or not, is a warm lead — the page copy and downstream flow must never treat "not awarded" as a dead end.
 
@@ -315,6 +322,7 @@ These rules govern how AI-assisted development (Claude Code or any other assista
 | 14 (About) | About (`/about`) — number reused by the user's own instruction for this module; kept distinct from the blocked Tribute entry above rather than renumbering it | ✅ Approved |
 | 15 | Privacy Policy (`/legal/privacy`) | ✅ Built — pending approval; see `docs/CONTENT_CHECKLIST.md` item 19 |
 | 16 | Terms & Conditions (`/legal/terms`) | ✅ Built — pending approval; see `docs/CONTENT_CHECKLIST.md` item 20 |
+| 17 | SNT exam paid registration + hall tickets (`/scholarship/apply`, `/admin/scholarship`) | ✅ Approved — branch `snt-scholarship`; exam dates, centre addresses, prize details and rules text are TODO placeholders in `src/content/` |
 | 5 | Results & Success Stories (`/results`) | ⏸ Intentionally on hold — pending verified admission data in `docs/RESULTS_FOUNDATION.md` |
 
 **Implementation phase: complete**, except Module 5 (Results) and Module 14/Tribute, both deliberately blocked pending real, verified content — see `docs/RESULTS_FOUNDATION.md` and `docs/TRIBUTE_FOUNDATION.md`. Modules 3, 4, 7–13, 14/About, 15, and 16 were built from dedicated source-of-truth documents or content supplied directly in-conversation per rule 2 — see `docs/CONTENT_CHECKLIST.md` for content fields still pending correction or real data within otherwise-approved modules. Note also that several nav/footer links (`/results`, `/results/stories`, `/tribute`, and the four `/courses/[slug]` deep links) point to pages not yet built — this is expected at this stage of the build order, not a defect. `/contact`, `/about/infrastructure`, `/hostel`, `/about`, `/legal/privacy`, and now `/legal/terms` are resolved as of Modules 11–13, 14/About, 15, and 16.
