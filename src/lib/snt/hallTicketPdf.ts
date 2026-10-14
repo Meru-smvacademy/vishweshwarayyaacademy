@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, rgb, type PDFFont, type PDFImage, type PDFPage, type RGB } from "pdf-lib";
-import { SNT_EXAM } from "@/content/scholarship";
+import { SNT_EXAM, findSntExamCentre } from "@/content/scholarship";
 import { SCHOLARSHIP_RULES, SCHOLARSHIP_RULES_FOOTNOTE, SCHOLARSHIP_RULES_TITLE } from "@/content/scholarship-rules";
 import type { SntRegistration } from "@/lib/supabase/types";
 
@@ -189,7 +189,7 @@ function drawFront(page: PDFPage, fonts: Fonts, registration: SntRegistration, p
   page.drawText("HALL TICKET NO.", { x: MARGIN + 14, y: y - 22, size: 8.5, font: fonts.bold, color: GOLD });
   page.drawText(registration.hall_ticket_no ?? "", { x: MARGIN + 14, y: y - 54, size: 28, font: fonts.bold, color: NAVY });
 
-  const centre = SNT_EXAM.centres.find((c) => c.value === registration.centre);
+  const centre = findSntExamCentre(registration.centre);
   const examRows: Row[] = [
     { label: "Exam Date", value: SNT_EXAM.examDate },
     { label: "Reporting Time", value: SNT_EXAM.reportingTime },

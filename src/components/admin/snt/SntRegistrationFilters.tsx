@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { SNT_CENTRES, SNT_MEDIUMS, SNT_STATUSES } from "@/lib/snt/constants";
+import { SNT_MEDIUMS, SNT_STATUSES } from "@/lib/snt/constants";
 import { sntAdminFilterQueryString, type SntAdminFilters } from "@/lib/snt/adminFilters";
 import { EDUCATION_COMPLETED_OPTIONS } from "@/lib/validation/scholarshipApplication";
 import { IVORY_100, SANS } from "@/components/admin/tokens";
@@ -49,7 +49,6 @@ function SelectChevron() {
 
 const SELECTS: { key: Exclude<keyof SntAdminFilters, "q">; label: string; allLabel: string; options: readonly string[] }[] = [
   { key: "status", label: "Filter by payment status", allLabel: "All payment statuses", options: SNT_STATUSES },
-  { key: "centre", label: "Filter by exam centre", allLabel: "All centres", options: SNT_CENTRES },
   { key: "education", label: "Filter by class", allLabel: "All classes", options: EDUCATION_COMPLETED_OPTIONS },
   { key: "medium", label: "Filter by medium", allLabel: "All mediums", options: SNT_MEDIUMS },
 ];
@@ -124,7 +123,7 @@ export default function SntRegistrationFilters({ initial }: { initial: SntAdminF
       {hasActiveFilter && (
         <button
           type="button"
-          onClick={() => push({ q: "", status: "", centre: "", education: "", medium: "" })}
+          onClick={() => push({ q: "", status: "", education: "", medium: "" })}
           style={{ background: "none", border: "none", color: "rgba(248,243,232,0.55)", fontFamily: SANS, fontSize: 12.5, cursor: "pointer", textDecoration: "underline" }}
         >
           Clear filters

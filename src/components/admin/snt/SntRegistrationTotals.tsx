@@ -6,7 +6,6 @@ export type SntTotals = {
   pending: number;
   failed: number;
   collectedPaise: number;
-  paidByCentre: { label: string; count: number }[];
   paidByMedium: { label: string; count: number }[];
   paidByClass: { label: string; count: number }[];
 };
@@ -65,7 +64,6 @@ export default function SntRegistrationTotals({ totals }: { totals: SntTotals })
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
         <Breakdown title="Paid by medium" items={totals.paidByMedium} />
-        <Breakdown title="Paid by centre" items={totals.paidByCentre} />
         <Breakdown title="Paid by class" items={totals.paidByClass} />
       </div>
     </div>

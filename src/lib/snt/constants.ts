@@ -10,9 +10,6 @@ export const SNT_PHOTO_MAX_HEIGHT = 800;
 export const SNT_PHOTO_MIN_SIDE = 100;
 export const SNT_PHOTO_TYPES = ["image/jpeg", "image/png"];
 
-export const SNT_CENTRES = ["Lingasugur", "Sindhanur"] as const;
-export type SntCentre = (typeof SNT_CENTRES)[number];
-
 // Medium of studying — the office uses medium-wise counts to set question papers.
 export const SNT_MEDIUMS = ["Kannada", "English", "Urdu", "Other"] as const;
 export type SntMedium = (typeof SNT_MEDIUMS)[number];

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { SntRegistration } from "@/lib/supabase/types";
-import { SNT_CENTRES, SNT_MEDIUMS, SNT_PHOTO_BUCKET } from "@/lib/snt/constants";
+import { SNT_MEDIUMS, SNT_PHOTO_BUCKET } from "@/lib/snt/constants";
 import { parseSntAdminFilters, sntAdminFilterOps, sntAdminFilterQueryString } from "@/lib/snt/adminFilters";
 import SntRegistrationFilters from "@/components/admin/snt/SntRegistrationFilters";
 import SntRegistrationList from "@/components/admin/snt/SntRegistrationList";
@@ -12,11 +12,11 @@ export const dynamic = "force-dynamic";
 
 const PHOTO_URL_TTL_SECONDS = 60 * 60;
 
-type CountRow = Pick<SntRegistration, "status" | "centre" | "medium" | "education_completed" | "amount_paise">;
+type CountRow = Pick<SntRegistration, "status" | "medium" | "education_completed" | "amount_paise">;
 
 function computeTotals(rows: CountRow[]): SntTotals {
   const paid = rows.filter((row) => row.status === "paid");
-  const countBy = (key: "centre" | "medium" | "education_completed", values: readonly string[]) =>
+  const countBy = (key: "medium" | "education_completed", values: readonly string[]) =>
     values.map((value) => ({ label: value, count: paid.filter((row) => row[key] === value).length }));
 
   return {
@@ -25,7 +25,6 @@ function computeTotals(rows: CountRow[]): SntTotals {
     pending: rows.filter((row) => row.status === "pending").length,
     failed: rows.filter((row) => row.status === "failed").length,
     collectedPaise: paid.reduce((sum, row) => sum + row.amount_paise, 0),
-    paidByCentre: countBy("centre", SNT_CENTRES),
     paidByMedium: countBy("medium", SNT_MEDIUMS),
     paidByClass: countBy("education_completed", ["Class 10", "Class 12"]),
   };
@@ -50,10 +49,10 @@ export default async function AdminSntScholarshipPage({
   if (listOps.or) listQuery = listQuery.or(listOps.or);
 
   // Totals ignore the status filter so paid/pending/failed stay comparable,
-  // but respect centre/class/medium/search so the office can slice counts.
+  // but respect class/medium/search so the office can slice counts.
   let totalsQuery = supabase
     .from("scholarship_registrations")
-    .select("status, centre, medium, education_completed, amount_paise");
+    .select("status, medium, education_completed, amount_paise");
   const totalsOps = sntAdminFilterOps({ ...filters, status: "" });
   for (const [column, value] of totalsOps.eq) totalsQuery = totalsQuery.eq(column, value);
   if (totalsOps.or) totalsQuery = totalsQuery.or(totalsOps.or);

@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
+import { SNT_EXAM } from "@/content/scholarship";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { SNT_AMOUNT_PAISE, SNT_PHOTO_BUCKET, SNT_PHOTO_MAX_BYTES } from "@/lib/snt/constants";
 import { validatePhotoBytes } from "@/lib/snt/imageValidation";
@@ -40,7 +41,6 @@ export async function POST(request: Request) {
     medium: text(formData, "medium"),
     whatsapp: text(formData, "whatsapp"),
     dob: text(formData, "dob"),
-    centre: text(formData, "centre"),
     rulesAccepted: text(formData, "rulesAccepted") === "true",
     consentGiven: text(formData, "consentGiven") === "true",
   };
@@ -97,7 +97,8 @@ export async function POST(request: Request) {
     parent_name: values.parentName.trim(),
     dob: values.dob,
     academic_year: values.academicYear,
-    centre: values.centre,
+    // Never taken from the browser: there is one exam centre, fixed in content.
+    centre: SNT_EXAM.centre.value,
     photo_path: photoPath,
     consent_given: true,
     consent_at: new Date().toISOString(),

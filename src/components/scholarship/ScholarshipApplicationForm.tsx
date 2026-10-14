@@ -54,7 +54,6 @@ const initialValues: SntRegistrationValues = {
   medium: "",
   whatsapp: "",
   dob: "",
-  centre: "",
   rulesAccepted: false,
   consentGiven: false,
 };
@@ -210,7 +209,6 @@ export default function ScholarshipApplicationForm() {
       values.parentName.trim() &&
       values.medium &&
       values.dob &&
-      values.centre &&
       values.rulesAccepted &&
       values.consentGiven &&
       photo
@@ -273,6 +271,23 @@ export default function ScholarshipApplicationForm() {
           <p style={{ color: "#6B7A90" }} className="text-base font-light sm:text-lg">
             Take the first step towards your academic journey.
           </p>
+          <div
+            className="mt-6 rounded-xl px-5 py-4"
+            style={{ backgroundColor: STRIP_BG, border: `1px solid ${CARD_BORDER}` }}
+          >
+            <p
+              className="text-xs font-medium uppercase tracking-widest"
+              style={{ fontFamily: SANS, color: GOLD, letterSpacing: "0.1em" }}
+            >
+              Exam Centre
+            </p>
+            <p style={{ fontFamily: SANS, color: NAVY }} className="mt-1 text-base font-medium">
+              {SNT_EXAM.centre.label}
+            </p>
+            <p style={{ fontFamily: SANS, color: "#6B7A90" }} className="text-sm font-light leading-relaxed">
+              {SNT_EXAM.centre.address}
+            </p>
+          </div>
         </div>
 
         <form
@@ -550,31 +565,6 @@ export default function ScholarshipApplicationForm() {
                   {ACADEMIC_YEARS.map((option) => (
                     <option key={option} value={option}>
                       {option}
-                    </option>
-                  ))}
-                </select>
-                <ChevronIcon />
-              </Field>
-            </div>
-
-            <div>
-              <Field label="Exam Centre" htmlFor="centre" isFocused={focused === "centre"} error={errors.centre}>
-                <select
-                  id="centre"
-                  value={values.centre}
-                  onChange={(e) => updateField("centre", e.target.value)}
-                  onFocus={() => setFocused("centre")}
-                  onBlur={() => setFocused(null)}
-                  className="w-full cursor-pointer appearance-none bg-transparent text-base font-light"
-                  style={{ fontFamily: SANS, color: values.centre ? NAVY : `${NAVY}66` }}
-                  aria-invalid={Boolean(errors.centre)}
-                >
-                  <option value="" disabled hidden>
-                    Select centre
-                  </option>
-                  {SNT_EXAM.centres.map((centre) => (
-                    <option key={centre.value} value={centre.value}>
-                      {centre.label}
                     </option>
                   ))}
                 </select>

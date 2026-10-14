@@ -1,4 +1,4 @@
-import { SNT_CENTRES, SNT_MEDIUMS } from "@/lib/snt/constants";
+import { SNT_MEDIUMS } from "@/lib/snt/constants";
 import {
   normalizePhone,
   validateScholarshipApplication,
@@ -11,13 +11,12 @@ export type SntRegistrationValues = ScholarshipApplicationValues & {
   medium: string;
   whatsapp: string;
   dob: string;
-  centre: string;
   rulesAccepted: boolean;
   consentGiven: boolean;
 };
 
 export type SntRegistrationFieldErrors = ScholarshipApplicationFieldErrors &
-  Partial<Record<"parentName" | "medium" | "whatsapp" | "dob" | "centre" | "rulesAccepted" | "consentGiven" | "photo", string>>;
+  Partial<Record<"parentName" | "medium" | "whatsapp" | "dob" | "rulesAccepted" | "consentGiven" | "photo", string>>;
 
 const PHONE_PATTERN = /^[6-9]\d{9}$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
@@ -66,10 +65,6 @@ export function validateSntRegistration(
     if (age < MIN_AGE_YEARS || age > MAX_AGE_YEARS) {
       errors.dob = "Check the date of birth — it looks incorrect.";
     }
-  }
-
-  if (!(SNT_CENTRES as readonly string[]).includes(values.centre)) {
-    errors.centre = "Select an exam centre.";
   }
 
   if (values.rulesAccepted !== true) {

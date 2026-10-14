@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SntRegistrationStatus from "@/components/scholarship/SntRegistrationStatus";
+import { findSntExamCentre } from "@/content/scholarship";
 import { getSntRegistration } from "@/lib/snt/registrations";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +30,7 @@ export default async function SntRegistrationPage({
       registrationId={registration.id}
       studentName={registration.student_name}
       centre={registration.centre}
+      centreAddress={findSntExamCentre(registration.centre)?.address ?? ""}
       initialStatus={registration.status}
       initialHallTicketNo={registration.hall_ticket_no}
       autoStartPayment={pay === "1" && registration.status !== "paid"}

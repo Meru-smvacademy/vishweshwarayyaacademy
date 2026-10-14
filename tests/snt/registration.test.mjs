@@ -68,7 +68,6 @@ function registrationForm(overrides = {}, photo = validPhoto, photoName = "photo
     companyWebsite: "",
     parentName: "Test Parent",
     dob: "2008-06-15",
-    centre: "Lingasugur",
     rulesAccepted: "true",
     consentGiven: "true",
     ...overrides,
@@ -180,9 +179,14 @@ describe("registration", () => {
   });
 
   test("missing medium and other required fields are rejected", async () => {
-    const { response, body } = await register({ medium: "", parentName: "", centre: "Raichur", rulesAccepted: "false" });
+    const { response, body } = await register({ medium: "", parentName: "", rulesAccepted: "false" });
     assert.equal(response.status, 422);
-    for (const field of ["medium", "parentName", "centre", "rulesAccepted"]) assert.ok(body.errors[field], field);
+    for (const field of ["medium", "parentName", "rulesAccepted"]) assert.ok(body.errors[field], field);
+  });
+
+  test("the exam centre is set server-side; a browser-supplied centre is ignored", async () => {
+    const id = await registerOk({ centre: "Sindhanur" });
+    assert.equal((await getRow(id)).centre, "Lingasugur");
   });
 
   test("submission without parent/guardian consent is rejected and nothing is saved", async () => {
@@ -264,7 +268,7 @@ describe("payment", () => {
   });
 
   test("success: captured callback → paid, hall ticket issued, 2-page PDF with photo and notice", async () => {
-    const id = await registerOk({ studentName: "Asha Patil", medium: "Urdu", centre: "Sindhanur" });
+    const id = await registerOk({ studentName: "Asha Patil", medium: "Urdu" });
     const { body: order } = await createOrder(id);
     const payload = captured(id, order.order_id);
 
@@ -382,6 +386,14 @@ describe("payment", () => {
 });
 
 describe("admin", () => {
+  test("application page shows the single exam centre with its address", async () => {
+    const html = await (await fetch(`${BASE}/scholarship/apply`)).text();
+    assert.match(html, /Exam Centre/);
+    assert.match(html, /Lingasugur/);
+    assert.match(html, /full exam-centre address for Lingasugur/);
+    assert.doesNotMatch(html, /Select centre/);
+  });
+
   test("admin page and export are not reachable without signing in", async () => {
     for (const path of ["/admin/scholarship", "/admin/scholarship/export"]) {
       const response = await fetch(`${BASE}${path}`, { redirect: "manual" });

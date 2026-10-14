@@ -147,6 +147,8 @@ export const FAQS: ScholarshipFaqItem[] = [
 // must replace before registrations open.
 // ---------------------------------------------------------------------------
 
+// The database accepts both campus names, so a second exam centre can be
+// added later as content plus a form selector, without a migration.
 export type SntExamCentre = {
   value: "Lingasugur" | "Sindhanur";
   label: string;
@@ -164,21 +166,19 @@ export const SNT_EXAM = {
   lastDateOfRegistration: "TODO: last date of registration",
   scholarshipDetails:
     "TODO: scholarship / prize details (e.g. ranks 1–10: 100% tuition waiver; ranks 11–50: 50%).",
-  centres: [
-    {
-      value: "Lingasugur",
-      label: "Lingasugur",
-      address: "TODO: full exam-centre address for Lingasugur",
-    },
-    {
-      value: "Sindhanur",
-      label: "Sindhanur",
-      address: "TODO: full exam-centre address for Sindhanur",
-    },
-  ] satisfies SntExamCentre[],
+  // Single exam centre: every registration is assigned this centre server-side.
+  centre: {
+    value: "Lingasugur",
+    label: "Lingasugur",
+    address: "TODO: full exam-centre address for Lingasugur",
+  } satisfies SntExamCentre,
   documentsNotice:
     "Bring to the exam hall: (1) this hall ticket, (2) school/college ID card, (3) Aadhaar card. If you do not have a school/college ID card, bring a certificate from your Head Master stating that you are studying in that class. Students without these documents may not be allowed to write the exam.",
 };
+
+export function findSntExamCentre(value: string): SntExamCentre | null {
+  return SNT_EXAM.centre.value === value ? SNT_EXAM.centre : null;
+}
 
 export const CONTACT = {
   intro: "For scholarship enquiries, application support, or admission guidance, please contact:",
