@@ -57,19 +57,23 @@ function loadCheckout(): Promise<void> {
 
 type Phase = "idle" | "starting" | "checkout" | "verifying" | "slow";
 
-function CentreInfo({ centre, address }: { centre: string; address: string }) {
+function CentreInfo({ name, addressLines }: { name: string; addressLines: string[] }) {
   return (
     <div className="mb-6 rounded-xl px-4 py-3 text-left" style={{ border: `1px solid ${CARD_BORDER}`, backgroundColor: STRIP_BG }}>
       <p className="text-xs font-medium uppercase tracking-widest" style={{ color: GOLD, letterSpacing: "0.1em" }}>
         Exam Centre
       </p>
       <p className="mt-1 text-sm font-medium" style={{ color: NAVY }}>
-        {centre}
+        {name}
       </p>
-      {address && (
-        <p className="text-sm font-light leading-relaxed" style={{ color: MUTED }}>
-          {address}
-        </p>
+      {addressLines.length > 0 && (
+        <address className="text-sm font-light not-italic leading-relaxed" style={{ color: MUTED }}>
+          {addressLines.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
+        </address>
       )}
     </div>
   );
@@ -78,16 +82,16 @@ function CentreInfo({ centre, address }: { centre: string; address: string }) {
 export default function SntRegistrationStatus({
   registrationId,
   studentName,
-  centre,
-  centreAddress,
+  centreName,
+  centreAddressLines,
   initialStatus,
   initialHallTicketNo,
   autoStartPayment,
 }: {
   registrationId: string;
   studentName: string;
-  centre: string;
-  centreAddress: string;
+  centreName: string;
+  centreAddressLines: string[];
   initialStatus: SntStatus;
   initialHallTicketNo: string | null;
   autoStartPayment: boolean;
@@ -235,7 +239,7 @@ export default function SntRegistrationStatus({
                   {hallTicketNo}
                 </p>
               </div>
-              <CentreInfo centre={centre} address={centreAddress} />
+              <CentreInfo name={centreName} addressLines={centreAddressLines} />
               <a
                 href={sntTicketPath(registrationId)}
                 className="inline-flex min-h-[44px] items-center justify-center gap-3 rounded-full px-7 py-3.5 text-sm font-medium transition-all duration-200 hover:!bg-[#1A3260]"
@@ -279,7 +283,7 @@ export default function SntRegistrationStatus({
                 </p>
               )}
 
-              <CentreInfo centre={centre} address={centreAddress} />
+              <CentreInfo name={centreName} addressLines={centreAddressLines} />
 
               <p style={{ color: MUTED }} className="mb-6 text-sm leading-relaxed">
                 {firstName}, your details are saved. Pay the registration fee of ₹{SNT_EXAM.feeRupees} to receive your

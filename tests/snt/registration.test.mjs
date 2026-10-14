@@ -389,8 +389,11 @@ describe("admin", () => {
   test("application page shows the single exam centre with its address", async () => {
     const html = await (await fetch(`${BASE}/scholarship/apply`)).text();
     assert.match(html, /Exam Centre/);
-    assert.match(html, /Lingasugur/);
-    assert.match(html, /full exam-centre address for Lingasugur/);
+    assert.match(html, /Sir M V NEET &amp; JEE Academy/);
+    for (const line of ["Khazi Complex, Opposite Bayyapur Hospital", "Raichur Bypass Road, Lingasugur", "Raichur District, Karnataka 584122"]) {
+      assert.ok(html.includes(line), line);
+    }
+    assert.doesNotMatch(html, /TODO/);
     assert.doesNotMatch(html, /Select centre/);
   });
 

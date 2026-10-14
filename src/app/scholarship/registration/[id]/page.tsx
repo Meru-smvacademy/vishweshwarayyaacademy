@@ -25,12 +25,14 @@ export default async function SntRegistrationPage({
     notFound();
   }
 
+  const centre = findSntExamCentre(registration.centre);
+
   return (
     <SntRegistrationStatus
       registrationId={registration.id}
       studentName={registration.student_name}
-      centre={registration.centre}
-      centreAddress={findSntExamCentre(registration.centre)?.address ?? ""}
+      centreName={centre?.name ?? registration.centre}
+      centreAddressLines={centre?.addressLines ?? []}
       initialStatus={registration.status}
       initialHallTicketNo={registration.hall_ticket_no}
       autoStartPayment={pay === "1" && registration.status !== "paid"}

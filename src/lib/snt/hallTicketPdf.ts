@@ -210,8 +210,8 @@ function drawFront(page: PDFPage, fonts: Fonts, registration: SntRegistration, p
     { label: "Native Place", value: registration.native_place },
     { label: "Phone", value: `+91 ${registration.phone}` },
     { label: "Academic Year", value: registration.academic_year },
-    { label: "Exam Centre", value: registration.centre },
-    { label: "Centre Address", value: centre?.address ?? "" },
+    { label: "Exam Centre", value: centre?.name ?? registration.centre },
+    { label: "Centre Address", value: centre?.addressLines.join("\n") ?? "" },
     { label: "Exam Duration", value: SNT_EXAM.duration },
   ];
   y -= drawDetailRows(page, fonts, rows, MARGIN, y, CONTENT_WIDTH) + 12;

@@ -291,11 +291,15 @@ export default function ScholarshipApplicationForm() {
               Exam Centre
             </p>
             <p style={{ fontFamily: SANS, color: NAVY }} className="mt-1 text-base font-medium">
-              {SNT_EXAM.centre.label}
+              {SNT_EXAM.centre.name}
             </p>
-            <p style={{ fontFamily: SANS, color: "#6B7A90" }} className="text-sm font-light leading-relaxed">
-              {SNT_EXAM.centre.address}
-            </p>
+            <address style={{ fontFamily: SANS, color: "#6B7A90" }} className="text-sm font-light not-italic leading-relaxed">
+              {SNT_EXAM.centre.addressLines.map((line) => (
+                <span key={line} className="block">
+                  {line}
+                </span>
+              ))}
+            </address>
             <p
               style={{ fontFamily: SANS, color: NAVY, borderTop: `1px solid ${CARD_BORDER}` }}
               className="mt-3 pt-3 text-sm leading-relaxed"

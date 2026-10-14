@@ -150,9 +150,10 @@ export const FAQS: ScholarshipFaqItem[] = [
 // The database accepts both campus names, so a second exam centre can be
 // added later as content plus a form selector, without a migration.
 export type SntExamCentre = {
+  /** Stored in scholarship_registrations.centre; must be one the database allows. */
   value: "Lingasugur" | "Sindhanur";
-  label: string;
-  address: string;
+  name: string;
+  addressLines: string[];
 };
 
 export const SNT_EXAM = {
@@ -165,7 +166,7 @@ export const SNT_EXAM = {
   // open and pages/hall tickets show "To be announced".
   examDate: null as string | null, // TODO: exam date as "YYYY-MM-DD", e.g. "2026-03-15"
   reportingTime: null as string | null, // TODO: reporting time as 24-hour "HH:MM" IST, e.g. "09:00"
-  duration: "TODO: exam duration (e.g. 2 hours, 10:00 AM – 12:00 PM)",
+  duration: "1 hour",
   // There is no last date: spot entry is allowed on exam day at the centre.
   registrationNotice:
     "Registration is open until the exam begins. Spot registration is allowed on the exam day at the centre.",
@@ -175,8 +176,12 @@ export const SNT_EXAM = {
   // Single exam centre: every registration is assigned this centre server-side.
   centre: {
     value: "Lingasugur",
-    label: "Lingasugur",
-    address: "TODO: full exam-centre address for Lingasugur",
+    name: "Sir M V NEET & JEE Academy",
+    addressLines: [
+      "Khazi Complex, Opposite Bayyapur Hospital",
+      "Raichur Bypass Road, Lingasugur",
+      "Raichur District, Karnataka 584122",
+    ],
   } satisfies SntExamCentre,
   documentsNotice:
     "Bring to the exam hall: (1) this hall ticket, (2) school/college ID card, (3) Aadhaar card. If you do not have a school/college ID card, bring a certificate from your Head Master stating that you are studying in that class. Students without these documents may not be allowed to write the exam.",
