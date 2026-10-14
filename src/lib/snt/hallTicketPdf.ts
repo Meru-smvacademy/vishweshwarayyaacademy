@@ -4,6 +4,7 @@ import path from "node:path";
 import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, rgb, type PDFFont, type PDFImage, type PDFPage, type RGB } from "pdf-lib";
 import { SNT_EXAM, findSntExamCentre } from "@/content/scholarship";
+import { formatSntExamDate, formatSntReportingTime } from "@/lib/snt/examSchedule";
 import { SCHOLARSHIP_RULES, SCHOLARSHIP_RULES_FOOTNOTE, SCHOLARSHIP_RULES_TITLE } from "@/content/scholarship-rules";
 import type { SntRegistration } from "@/lib/supabase/types";
 
@@ -191,8 +192,8 @@ function drawFront(page: PDFPage, fonts: Fonts, registration: SntRegistration, p
 
   const centre = findSntExamCentre(registration.centre);
   const examRows: Row[] = [
-    { label: "Exam Date", value: SNT_EXAM.examDate },
-    { label: "Reporting Time", value: SNT_EXAM.reportingTime },
+    { label: "Exam Date", value: formatSntExamDate(SNT_EXAM) },
+    { label: "Reporting Time", value: formatSntReportingTime(SNT_EXAM) },
   ];
   drawDetailRows(page, fonts, examRows, MARGIN, y - 80, boxWidth);
 

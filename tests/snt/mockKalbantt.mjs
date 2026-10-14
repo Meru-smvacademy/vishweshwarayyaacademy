@@ -32,7 +32,10 @@ export function startMockKalbantt({ port, token }) {
     });
   });
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    server.once("error", (error) =>
+      reject(new Error(`mock Kalbantt could not listen on port ${port}: ${error.message} (is another mock still running?)`)),
+    );
     server.listen(port, "127.0.0.1", () =>
       resolve({ orders, close: () => new Promise((done) => server.close(done)) }),
     );

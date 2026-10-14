@@ -394,6 +394,13 @@ describe("admin", () => {
     assert.doesNotMatch(html, /Select centre/);
   });
 
+  test("application page has no closing date and announces spot registration", async () => {
+    const html = await (await fetch(`${BASE}/scholarship/apply`)).text();
+    assert.match(html, /Registration is open until the exam begins\. Spot registration is allowed on the exam day at the centre\./);
+    assert.doesNotMatch(html, /last date|closing date|closes on/i);
+    assert.doesNotMatch(html, /Registration for this exam has closed/);
+  });
+
   test("admin page and export are not reachable without signing in", async () => {
     for (const path of ["/admin/scholarship", "/admin/scholarship/export"]) {
       const response = await fetch(`${BASE}${path}`, { redirect: "manual" });

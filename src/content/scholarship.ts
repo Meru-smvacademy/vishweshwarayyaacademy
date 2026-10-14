@@ -160,10 +160,16 @@ export const SNT_EXAM = {
   academyName: "Sir M Vishweshwarayya NEET | JEE Academy",
   campusNames: "Lingasugur Campus  ·  Sindhanur Campus",
   feeRupees: 500,
-  examDate: "TODO: exam date (e.g. Sunday, 15 March 2026)",
-  reportingTime: "TODO: reporting time (e.g. 9:00 AM)",
+  // Machine-readable on purpose: registration closes automatically at exam
+  // date + reporting time (IST). While examDate is null, registration stays
+  // open and pages/hall tickets show "To be announced".
+  examDate: null as string | null, // TODO: exam date as "YYYY-MM-DD", e.g. "2026-03-15"
+  reportingTime: null as string | null, // TODO: reporting time as 24-hour "HH:MM" IST, e.g. "09:00"
   duration: "TODO: exam duration (e.g. 2 hours, 10:00 AM – 12:00 PM)",
-  lastDateOfRegistration: "TODO: last date of registration",
+  // There is no last date: spot entry is allowed on exam day at the centre.
+  registrationNotice:
+    "Registration is open until the exam begins. Spot registration is allowed on the exam day at the centre.",
+  registrationClosedMessage: "Registration for this exam has closed.",
   scholarshipDetails:
     "TODO: scholarship / prize details (e.g. ranks 1–10: 100% tuition waiver; ranks 11–50: 50%).",
   // Single exam centre: every registration is assigned this centre server-side.

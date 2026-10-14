@@ -312,7 +312,7 @@ export default function SntRegistrationStatus({
 
               <p className="mt-6 text-xs font-light leading-snug" style={{ color: "#9AA3B0" }}>
                 Already paid? It can take a minute to confirm.{" "}
-                <button type="button" onClick={startPolling} className="underline underline-offset-2" style={{ color: GOLD }}>
+                <button type="button" onClick={startPolling} className="inline-flex min-h-[44px] items-center underline underline-offset-2" style={{ color: GOLD }}>
                   Check payment status
                 </button>
               </p>
@@ -320,7 +320,7 @@ export default function SntRegistrationStatus({
           )}
         </div>
         <div className="px-6 py-4 text-center sm:px-10" style={{ borderTop: `1px solid ${CARD_BORDER}`, backgroundColor: STRIP_BG }}>
-          <Link href="/scholarship" className="text-xs font-medium" style={{ color: MUTED }}>
+          <Link href="/scholarship" className="inline-flex min-h-[44px] items-center text-xs font-medium" style={{ color: MUTED }}>
             About the SNT Scholarship
           </Link>
           {status === "paid" && (

@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { SNT_EXAM } from "@/content/scholarship";
+import { isSntRegistrationOpen } from "@/lib/snt/examSchedule";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createKalbanttOrder } from "@/lib/snt/kalbanttPay";
 import { getSntRegistration, isUuid } from "@/lib/snt/registrations";
@@ -23,6 +25,11 @@ export async function POST(request: Request) {
   }
   if (registration.status === "paid") {
     return NextResponse.json({ status: "paid", error: "This registration is already paid." }, { status: 409 });
+  }
+  // Callbacks for payments already in flight are still honoured by
+  // payment-status; only new payment attempts stop when the exam begins.
+  if (!isSntRegistrationOpen(SNT_EXAM)) {
+    return NextResponse.json({ closed: true, error: SNT_EXAM.registrationClosedMessage }, { status: 403 });
   }
 
   let order;

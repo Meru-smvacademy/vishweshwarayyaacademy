@@ -189,6 +189,7 @@ The SNT (Scholarship-cum-Nurture Test) is the academy's highest-intent acquisiti
 - **Payment boundary:** the Razorpay secret key never exists in this project. Kalbantt's payment service holds all Razorpay credentials, creates orders (`/api/scholarship/order` calls it server-to-server with a fixed amount) and applies the Razorpay Route transfer to the academy's linked account. Payment outcomes arrive only via the HMAC-signed callback `POST /api/scholarship/payment-status`; the browser polls and never decides the outcome.
 - A hall ticket number and PDF exist only for a captured payment. Numbers are issued inside one database transaction (locked counter row) and are unique and gapless.
 - Student photos live in the private `snt-photos` bucket and are served only through signed URLs or server-rendered PDFs. Aadhaar numbers are never collected.
+- There is no last date of registration — spot entry is allowed on exam day. Registration closes only when the exam begins (`SNT_EXAM.examDate` + `reportingTime`, IST); the register and order routes enforce it, and it stays open while `examDate` is unset.
 - Exam details and rules are content, not code: `src/content/scholarship.ts` (`SNT_EXAM`) and `src/content/scholarship-rules.ts`.
 - `/scholarship/status` is a lookup surface only: reference number + phone, `noindex`, no listing/enumeration of other applicants.
 - Every applicant, awarded or not, is a warm lead — the page copy and downstream flow must never treat "not awarded" as a dead end.

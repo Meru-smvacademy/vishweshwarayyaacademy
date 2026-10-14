@@ -10,13 +10,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - SNT Scholarship Exam paid registration (Module 17) on the existing `/scholarship/apply` page — existing fields and design kept; added student passport photo (JPG/PNG, max 4 MB, resized client-side to 600×800, previewed), parent/guardian name, WhatsApp number (defaults to phone), date of birth, medium of studying (Kannada/English/Urdu/Other), a rules-and-regulations checkbox linking to the rules PDF, and a required parent/guardian consent checkbox. No Aadhaar numbers are collected. There is a single exam centre (Lingasugur), set server-side from `SNT_EXAM.centre` and shown with its address on the application page, the confirmation page and the hall ticket.
 - `scholarship_registrations` table, private `snt-photos` storage bucket, hall-ticket counter and payment-outcome functions (`supabase/migrations/0007_snt_scholarship_registrations.sql`). All writes go through server routes; admins have read-only access.
 - Payment via the Kalbantt payment service (no Razorpay secret in this project): `POST /api/scholarship/order` and the HMAC-signed callback `POST /api/scholarship/payment-status`. Hall ticket numbers (`SNT26-00001`…) are issued only on a captured payment, transactionally, unique and gapless; duplicate callbacks are idempotent.
+- No last date of registration: spot entry is allowed on exam day. Registration and new payments close automatically when the exam begins (`examDate` + `reportingTime`, IST, in `src/content/scholarship.ts`); while `examDate` is unset, registration stays open.
 - `/scholarship/registration/[id]` — status page with Pay now (pending/failed) and hall-ticket download (paid). 2-page A4 hall-ticket PDF at `/api/scholarship/ticket/[id]` (paid only); rules PDF at `/api/scholarship/rules`, both rendered from `src/content/scholarship-rules.ts`.
 - `/admin/scholarship` — photo thumbnails, hall ticket numbers, payment status, consent, filters (status, class, medium), search, totals with medium/class counts, centre column, CSV export (Excel-ready) including payment, order and transfer ids, and ticket re-download.
 - `tests/snt` integration suite (`npm run test:snt`) with a mock Kalbantt service: success, failed payment, duplicate callback, 20 concurrent payments, oversized and non-image photos, consent enforcement, callback signature checks.
 - Dependencies: `pdf-lib`, `@pdf-lib/fontkit`; bundled Noto Sans/Serif fonts (OFL) for the PDF.
 
 ### Known issues
-- Exam date, reporting time, duration, last date of registration, scholarship/prize details, centre addresses and all rules text are TODO placeholders in `src/content/scholarship.ts` and `src/content/scholarship-rules.ts`.
+- Exam date, reporting time, duration, scholarship/prize details, centre addresses and all rules text are TODO placeholders in `src/content/scholarship.ts` and `src/content/scholarship-rules.ts`.
 - The Kalbantt-side SNT order endpoint and callback are not yet built; end-to-end Razorpay test-mode checkout has not been exercised.
 - The site header overflows horizontally by 2px at 1280px width (pre-existing, all pages).
 

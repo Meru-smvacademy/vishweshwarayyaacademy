@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { SNT_EXAM } from "@/content/scholarship";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isSntRegistrationOpen } from "@/lib/snt/examSchedule";
 import { SNT_AMOUNT_PAISE, SNT_PHOTO_BUCKET, SNT_PHOTO_MAX_BYTES } from "@/lib/snt/constants";
 import { validatePhotoBytes } from "@/lib/snt/imageValidation";
 import { isLikelyBot, normalizePhone } from "@/lib/validation/scholarshipApplication";
@@ -15,6 +16,10 @@ function text(formData: FormData, key: string): string {
 }
 
 export async function POST(request: Request) {
+  if (!isSntRegistrationOpen(SNT_EXAM)) {
+    return NextResponse.json({ closed: true, error: SNT_EXAM.registrationClosedMessage }, { status: 403 });
+  }
+
   const declaredLength = Number(request.headers.get("content-length") ?? 0);
   // Photo limit plus generous room for the text fields and multipart framing.
   if (declaredLength > SNT_PHOTO_MAX_BYTES + 64 * 1024) {

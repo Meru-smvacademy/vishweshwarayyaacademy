@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { SNT_EXAM } from "@/content/scholarship";
+import SntRegistrationClosed from "@/components/scholarship/SntRegistrationClosed";
 import {
   SNT_CONSENT_TEXT,
   SNT_MEDIUMS,
@@ -58,7 +59,7 @@ const initialValues: SntRegistrationValues = {
   consentGiven: false,
 };
 
-type SubmitState = "idle" | "submitting" | "error";
+type SubmitState = "idle" | "submitting" | "error" | "closed";
 
 type PreparedPhoto = { blob: Blob; previewUrl: string };
 
@@ -151,7 +152,7 @@ function Field({
         {label}
       </label>
       <div
-        className="relative flex items-center pb-2.5 transition-colors duration-150"
+        className="relative flex items-center pb-0.5 transition-colors duration-150 [&>input]:min-h-[44px] [&>select]:min-h-[44px]"
         style={{ borderBottom: `1.5px solid ${error ? ERROR : isFocused ? GOLD : RULE}` }}
       >
         {children}
@@ -240,6 +241,10 @@ export default function ScholarshipApplicationForm() {
       const response = await fetch("/api/scholarship/register", { method: "POST", body });
       const data = await response.json().catch(() => ({}));
 
+      if (response.status === 403 && data.closed) {
+        setStatus("closed");
+        return;
+      }
       if (response.status === 422 && data.errors) {
         setErrors(data.errors);
         setStatus("idle");
@@ -254,6 +259,10 @@ export default function ScholarshipApplicationForm() {
       setSubmitError("Something went wrong while submitting. Please try again, or call us directly.");
       setStatus("error");
     }
+  }
+
+  if (status === "closed") {
+    return <SntRegistrationClosed />;
   }
 
   return (
@@ -286,6 +295,12 @@ export default function ScholarshipApplicationForm() {
             </p>
             <p style={{ fontFamily: SANS, color: "#6B7A90" }} className="text-sm font-light leading-relaxed">
               {SNT_EXAM.centre.address}
+            </p>
+            <p
+              style={{ fontFamily: SANS, color: NAVY, borderTop: `1px solid ${CARD_BORDER}` }}
+              className="mt-3 pt-3 text-sm leading-relaxed"
+            >
+              {SNT_EXAM.registrationNotice}
             </p>
           </div>
         </div>
@@ -589,7 +604,7 @@ export default function ScholarshipApplicationForm() {
                     href={SNT_RULES_PDF_PATH}
                     target="_blank"
                     rel="noopener"
-                    className="font-medium underline underline-offset-2"
+                    className="py-[13px] font-medium underline underline-offset-2"
                     style={{ color: GOLD }}
                   >
                     rules and regulations
