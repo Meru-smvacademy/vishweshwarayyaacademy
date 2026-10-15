@@ -8,7 +8,9 @@ import { SNT_BATCH, SNT_PRODUCT, sntTicketPath, type SntStatus } from "@/lib/snt
 
 const NAVY = "#0F1E3C";
 const GOLD = "#C4922A";
-const MUTED = "#6B7A90";
+// Outdoor readability: body text is NAVY; secondary text and Kannada use
+// --scholarship-navy-light (11.5:1). GOLD is decoration only, never text.
+const SOFT = "var(--scholarship-navy-light)";
 const CARD_BORDER = "#E2DAD0";
 const STRIP_BG = "#FDFAF6";
 const ERROR = "#C0392B";
@@ -62,14 +64,14 @@ type Phase = "idle" | "starting" | "checkout" | "verifying" | "slow";
 function CentreInfo({ name, addressLines }: { name: string; addressLines: string[] }) {
   return (
     <div className="mb-6 rounded-xl px-4 py-3 text-left" style={{ border: `1px solid ${CARD_BORDER}`, backgroundColor: STRIP_BG }}>
-      <p className="text-xs font-medium uppercase tracking-widest" style={{ color: GOLD, letterSpacing: "0.1em" }}>
+      <p className="text-xs font-medium uppercase tracking-widest" style={{ color: NAVY, letterSpacing: "0.1em" }}>
         Exam Centre
       </p>
       <p className="mt-1 text-sm font-medium" style={{ color: NAVY }}>
         {name}
       </p>
       {addressLines.length > 0 && (
-        <address className="text-sm font-light not-italic leading-relaxed" style={{ color: MUTED }}>
+        <address className="text-sm font-light not-italic leading-relaxed" style={{ color: NAVY }}>
           {addressLines.map((line) => (
             <span key={line} className="block">
               {line}
@@ -228,14 +230,14 @@ export default function SntRegistrationStatus({
               <h1 style={{ fontFamily: DISPLAY, color: NAVY }} className="mb-3 text-3xl font-semibold">
                 Registration Complete
               </h1>
-              <p style={{ color: MUTED }} className="mb-6 text-base leading-relaxed">
+              <p style={{ color: NAVY }} className="mb-6 text-base leading-relaxed">
                 Thank you, {firstName}. Your fee of ₹{SNT_EXAM.feeRupees} is paid and your hall ticket is ready.
               </p>
               <div className="mb-6 rounded-xl px-4 py-4" style={{ border: `1.5px solid ${GOLD}`, backgroundColor: STRIP_BG }}>
-                <p className="text-xs font-medium uppercase tracking-widest" style={{ color: GOLD, letterSpacing: "0.1em" }}>
+                <p className="text-xs font-medium uppercase tracking-widest" style={{ color: NAVY, letterSpacing: "0.1em" }}>
                   Hall Ticket Number
                 </p>
-                <p lang="kn" className="text-xs" style={{ color: MUTED, fontFamily: KANNADA }}>
+                <p lang="kn" className="text-xs" style={{ color: SOFT, fontFamily: KANNADA }}>
                   {SNT_KN.hallTicketNumber}
                 </p>
                 <p
@@ -254,7 +256,7 @@ export default function SntRegistrationStatus({
               >
                 Download Hall Ticket (PDF)
               </a>
-              <p className="mt-5 text-xs font-light leading-snug" style={{ color: "#9AA3B0" }}>
+              <p className="mt-5 text-xs font-light leading-snug" style={{ color: SOFT }}>
                 Bookmark this page — you can download your hall ticket again from here at any time.
               </p>
             </>
@@ -265,7 +267,7 @@ export default function SntRegistrationStatus({
               </h1>
 
               {phase === "verifying" ? (
-                <p style={{ color: MUTED }} className="mb-6 text-base leading-relaxed" aria-live="polite">
+                <p style={{ color: NAVY }} className="mb-6 text-base leading-relaxed" aria-live="polite">
                   Please wait while we confirm your payment with the bank. Do not close this page.
                 </p>
               ) : (
@@ -279,12 +281,12 @@ export default function SntRegistrationStatus({
               )}
 
               {status === "failed" && phase === "idle" && (
-                <p style={{ color: MUTED }} className="mb-4 text-sm leading-relaxed">
+                <p style={{ color: NAVY }} className="mb-4 text-sm leading-relaxed">
                   Your last payment attempt did not go through. No hall ticket has been issued. You can try again below.
                 </p>
               )}
               {phase === "slow" && (
-                <p style={{ color: MUTED }} className="mb-4 text-sm leading-relaxed">
+                <p style={{ color: NAVY }} className="mb-4 text-sm leading-relaxed">
                   We haven&apos;t received confirmation yet. If money was debited from your account, please do not pay
                   again — refresh this page in a few minutes, or call the academy.
                 </p>
@@ -292,7 +294,7 @@ export default function SntRegistrationStatus({
 
               <CentreInfo name={centreName} addressLines={centreAddressLines} />
 
-              <p style={{ color: MUTED }} className="mb-6 text-sm leading-relaxed">
+              <p style={{ color: NAVY }} className="mb-6 text-sm leading-relaxed">
                 {firstName}, your details are saved. Pay the registration fee of ₹{SNT_EXAM.feeRupees} to receive your
                 hall ticket number and download your hall ticket.
               </p>
@@ -321,9 +323,9 @@ export default function SntRegistrationStatus({
                 </p>
               )}
 
-              <p className="mt-6 text-xs font-light leading-snug" style={{ color: "#9AA3B0" }}>
+              <p className="mt-6 text-xs font-light leading-snug" style={{ color: SOFT }}>
                 Already paid? It can take a minute to confirm.{" "}
-                <button type="button" onClick={startPolling} className="inline-flex min-h-[44px] items-center underline underline-offset-2" style={{ color: GOLD }}>
+                <button type="button" onClick={startPolling} className="inline-flex min-h-[44px] items-center underline underline-offset-2" style={{ color: NAVY }}>
                   Check payment status
                 </button>
               </p>
@@ -331,7 +333,7 @@ export default function SntRegistrationStatus({
           )}
         </div>
         <div className="px-6 py-4 text-center sm:px-10" style={{ borderTop: `1px solid ${CARD_BORDER}`, backgroundColor: STRIP_BG }}>
-          <Link href="/scholarship" className="inline-flex min-h-[44px] items-center text-xs font-medium" style={{ color: MUTED }}>
+          <Link href="/scholarship" className="inline-flex min-h-[44px] items-center text-xs font-medium" style={{ color: SOFT }}>
             About the SNT Scholarship
           </Link>
           {status === "paid" && (

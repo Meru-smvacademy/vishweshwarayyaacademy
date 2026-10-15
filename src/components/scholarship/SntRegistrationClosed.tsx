@@ -4,7 +4,8 @@ import { SNT_KN } from "@/content/scholarship-kn";
 
 const NAVY = "#0F1E3C";
 const GOLD = "#C4922A";
-const MUTED = "#6B7A90";
+// Kannada lines: slightly lighter than the NAVY English text, still 10.7:1 on CREAM.
+const KN_INK = "var(--scholarship-navy-light)";
 const CREAM = "#F9F6F0";
 
 const DISPLAY = "var(--font-playfair-display), Georgia, serif";
@@ -18,21 +19,21 @@ export default function SntRegistrationClosed() {
         <div style={{ backgroundColor: GOLD }} className="mx-auto mb-6 h-0.5 w-10" />
         <h1 style={{ fontFamily: DISPLAY, color: NAVY }} className="mb-3 text-3xl font-semibold">
           {SNT_EXAM.registrationClosedMessage}
-          <span lang="kn" className="mt-1 block text-sm" style={{ fontFamily: KANNADA, color: MUTED }}>
+          <span lang="kn" className="mt-1 block text-sm" style={{ fontFamily: KANNADA, color: KN_INK }}>
             {SNT_KN.registrationClosed}
           </span>
         </h1>
-        <p style={{ color: MUTED }} className="mb-8 text-base leading-relaxed">
+        <p style={{ color: NAVY }} className="mb-8 text-base leading-relaxed">
           The SNT Scholarship Exam has begun. If you have already registered, use the link you received to download your
           hall ticket.
-          <span lang="kn" className="mt-1 block text-sm" style={{ fontFamily: KANNADA, color: MUTED }}>
+          <span lang="kn" className="mt-1 block text-sm" style={{ fontFamily: KANNADA, color: KN_INK }}>
             {SNT_KN.registrationClosedDetail}
           </span>
         </p>
         <Link
           href="/scholarship"
           className="inline-flex min-h-[44px] flex-col justify-center rounded-2xl border px-6 py-1.5 text-sm font-medium transition-all hover:opacity-70"
-          style={{ color: GOLD, borderColor: GOLD }}
+          style={{ color: NAVY, borderColor: NAVY }}
         >
           About the SNT Scholarship
           <span lang="kn" className="block text-xs font-normal" style={{ fontFamily: KANNADA }}>

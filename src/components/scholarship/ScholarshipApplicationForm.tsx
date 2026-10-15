@@ -30,17 +30,18 @@ import {
   type SntRegistrationValues,
 } from "@/lib/validation/sntRegistration";
 
+// Outdoor readability: all text is NAVY (16.5:1 on white) or, for Kannada
+// second lines, --scholarship-navy-light (11.5:1). --muted (6.0:1) is used only
+// for placeholders and input borders. GOLD is decoration only, never text.
 const NAVY = "#0F1E3C";
 const GOLD = "#C4922A";
-const MUTED_LABEL = "#8A95A5";
-const RULE = "#DDD6CC";
+const KN_INK = "var(--scholarship-navy-light)";
+const SOFT_INK = "var(--muted)";
 const CARD_BORDER = "#E2DAD0";
 const STRIP_BG = "#FDFAF6";
 const DISABLED_BG = "#C5BDB0";
 const ERROR = "#C0392B";
 const CREAM = "#F9F6F0";
-
-const KN_MUTED = "#7A8597";
 
 const DISPLAY = "var(--font-playfair-display), Georgia, serif";
 // Kannada characters fall through to Noto Sans Kannada (Outfit has none), so
@@ -126,7 +127,7 @@ function ChevronIcon() {
   return (
     <span
       className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2"
-      style={{ color: "#A8B0BC" }}
+      style={{ color: SOFT_INK }}
     >
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
         <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -136,7 +137,7 @@ function ChevronIcon() {
 }
 
 /** The Kannada line under an English label or sentence: smaller and muted. */
-function Kn({ children, className = "", color = KN_MUTED }: { children: ReactNode; className?: string; color?: string }) {
+function Kn({ children, className = "", color = KN_INK }: { children: ReactNode; className?: string; color?: string }) {
   return (
     <span
       lang="kn"
@@ -184,14 +185,14 @@ function Field({
       <label
         htmlFor={htmlFor}
         className="text-xs font-medium uppercase tracking-widest transition-colors duration-150"
-        style={{ fontFamily: SANS, color: isFocused ? GOLD : MUTED_LABEL, letterSpacing: "0.1em" }}
+        style={{ fontFamily: SANS, color: NAVY, letterSpacing: "0.1em" }}
       >
         {label}
         <Kn className="mt-0.5">{labelKn}</Kn>
       </label>
       <div
         className="relative flex items-center pb-0.5 transition-colors duration-150 [&>input]:min-h-[44px] [&>select]:min-h-[44px]"
-        style={{ borderBottom: `1.5px solid ${error ? ERROR : isFocused ? GOLD : RULE}` }}
+        style={{ borderBottom: `2px solid ${error ? ERROR : isFocused ? NAVY : SOFT_INK}` }}
       >
         {children}
       </div>
@@ -315,7 +316,7 @@ export default function ScholarshipApplicationForm() {
             Apply for SNT
             <br className="hidden sm:block" /> Scholarship
           </h1>
-          <p style={{ color: "#6B7A90" }} className="text-base font-light sm:text-lg">
+          <p style={{ color: NAVY }} className="text-base font-light sm:text-lg">
             Take the first step towards your academic journey.
           </p>
           <Kn className="mt-1 text-sm">
@@ -327,7 +328,7 @@ export default function ScholarshipApplicationForm() {
           >
             <p
               className="text-xs font-medium uppercase tracking-widest"
-              style={{ fontFamily: SANS, color: GOLD, letterSpacing: "0.1em" }}
+              style={{ fontFamily: SANS, color: NAVY, letterSpacing: "0.1em" }}
             >
               Exam Centre
             </p>
@@ -336,7 +337,7 @@ export default function ScholarshipApplicationForm() {
               {SNT_EXAM.centre.name}
             </p>
             <Kn>{SNT_KN.centreName}</Kn>
-            <address style={{ fontFamily: SANS, color: "#6B7A90" }} className="text-sm font-light not-italic leading-relaxed">
+            <address style={{ fontFamily: SANS, color: NAVY }} className="text-sm font-light not-italic leading-relaxed">
               {SNT_EXAM.centre.addressLines.map((line) => (
                 <span key={line} className="block">
                   {line}
@@ -368,7 +369,7 @@ export default function ScholarshipApplicationForm() {
             <div className="sm:col-span-2">
               <span
                 className="mb-3 block text-xs font-medium uppercase tracking-widest"
-                style={{ fontFamily: SANS, color: errors.photo ? ERROR : MUTED_LABEL, letterSpacing: "0.1em" }}
+                style={{ fontFamily: SANS, color: errors.photo ? ERROR : NAVY, letterSpacing: "0.1em" }}
               >
                 Student Passport Photo
                 <Kn className="mt-0.5">{SNT_KN.labels.photo}</Kn>
@@ -376,7 +377,7 @@ export default function ScholarshipApplicationForm() {
               <div className="flex items-center gap-5">
                 <div
                   className="relative flex h-32 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg"
-                  style={{ border: `1.5px dashed ${errors.photo ? ERROR : photo ? GOLD : RULE}`, backgroundColor: STRIP_BG }}
+                  style={{ border: `2px dashed ${errors.photo ? ERROR : photo ? NAVY : SOFT_INK}`, backgroundColor: STRIP_BG }}
                 >
                   {photo ? (
                     <Image
@@ -389,8 +390,8 @@ export default function ScholarshipApplicationForm() {
                     />
                   ) : (
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <circle cx="12" cy="9" r="4" stroke={MUTED_LABEL} strokeWidth="1.3" />
-                      <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" stroke={MUTED_LABEL} strokeWidth="1.3" strokeLinecap="round" />
+                      <circle cx="12" cy="9" r="4" stroke={SOFT_INK} strokeWidth="1.3" />
+                      <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" stroke={SOFT_INK} strokeWidth="1.3" strokeLinecap="round" />
                     </svg>
                   )}
                 </div>
@@ -398,10 +399,10 @@ export default function ScholarshipApplicationForm() {
                   <label
                     htmlFor="photo"
                     className="inline-flex min-h-[44px] cursor-pointer flex-col justify-center rounded-2xl border px-5 py-1.5 text-sm font-medium transition-all hover:opacity-70"
-                    style={{ fontFamily: SANS, color: GOLD, borderColor: GOLD }}
+                    style={{ fontFamily: SANS, color: NAVY, borderColor: NAVY }}
                   >
                     {isPreparingPhoto ? "Processing…" : photo ? "Change photo" : "Upload photo"}
-                    <Kn color={GOLD}>
+                    <Kn>
                       {isPreparingPhoto ? SNT_KN.processingPhoto : photo ? SNT_KN.changePhoto : SNT_KN.uploadPhoto}
                     </Kn>
                   </label>
@@ -413,7 +414,7 @@ export default function ScholarshipApplicationForm() {
                     className="sr-only"
                     aria-invalid={Boolean(errors.photo)}
                   />
-                  <p style={{ fontFamily: SANS, color: "#9AA3B0" }} className="text-xs font-light leading-snug">
+                  <p style={{ fontFamily: SANS, color: NAVY }} className="text-xs font-light leading-snug">
                     Recent passport-size photo · JPG or PNG · max 4 MB. It will be printed on the hall ticket.
                   </p>
                   <Kn className="text-xs">{SNT_KN.photoHelp}</Kn>
@@ -436,7 +437,7 @@ export default function ScholarshipApplicationForm() {
                   onChange={(e) => updateField("studentName", e.target.value)}
                   onFocus={() => setFocused("studentName")}
                   onBlur={() => setFocused(null)}
-                  className="w-full bg-transparent text-base font-light placeholder:opacity-40"
+                  className="w-full bg-transparent text-base font-light placeholder:text-muted"
                   style={{ fontFamily: SANS, color: NAVY }}
                   autoComplete="name"
                   aria-invalid={Boolean(errors.studentName)}
@@ -454,7 +455,7 @@ export default function ScholarshipApplicationForm() {
                   onChange={(e) => updateField("parentName", e.target.value)}
                   onFocus={() => setFocused("parentName")}
                   onBlur={() => setFocused(null)}
-                  className="w-full bg-transparent text-base font-light placeholder:opacity-40"
+                  className="w-full bg-transparent text-base font-light placeholder:text-muted"
                   style={{ fontFamily: SANS, color: NAVY }}
                   aria-invalid={Boolean(errors.parentName)}
                 />
@@ -470,7 +471,7 @@ export default function ScholarshipApplicationForm() {
                   onFocus={() => setFocused("applyingFor")}
                   onBlur={() => setFocused(null)}
                   className="w-full cursor-pointer appearance-none text-ellipsis bg-transparent pr-6 text-base font-light"
-                  style={{ fontFamily: SANS, color: values.applyingFor ? NAVY : `${NAVY}66` }}
+                  style={{ fontFamily: SANS, color: values.applyingFor ? NAVY : SOFT_INK }}
                   aria-invalid={Boolean(errors.applyingFor)}
                 >
                   <option value="" disabled hidden>
@@ -495,7 +496,7 @@ export default function ScholarshipApplicationForm() {
                   onFocus={() => setFocused("educationCompleted")}
                   onBlur={() => setFocused(null)}
                   className="w-full cursor-pointer appearance-none text-ellipsis bg-transparent pr-6 text-base font-light"
-                  style={{ fontFamily: SANS, color: values.educationCompleted ? NAVY : `${NAVY}66` }}
+                  style={{ fontFamily: SANS, color: values.educationCompleted ? NAVY : SOFT_INK }}
                   aria-invalid={Boolean(errors.educationCompleted)}
                 >
                   <option value="" disabled hidden>
@@ -520,7 +521,7 @@ export default function ScholarshipApplicationForm() {
                   onFocus={() => setFocused("medium")}
                   onBlur={() => setFocused(null)}
                   className="w-full cursor-pointer appearance-none text-ellipsis bg-transparent pr-6 text-base font-light"
-                  style={{ fontFamily: SANS, color: values.medium ? NAVY : `${NAVY}66` }}
+                  style={{ fontFamily: SANS, color: values.medium ? NAVY : SOFT_INK }}
                   aria-invalid={Boolean(errors.medium)}
                 >
                   <option value="" disabled hidden>
@@ -546,7 +547,7 @@ export default function ScholarshipApplicationForm() {
                   onChange={(e) => updateField("schoolCollegeName", e.target.value)}
                   onFocus={() => setFocused("schoolCollegeName")}
                   onBlur={() => setFocused(null)}
-                  className="w-full bg-transparent text-base font-light placeholder:opacity-40"
+                  className="w-full bg-transparent text-base font-light placeholder:text-muted"
                   style={{ fontFamily: SANS, color: NAVY }}
                   aria-invalid={Boolean(errors.schoolCollegeName)}
                 />
@@ -563,7 +564,7 @@ export default function ScholarshipApplicationForm() {
                   onChange={(e) => updateField("nativePlace", e.target.value)}
                   onFocus={() => setFocused("nativePlace")}
                   onBlur={() => setFocused(null)}
-                  className="w-full bg-transparent text-base font-light placeholder:opacity-40"
+                  className="w-full bg-transparent text-base font-light placeholder:text-muted"
                   style={{ fontFamily: SANS, color: NAVY }}
                   aria-invalid={Boolean(errors.nativePlace)}
                 />
@@ -580,7 +581,7 @@ export default function ScholarshipApplicationForm() {
                   onFocus={() => setFocused("dob")}
                   onBlur={() => setFocused(null)}
                   className="w-full bg-transparent text-base font-light"
-                  style={{ fontFamily: SANS, color: values.dob ? NAVY : `${NAVY}66` }}
+                  style={{ fontFamily: SANS, color: values.dob ? NAVY : SOFT_INK }}
                   aria-invalid={Boolean(errors.dob)}
                 />
               </Field>
@@ -597,7 +598,7 @@ export default function ScholarshipApplicationForm() {
                   onChange={(e) => updateField("phone", e.target.value)}
                   onFocus={() => setFocused("phone")}
                   onBlur={() => setFocused(null)}
-                  className="w-full bg-transparent text-base font-light placeholder:opacity-40"
+                  className="w-full bg-transparent text-base font-light placeholder:text-muted"
                   style={{ fontFamily: SANS, color: NAVY }}
                   autoComplete="tel"
                   aria-invalid={Boolean(errors.phone)}
@@ -616,7 +617,7 @@ export default function ScholarshipApplicationForm() {
                   onChange={(e) => updateField("whatsapp", e.target.value)}
                   onFocus={() => setFocused("whatsapp")}
                   onBlur={() => setFocused(null)}
-                  className="w-full bg-transparent text-base font-light placeholder:opacity-40"
+                  className="w-full bg-transparent text-base font-light placeholder:text-muted"
                   style={{ fontFamily: SANS, color: NAVY }}
                   aria-invalid={Boolean(errors.whatsapp)}
                 />
@@ -663,7 +664,7 @@ export default function ScholarshipApplicationForm() {
                     target="_blank"
                     rel="noopener"
                     className="py-[13px] font-medium underline underline-offset-2"
-                    style={{ color: GOLD }}
+                    style={{ color: NAVY }}
                   >
                     rules and regulations
                   </Link>
@@ -711,7 +712,7 @@ export default function ScholarshipApplicationForm() {
             style={{ borderTop: `1px solid ${CARD_BORDER}`, backgroundColor: STRIP_BG }}
           >
             <div className="max-w-xs">
-              <p style={{ fontFamily: SANS, color: "#9AA3B0" }} className="text-xs font-light leading-snug">
+              <p style={{ fontFamily: SANS, color: NAVY }} className="text-xs font-light leading-snug">
                 Registration fee ₹{SNT_EXAM.feeRupees} is paid in the next step. Your hall ticket is issued only after
                 the payment is confirmed.
               </p>
@@ -730,14 +731,14 @@ export default function ScholarshipApplicationForm() {
               style={{
                 fontFamily: SANS,
                 backgroundColor: isComplete ? NAVY : DISABLED_BG,
-                color: "#FFFFFF",
+                color: isComplete ? "#FFFFFF" : NAVY,
                 cursor: isComplete && status !== "submitting" ? "pointer" : "not-allowed",
                 letterSpacing: "0.03em",
               }}
             >
               <span className="flex flex-col items-start text-left">
                 {status === "submitting" ? "Saving…" : `Register & Pay ₹${SNT_EXAM.feeRupees}`}
-                <Kn color="rgba(255,255,255,0.8)">
+                <Kn color={isComplete ? "rgba(255,255,255,0.8)" : KN_INK}>
                   {status === "submitting" ? SNT_KN.submitting : SNT_KN.submit(SNT_EXAM.feeRupees)}
                 </Kn>
               </span>
