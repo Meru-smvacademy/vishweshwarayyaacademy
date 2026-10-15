@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { SNT_AMOUNT_PAISE, SNT_BATCH, SNT_PRODUCT } from "@/lib/snt/constants";
+import { SNT_AMOUNT_PAISE, SNT_PRODUCT } from "@/lib/snt/constants";
+import { SNT_EXAM } from "@/content/scholarship";
 import {
   RAZORPAY_EVENT_ID_HEADER,
   RAZORPAY_SIGNATURE_HEADER,
@@ -120,7 +121,7 @@ export async function POST(request: Request) {
 
   const { data: hallTicketNo, error: paidError } = await supabase.rpc("snt_mark_paid", {
     p_registration_id: registration.id,
-    p_batch: SNT_BATCH,
+    p_exam_year: SNT_EXAM.examYear,
     p_order_id: payment.orderId,
     p_payment_id: payment.id,
   });

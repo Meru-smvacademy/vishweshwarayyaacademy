@@ -180,3 +180,12 @@
   line-gap-override: 0.00%;
   size-adjust: 136.86%;
 }
+
+@font-face {
+  font-family: "Noto Sans Kannada Fallback";
+  src: local("Arial");
+  ascent-override: 75.45%;
+  descent-override: 50.36%;
+  line-gap-override: 0.00%;
+  size-adjust: 107.22%;
+}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { SNT_EXAM } from "@/content/scholarship";
+import { SNT_KN, kannadaFor } from "@/content/scholarship-kn";
 import SntRegistrationClosed from "@/components/scholarship/SntRegistrationClosed";
 import {
   SNT_CONSENT_TEXT,
@@ -39,8 +40,13 @@ const DISABLED_BG = "#C5BDB0";
 const ERROR = "#C0392B";
 const CREAM = "#F9F6F0";
 
+const KN_MUTED = "#7A8597";
+
 const DISPLAY = "var(--font-playfair-display), Georgia, serif";
-const SANS = "var(--font-outfit), system-ui, sans-serif";
+// Kannada characters fall through to Noto Sans Kannada (Outfit has none), so
+// mixed text such as dropdown options renders correctly in one element.
+const SANS = "var(--font-outfit), var(--font-noto-kannada), system-ui, sans-serif";
+const KANNADA = "var(--font-noto-kannada), system-ui, sans-serif";
 
 const initialValues: SntRegistrationValues = {
   studentName: "",
@@ -129,27 +135,59 @@ function ChevronIcon() {
   );
 }
 
+/** The Kannada line under an English label or sentence: smaller and muted. */
+function Kn({ children, className = "", color = KN_MUTED }: { children: ReactNode; className?: string; color?: string }) {
+  return (
+    <span
+      lang="kn"
+      className={`block text-[12.5px] font-normal leading-snug ${className}`}
+      // Letter-spacing and uppercase from the English label would break Kannada letter joining.
+      style={{ fontFamily: KANNADA, color, letterSpacing: "normal", textTransform: "none" }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function ErrorText({ message, indent = false, role }: { message: string; indent?: boolean; role?: "alert" }) {
+  const kannada = kannadaFor(SNT_KN.errors, message);
+  return (
+    <div role={role} style={{ fontFamily: SANS, fontSize: "12px", color: ERROR, margin: indent ? "4px 0 0 32px" : 0 }}>
+      <p style={{ margin: 0 }}>{message}</p>
+      {kannada && <Kn color={ERROR}>{kannada}</Kn>}
+    </div>
+  );
+}
+
+/** "English / ಕನ್ನಡ" for a dropdown option (a native option cannot hold two lines). */
+function optionLabel(english: string, kannada = kannadaFor(SNT_KN.options, english)): string {
+  return kannada ? `${english} / ${kannada}` : english;
+}
+
 function Field({
   label,
+  labelKn,
   htmlFor,
   isFocused,
   error,
   children,
 }: {
   label: string;
+  labelKn: string;
   htmlFor: string;
   isFocused: boolean;
   error?: string;
   children: ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex min-w-0 flex-col gap-1.5">
       <label
         htmlFor={htmlFor}
         className="text-xs font-medium uppercase tracking-widest transition-colors duration-150"
         style={{ fontFamily: SANS, color: isFocused ? GOLD : MUTED_LABEL, letterSpacing: "0.1em" }}
       >
         {label}
+        <Kn className="mt-0.5">{labelKn}</Kn>
       </label>
       <div
         className="relative flex items-center pb-0.5 transition-colors duration-150 [&>input]:min-h-[44px] [&>select]:min-h-[44px]"
@@ -157,7 +195,7 @@ function Field({
       >
         {children}
       </div>
-      {error && <p style={{ fontFamily: SANS, fontSize: "12px", color: ERROR, margin: 0 }}>{error}</p>}
+      {error && <ErrorText message={error} />}
     </div>
   );
 }
@@ -280,6 +318,9 @@ export default function ScholarshipApplicationForm() {
           <p style={{ color: "#6B7A90" }} className="text-base font-light sm:text-lg">
             Take the first step towards your academic journey.
           </p>
+          <Kn className="mt-1 text-sm">
+            {SNT_KN.pageTitle} · {SNT_KN.pageSubtitle}
+          </Kn>
           <div
             className="mt-6 rounded-xl px-5 py-4"
             style={{ backgroundColor: STRIP_BG, border: `1px solid ${CARD_BORDER}` }}
@@ -290,9 +331,11 @@ export default function ScholarshipApplicationForm() {
             >
               Exam Centre
             </p>
-            <p style={{ fontFamily: SANS, color: NAVY }} className="mt-1 text-base font-medium">
+            <Kn>{SNT_KN.examCentre}</Kn>
+            <p style={{ fontFamily: SANS, color: NAVY }} className="mt-2 text-base font-medium">
               {SNT_EXAM.centre.name}
             </p>
+            <Kn>{SNT_KN.centreName}</Kn>
             <address style={{ fontFamily: SANS, color: "#6B7A90" }} className="text-sm font-light not-italic leading-relaxed">
               {SNT_EXAM.centre.addressLines.map((line) => (
                 <span key={line} className="block">
@@ -300,11 +343,17 @@ export default function ScholarshipApplicationForm() {
                 </span>
               ))}
             </address>
+            <address className="mt-1 not-italic">
+              {SNT_KN.centreAddressLines.map((line) => (
+                <Kn key={line}>{line}</Kn>
+              ))}
+            </address>
             <p
               style={{ fontFamily: SANS, color: NAVY, borderTop: `1px solid ${CARD_BORDER}` }}
               className="mt-3 pt-3 text-sm leading-relaxed"
             >
               {SNT_EXAM.registrationNotice}
+              <Kn className="mt-1">{SNT_KN.registrationNotice}</Kn>
             </p>
           </div>
         </div>
@@ -322,6 +371,7 @@ export default function ScholarshipApplicationForm() {
                 style={{ fontFamily: SANS, color: errors.photo ? ERROR : MUTED_LABEL, letterSpacing: "0.1em" }}
               >
                 Student Passport Photo
+                <Kn className="mt-0.5">{SNT_KN.labels.photo}</Kn>
               </span>
               <div className="flex items-center gap-5">
                 <div
@@ -344,13 +394,16 @@ export default function ScholarshipApplicationForm() {
                     </svg>
                   )}
                 </div>
-                <div className="flex flex-col items-start gap-2">
+                <div className="flex min-w-0 flex-col items-start gap-2">
                   <label
                     htmlFor="photo"
-                    className="inline-flex min-h-[44px] cursor-pointer items-center rounded-full border px-5 text-sm font-medium transition-all hover:opacity-70"
+                    className="inline-flex min-h-[44px] cursor-pointer flex-col justify-center rounded-2xl border px-5 py-1.5 text-sm font-medium transition-all hover:opacity-70"
                     style={{ fontFamily: SANS, color: GOLD, borderColor: GOLD }}
                   >
                     {isPreparingPhoto ? "Processing…" : photo ? "Change photo" : "Upload photo"}
+                    <Kn color={GOLD}>
+                      {isPreparingPhoto ? SNT_KN.processingPhoto : photo ? SNT_KN.changePhoto : SNT_KN.uploadPhoto}
+                    </Kn>
                   </label>
                   <input
                     id="photo"
@@ -363,17 +416,18 @@ export default function ScholarshipApplicationForm() {
                   <p style={{ fontFamily: SANS, color: "#9AA3B0" }} className="text-xs font-light leading-snug">
                     Recent passport-size photo · JPG or PNG · max 4 MB. It will be printed on the hall ticket.
                   </p>
+                  <Kn className="text-xs">{SNT_KN.photoHelp}</Kn>
                 </div>
               </div>
               {errors.photo && (
-                <p role="alert" style={{ fontFamily: SANS, fontSize: "12px", color: ERROR, margin: "8px 0 0" }}>
-                  {errors.photo}
-                </p>
+                <div className="mt-2">
+                  <ErrorText role="alert" message={errors.photo} />
+                </div>
               )}
             </div>
 
             <div className="sm:col-span-2">
-              <Field label="Student Name" htmlFor="studentName" isFocused={focused === "studentName"} error={errors.studentName}>
+              <Field label="Student Name" labelKn={SNT_KN.labels.studentName} htmlFor="studentName" isFocused={focused === "studentName"} error={errors.studentName}>
                 <input
                   id="studentName"
                   type="text"
@@ -391,7 +445,7 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div className="sm:col-span-2">
-              <Field label="Parent / Guardian Name" htmlFor="parentName" isFocused={focused === "parentName"} error={errors.parentName}>
+              <Field label="Parent / Guardian Name" labelKn={SNT_KN.labels.parentName} htmlFor="parentName" isFocused={focused === "parentName"} error={errors.parentName}>
                 <input
                   id="parentName"
                   type="text"
@@ -408,23 +462,23 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div>
-              <Field label="Applying For" htmlFor="applyingFor" isFocused={focused === "applyingFor"} error={errors.applyingFor}>
+              <Field label="Applying For" labelKn={SNT_KN.labels.applyingFor} htmlFor="applyingFor" isFocused={focused === "applyingFor"} error={errors.applyingFor}>
                 <select
                   id="applyingFor"
                   value={values.applyingFor}
                   onChange={(e) => updateField("applyingFor", e.target.value)}
                   onFocus={() => setFocused("applyingFor")}
                   onBlur={() => setFocused(null)}
-                  className="w-full cursor-pointer appearance-none bg-transparent text-base font-light"
+                  className="w-full cursor-pointer appearance-none text-ellipsis bg-transparent pr-6 text-base font-light"
                   style={{ fontFamily: SANS, color: values.applyingFor ? NAVY : `${NAVY}66` }}
                   aria-invalid={Boolean(errors.applyingFor)}
                 >
                   <option value="" disabled hidden>
-                    Select scholarship
+                    {optionLabel("Select scholarship", SNT_KN.selectPrompts.applyingFor)}
                   </option>
                   {SCHOLARSHIP_PATHWAYS.map((option) => (
                     <option key={option} value={option}>
-                      {option}
+                      {optionLabel(option)}
                     </option>
                   ))}
                 </select>
@@ -433,23 +487,23 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div>
-              <Field label="Education Completed" htmlFor="educationCompleted" isFocused={focused === "educationCompleted"} error={errors.educationCompleted}>
+              <Field label="Education Completed" labelKn={SNT_KN.labels.educationCompleted} htmlFor="educationCompleted" isFocused={focused === "educationCompleted"} error={errors.educationCompleted}>
                 <select
                   id="educationCompleted"
                   value={values.educationCompleted}
                   onChange={(e) => updateField("educationCompleted", e.target.value)}
                   onFocus={() => setFocused("educationCompleted")}
                   onBlur={() => setFocused(null)}
-                  className="w-full cursor-pointer appearance-none bg-transparent text-base font-light"
+                  className="w-full cursor-pointer appearance-none text-ellipsis bg-transparent pr-6 text-base font-light"
                   style={{ fontFamily: SANS, color: values.educationCompleted ? NAVY : `${NAVY}66` }}
                   aria-invalid={Boolean(errors.educationCompleted)}
                 >
                   <option value="" disabled hidden>
-                    Select class
+                    {optionLabel("Select class", SNT_KN.selectPrompts.educationCompleted)}
                   </option>
                   {EDUCATION_COMPLETED_OPTIONS.map((option) => (
                     <option key={option} value={option}>
-                      {option}
+                      {optionLabel(option)}
                     </option>
                   ))}
                 </select>
@@ -458,23 +512,23 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div className="sm:col-span-2">
-              <Field label="Medium of Studying" htmlFor="medium" isFocused={focused === "medium"} error={errors.medium}>
+              <Field label="Medium of Studying" labelKn={SNT_KN.labels.medium} htmlFor="medium" isFocused={focused === "medium"} error={errors.medium}>
                 <select
                   id="medium"
                   value={values.medium}
                   onChange={(e) => updateField("medium", e.target.value)}
                   onFocus={() => setFocused("medium")}
                   onBlur={() => setFocused(null)}
-                  className="w-full cursor-pointer appearance-none bg-transparent text-base font-light"
+                  className="w-full cursor-pointer appearance-none text-ellipsis bg-transparent pr-6 text-base font-light"
                   style={{ fontFamily: SANS, color: values.medium ? NAVY : `${NAVY}66` }}
                   aria-invalid={Boolean(errors.medium)}
                 >
                   <option value="" disabled hidden>
-                    Select medium
+                    {optionLabel("Select medium", SNT_KN.selectPrompts.medium)}
                   </option>
                   {SNT_MEDIUMS.map((option) => (
                     <option key={option} value={option}>
-                      {option}
+                      {optionLabel(option)}
                     </option>
                   ))}
                 </select>
@@ -483,7 +537,7 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div className="sm:col-span-2">
-              <Field label="School / College Name" htmlFor="schoolCollegeName" isFocused={focused === "schoolCollegeName"} error={errors.schoolCollegeName}>
+              <Field label="School / College Name" labelKn={SNT_KN.labels.schoolCollegeName} htmlFor="schoolCollegeName" isFocused={focused === "schoolCollegeName"} error={errors.schoolCollegeName}>
                 <input
                   id="schoolCollegeName"
                   type="text"
@@ -500,7 +554,7 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div>
-              <Field label="Native Place" htmlFor="nativePlace" isFocused={focused === "nativePlace"} error={errors.nativePlace}>
+              <Field label="Native Place" labelKn={SNT_KN.labels.nativePlace} htmlFor="nativePlace" isFocused={focused === "nativePlace"} error={errors.nativePlace}>
                 <input
                   id="nativePlace"
                   type="text"
@@ -517,7 +571,7 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div>
-              <Field label="Date of Birth" htmlFor="dob" isFocused={focused === "dob"} error={errors.dob}>
+              <Field label="Date of Birth" labelKn={SNT_KN.labels.dob} htmlFor="dob" isFocused={focused === "dob"} error={errors.dob}>
                 <input
                   id="dob"
                   type="date"
@@ -533,7 +587,7 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div>
-              <Field label="Phone Number" htmlFor="phone" isFocused={focused === "phone"} error={errors.phone}>
+              <Field label="Phone Number" labelKn={SNT_KN.labels.phone} htmlFor="phone" isFocused={focused === "phone"} error={errors.phone}>
                 <input
                   id="phone"
                   type="tel"
@@ -552,7 +606,7 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div>
-              <Field label="WhatsApp Number (optional)" htmlFor="whatsapp" isFocused={focused === "whatsapp"} error={errors.whatsapp}>
+              <Field label="WhatsApp Number (optional)" labelKn={SNT_KN.labels.whatsapp} htmlFor="whatsapp" isFocused={focused === "whatsapp"} error={errors.whatsapp}>
                 <input
                   id="whatsapp"
                   type="tel"
@@ -570,20 +624,20 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div>
-              <Field label="Academic Year" htmlFor="academicYear" isFocused={focused === "academicYear"} error={errors.academicYear}>
+              <Field label="Academic Year" labelKn={SNT_KN.labels.academicYear} htmlFor="academicYear" isFocused={focused === "academicYear"} error={errors.academicYear}>
                 <select
                   id="academicYear"
                   value={values.academicYear}
                   onChange={(e) => updateField("academicYear", e.target.value)}
                   onFocus={() => setFocused("academicYear")}
                   onBlur={() => setFocused(null)}
-                  className="w-full cursor-pointer appearance-none bg-transparent text-base font-light"
+                  className="w-full cursor-pointer appearance-none text-ellipsis bg-transparent pr-6 text-base font-light"
                   style={{ fontFamily: SANS, color: NAVY }}
                   aria-invalid={Boolean(errors.academicYear)}
                 >
                   {ACADEMIC_YEARS.map((option) => (
                     <option key={option} value={option}>
-                      {option}
+                      {optionLabel(option)}
                     </option>
                   ))}
                 </select>
@@ -613,11 +667,10 @@ export default function ScholarshipApplicationForm() {
                   >
                     rules and regulations
                   </Link>
+                  <Kn className="mt-0.5">{SNT_KN.rulesAccepted}</Kn>
                 </span>
               </label>
-              {errors.rulesAccepted && (
-                <p style={{ fontFamily: SANS, fontSize: "12px", color: ERROR, margin: "4px 0 0 32px" }}>{errors.rulesAccepted}</p>
-              )}
+              {errors.rulesAccepted && <ErrorText message={errors.rulesAccepted} indent />}
             </div>
 
             <div className="sm:col-span-2">
@@ -633,11 +686,10 @@ export default function ScholarshipApplicationForm() {
                 />
                 <span style={{ fontFamily: SANS, color: NAVY }} className="text-sm font-light leading-relaxed">
                   {SNT_CONSENT_TEXT}
+                  <Kn className="mt-1">{SNT_KN.consent}</Kn>
                 </span>
               </label>
-              {errors.consentGiven && (
-                <p style={{ fontFamily: SANS, fontSize: "12px", color: ERROR, margin: "4px 0 0 32px" }}>{errors.consentGiven}</p>
-              )}
+              {errors.consentGiven && <ErrorText message={errors.consentGiven} indent />}
             </div>
 
             <div aria-hidden="true" className="absolute left-[-9999px] h-px w-px overflow-hidden">
@@ -663,10 +715,12 @@ export default function ScholarshipApplicationForm() {
                 Registration fee ₹{SNT_EXAM.feeRupees} is paid in the next step. Your hall ticket is issued only after
                 the payment is confirmed.
               </p>
+              <Kn className="mt-1 text-xs">{SNT_KN.feeLine(SNT_EXAM.feeRupees)}</Kn>
               {status === "error" && submitError && (
-                <p role="alert" style={{ fontFamily: SANS, fontSize: "12px", color: ERROR, marginTop: "8px" }}>
-                  {submitError}
-                </p>
+                <div role="alert" style={{ fontFamily: SANS, fontSize: "12px", color: ERROR, marginTop: "8px" }}>
+                  <p style={{ margin: 0 }}>{submitError}</p>
+                  <Kn color={ERROR}>{SNT_KN.submitFailed}</Kn>
+                </div>
               )}
             </div>
             <button
@@ -681,7 +735,12 @@ export default function ScholarshipApplicationForm() {
                 letterSpacing: "0.03em",
               }}
             >
-              {status === "submitting" ? "Saving…" : `Register & Pay ₹${SNT_EXAM.feeRupees}`}
+              <span className="flex flex-col items-start text-left">
+                {status === "submitting" ? "Saving…" : `Register & Pay ₹${SNT_EXAM.feeRupees}`}
+                <Kn color="rgba(255,255,255,0.8)">
+                  {status === "submitting" ? SNT_KN.submitting : SNT_KN.submit(SNT_EXAM.feeRupees)}
+                </Kn>
+              </span>
               {status !== "submitting" && (
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

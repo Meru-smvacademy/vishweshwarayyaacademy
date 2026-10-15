@@ -161,6 +161,9 @@ export const SNT_EXAM = {
   academyName: "Sir M Vishweshwarayya NEET | JEE Academy",
   campusNames: "Lingasugur Campus  ·  Sindhanur Campus",
   feeRupees: 500,
+  // Hall ticket numbers are this year followed by a 6-digit sequence, e.g.
+  // 2027000001. Each year has its own sequence, starting again at 000001.
+  examYear: 2027,
   // Machine-readable on purpose: registration closes automatically at exam
   // date + reporting time (IST). While examDate is null, registration stays
   // open and pages/hall tickets show "To be announced".
@@ -186,6 +189,11 @@ export const SNT_EXAM = {
   documentsNotice:
     "Bring to the exam hall: (1) this hall ticket, (2) school/college ID card, (3) Aadhaar card. If you do not have a school/college ID card, bring a certificate from your Head Master stating that you are studying in that class. Students without these documents may not be allowed to write the exam.",
 };
+
+// Fails the build if the exam date and the hall-ticket year disagree.
+if (SNT_EXAM.examDate && !SNT_EXAM.examDate.startsWith(`${SNT_EXAM.examYear}-`)) {
+  throw new Error(`SNT_EXAM.examDate (${SNT_EXAM.examDate}) is not in SNT_EXAM.examYear (${SNT_EXAM.examYear}).`);
+}
 
 export function findSntExamCentre(value: string): SntExamCentre | null {
   return SNT_EXAM.centre.value === value ? SNT_EXAM.centre : null;

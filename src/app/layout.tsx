@@ -268,6 +268,21 @@ const cinzel = localFont({
   adjustFontFallback: false,
 });
 
+// Kannada (SNT registration form, hall ticket status). Not preloaded: only the
+// pages that show Kannada text download it.
+const notoSansKannada = localFont({
+  src: [
+    { path: "./fonts/noto-sans-kannada/noto-sans-kannada.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/noto-sans-kannada/noto-sans-kannada.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/noto-sans-kannada/noto-sans-kannada.woff2", weight: "600", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Noto Sans Kannada" }],
+  variable: "--font-noto-kannada",
+  fallback: ['"Noto Sans Kannada Fallback"'],
+  adjustFontFallback: false,
+  preload: false,
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -298,7 +313,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${inter.variable} ${outfit.variable} ${playfairDisplay.variable} ${fraunces.variable} ${workSans.variable} ${dmSans.variable} ${sourceSans3.variable} ${dmMono.variable} ${barlowCondensed.variable} ${jetbrainsMono.variable} ${dmSerifDisplay.variable} ${instrumentSans.variable} ${instrumentSerif.variable} ${lora.variable} ${ebGaramond.variable} ${cinzel.variable} ${poppins.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${inter.variable} ${outfit.variable} ${playfairDisplay.variable} ${fraunces.variable} ${workSans.variable} ${dmSans.variable} ${sourceSans3.variable} ${dmMono.variable} ${barlowCondensed.variable} ${jetbrainsMono.variable} ${dmSerifDisplay.variable} ${instrumentSans.variable} ${instrumentSerif.variable} ${lora.variable} ${ebGaramond.variable} ${cinzel.variable} ${poppins.variable} ${notoSansKannada.variable} antialiased`}
       >
         <a
           href="#main-content"

@@ -1,5 +1,8 @@
+import { SNT_EXAM } from "@/content/scholarship";
+
 export const SNT_PRODUCT = "SNT";
-export const SNT_BATCH = "SNT26";
+// Informational tag on Razorpay orders; payments are matched on product + registration id.
+export const SNT_BATCH = `SNT${SNT_EXAM.examYear}`;
 // Fixed server-side; the browser never supplies the amount.
 export const SNT_AMOUNT_PAISE = 50000;
 

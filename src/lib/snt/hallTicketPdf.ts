@@ -2,11 +2,18 @@ import "server-only";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import fontkit from "@pdf-lib/fontkit";
+import regeneratorRuntime from "regenerator-runtime";
 import { PDFDocument, rgb, type PDFFont, type PDFImage, type PDFPage, type RGB } from "pdf-lib";
 import { SNT_EXAM, findSntExamCentre } from "@/content/scholarship";
 import { formatSntExamDate, formatSntReportingTime } from "@/lib/snt/examSchedule";
+import { isHallTicketNumber } from "@/lib/snt/hallTicketNumber";
+import { SNT_KN } from "@/content/scholarship-kn";
 import { SCHOLARSHIP_RULES, SCHOLARSHIP_RULES_FOOTNOTE, SCHOLARSHIP_RULES_TITLE } from "@/content/scholarship-rules";
 import type { SntRegistration } from "@/lib/supabase/types";
+
+// @pdf-lib/fontkit's Indic shaper (needed for Kannada conjuncts) was compiled
+// expecting this global; without it, drawing Kannada text throws.
+(globalThis as { regeneratorRuntime?: unknown }).regeneratorRuntime ??= regeneratorRuntime;
 
 const A4: [number, number] = [595.28, 841.89];
 const MARGIN = 40;
@@ -28,16 +35,18 @@ const PAID_GREEN = hex("#1E7A46");
 const PAID_BG = hex("#EEF7F1");
 const WHITE = rgb(1, 1, 1);
 
-type Fonts = { regular: PDFFont; bold: PDFFont; display: PDFFont };
+type Fonts = { regular: PDFFont; bold: PDFFont; display: PDFFont; kannada: PDFFont; kannadaBold: PDFFont };
 
 const FONT_DIR = path.join(process.cwd(), "src", "assets", "fonts");
-let fontBytesCache: Promise<[Buffer, Buffer, Buffer]> | null = null;
+let fontBytesCache: Promise<Buffer[]> | null = null;
 
 function loadFontBytes() {
   fontBytesCache ??= Promise.all([
     readFile(path.join(FONT_DIR, "NotoSans-Regular.ttf")),
     readFile(path.join(FONT_DIR, "NotoSans-Bold.ttf")),
     readFile(path.join(FONT_DIR, "NotoSerif-Bold.ttf")),
+    readFile(path.join(FONT_DIR, "NotoSansKannada-Regular.ttf")),
+    readFile(path.join(FONT_DIR, "NotoSansKannada-Bold.ttf")),
   ]);
   return fontBytesCache;
 }
@@ -45,11 +54,15 @@ function loadFontBytes() {
 async function createDocument(title: string): Promise<{ doc: PDFDocument; fonts: Fonts }> {
   const doc = await PDFDocument.create();
   doc.registerFontkit(fontkit);
-  const [regular, bold, display] = await loadFontBytes();
+  const [regular, bold, display, kannada, kannadaBold] = await loadFontBytes();
+  // Subset embedding is required for Kannada: it keeps fontkit's shaped glyphs
+  // (conjuncts, vowel signs) and their advances together.
   const fonts = {
     regular: await doc.embedFont(regular, { subset: true }),
     bold: await doc.embedFont(bold, { subset: true }),
     display: await doc.embedFont(display, { subset: true }),
+    kannada: await doc.embedFont(kannada, { subset: true }),
+    kannadaBold: await doc.embedFont(kannadaBold, { subset: true }),
   };
   doc.setTitle(title);
   doc.setAuthor(SNT_EXAM.academyName);
@@ -178,24 +191,54 @@ function drawDetailRows(page: PDFPage, fonts: Fonts, rows: Row[], x: number, yTo
   return yTop - y;
 }
 
+/**
+ * The hall ticket number in a bordered box, one digit per equal-width cell, so
+ * it can be copied digit by digit into the OMR sheet's bubbles.
+ */
+function drawHallTicketNumber(page: PDFPage, fonts: Fonts, number: string, x: number, yTop: number, width: number) {
+  const height = 84;
+  const pad = 12;
+  page.drawRectangle({ x, y: yTop - height, width, height, color: CREAM, borderColor: NAVY, borderWidth: 1.5 });
+
+  const english = "HALL TICKET NUMBER / ";
+  page.drawText(english, { x: x + pad, y: yTop - 17, size: 8.5, font: fonts.bold, color: GOLD });
+  page.drawText(SNT_KN.hallTicketNumber, {
+    x: x + pad + fonts.bold.widthOfTextAtSize(english, 8.5),
+    y: yTop - 17,
+    size: 9,
+    font: fonts.kannadaBold,
+    color: GOLD,
+  });
+
+  const digits = [...number];
+  const gap = 4;
+  const cellWidth = (width - pad * 2 - gap * (digits.length - 1)) / Math.max(digits.length, 1);
+  const cellHeight = 44;
+  const cellTop = yTop - 28;
+  const size = 24;
+  digits.forEach((digit, i) => {
+    const cellX = x + pad + i * (cellWidth + gap);
+    page.drawRectangle({ x: cellX, y: cellTop - cellHeight, width: cellWidth, height: cellHeight, color: WHITE, borderColor: NAVY, borderWidth: 1 });
+    const digitWidth = fonts.bold.widthOfTextAtSize(digit, size);
+    page.drawText(digit, { x: cellX + (cellWidth - digitWidth) / 2, y: cellTop - cellHeight / 2 - size * 0.36, size, font: fonts.bold, color: NAVY });
+  });
+}
+
 function drawFront(page: PDFPage, fonts: Fonts, registration: SntRegistration, photo: PDFImage) {
   let y = drawHeader(page, fonts, `HALL TICKET  ·  ACADEMIC YEAR ${registration.academic_year}`) - 18;
 
   const photoX = A4[0] - MARGIN - 112;
   drawPhoto(page, photo, fonts, photoX, y);
 
-  // Hall ticket number, prominent, beside the photo.
   const boxWidth = photoX - MARGIN - 16;
-  page.drawRectangle({ x: MARGIN, y: y - 70, width: boxWidth, height: 70, color: CREAM, borderColor: GOLD, borderWidth: 1.5 });
-  page.drawText("HALL TICKET NO.", { x: MARGIN + 14, y: y - 22, size: 8.5, font: fonts.bold, color: GOLD });
-  page.drawText(registration.hall_ticket_no ?? "", { x: MARGIN + 14, y: y - 54, size: 28, font: fonts.bold, color: NAVY });
+  drawHallTicketNumber(page, fonts, registration.hall_ticket_no ?? "", MARGIN, y, boxWidth);
 
   const centre = findSntExamCentre(registration.centre);
   const examRows: Row[] = [
     { label: "Exam Date", value: formatSntExamDate(SNT_EXAM) },
     { label: "Reporting Time", value: formatSntReportingTime(SNT_EXAM) },
   ];
-  drawDetailRows(page, fonts, examRows, MARGIN, y - 80, boxWidth);
+  drawDetailRows(page, fonts, examRows, MARGIN, y - 92, boxWidth);
 
   y -= 168;
 
@@ -293,6 +336,9 @@ async function embedPhoto(doc: PDFDocument, bytes: Uint8Array): Promise<PDFImage
 export async function renderHallTicketPdf(registration: SntRegistration, photoBytes: Uint8Array): Promise<Uint8Array> {
   if (registration.status !== "paid" || !registration.hall_ticket_no) {
     throw new Error("Hall tickets can only be rendered for paid registrations.");
+  }
+  if (!isHallTicketNumber(registration.hall_ticket_no)) {
+    throw new Error(`Hall ticket number ${registration.hall_ticket_no} is not 10 digits.`);
   }
   const { doc, fonts } = await createDocument(`SNT Hall Ticket ${registration.hall_ticket_no}`);
   const photo = await embedPhoto(doc, photoBytes);

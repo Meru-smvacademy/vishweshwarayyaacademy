@@ -1,7 +1,7 @@
 // SNT Scholarship Exam — integration tests.
 //
 // Runs against a live app + a NON-PRODUCTION Supabase (e.g. `supabase start`
-// with migrations 0001–0008 applied) + a local mock of the Razorpay API that
+// with migrations 0001–0009 applied) + a local mock of the Razorpay API that
 // this suite starts itself. Never point this at the live project: it creates
 // registrations and advances the hall-ticket counter.
 //
@@ -21,6 +21,7 @@ import { createClient } from "@supabase/supabase-js";
 import { PDFDocument, PDFName, PDFDict } from "pdf-lib";
 import sharp from "sharp";
 import { startMockRazorpay } from "./mockRazorpay.mjs";
+import { SNT_EXAM } from "../../src/content/scholarship.ts";
 
 const BASE = process.env.SNT_TEST_BASE_URL;
 const WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET;
@@ -49,7 +50,17 @@ const db = createClient(process.env.SNT_TEST_SUPABASE_URL, process.env.SNT_TEST_
   auth: { persistSession: false },
 });
 
-const HALL_TICKET = /^SNT26-\d{5}$/;
+// 10 digits, all numeric: the exam year from config + a 6-digit sequence.
+const EXAM_YEAR = SNT_EXAM.examYear;
+const HALL_TICKET = new RegExp(`^${EXAM_YEAR}\\d{6}$`);
+const BATCH = `SNT${EXAM_YEAR}`;
+
+function assertHallTicket(value) {
+  assert.equal(typeof value, "string");
+  assert.equal(value.length, 10, `hall ticket number ${value} is 10 characters`);
+  assert.match(value, /^[0-9]{10}$/, "all numeric");
+  assert.match(value, HALL_TICKET, `starts with exam year ${EXAM_YEAR}`);
+}
 // Mock defaults: Razorpay fee ₹11.80 including ₹1.80 GST → academy receives ₹488.20.
 const FEE = 1180;
 const TAX = 180;
@@ -161,9 +172,9 @@ async function getRow(id) {
 }
 
 async function counter() {
-  const { data, error } = await db.from("snt_hall_ticket_counters").select("last_value").eq("batch", "SNT26").single();
+  const { data, error } = await db.from("snt_hall_ticket_sequences").select("last_value").eq("exam_year", EXAM_YEAR).maybeSingle();
   if (error) throw error;
-  return data.last_value;
+  return data?.last_value ?? 0;
 }
 
 before(async () => {
@@ -287,7 +298,7 @@ describe("payment", () => {
     assert.equal(order.amount, 50000);
     assert.equal(order.currency, "INR");
     assert.equal(order.receipt, id);
-    assert.deepEqual(order.notes, { product: "SNT", batch: "SNT26", registration_id: id });
+    assert.deepEqual(order.notes, { product: "SNT", batch: BATCH, registration_id: id });
     assert.equal(mock.transferRequests.length, transfersBefore, "no transfer at order time");
     assert.equal((await getRow(id)).order_id, body.razorpay_order_id);
   });
@@ -308,7 +319,7 @@ describe("payment", () => {
     const before = mock.transferRequests.length;
     const { id, orderId, payment, response, body } = await payFully({ studentName: "Asha Patil", medium: "Urdu" });
     assert.equal(response.status, 200, JSON.stringify(body));
-    assert.match(body.hall_ticket_no, HALL_TICKET);
+    assertHallTicket(body.hall_ticket_no);
 
     const row = await getRow(id);
     assert.equal(row.status, "paid");
@@ -341,6 +352,9 @@ describe("payment", () => {
     assert.equal(Math.round(front.getHeight()), 842);
     const xObjects = front.node.Resources().lookup(PDFName.of("XObject"), PDFDict);
     assert.ok(xObjects && xObjects.keys().length >= 1, "front page embeds the student photo");
+    const fonts = front.node.Resources().lookup(PDFName.of("Font"), PDFDict);
+    const fontNames = fonts.keys().map((key) => String(fonts.lookup(key, PDFDict).get(PDFName.of("BaseFont"))));
+    assert.ok(fontNames.some((name) => name.includes("NotoSansKannada")), "front page embeds the Kannada font for the label");
     if (process.env.SNT_TEST_PDF_OUT) {
       const { writeFile } = await import("node:fs/promises");
       await writeFile(process.env.SNT_TEST_PDF_OUT, bytes);
@@ -377,7 +391,7 @@ describe("payment", () => {
     const attacker = await registerOk();
     const attackerOrder = await orderFor(attacker);
     const payment = mock.capture(attackerOrder);
-    const response = await sendWebhook(webhookEvent("payment.captured", payment, { product: "SNT", batch: "SNT26", registration_id: victim }));
+    const response = await sendWebhook(webhookEvent("payment.captured", payment, { product: "SNT", batch: BATCH, registration_id: victim }));
     assert.equal(response.status, 200);
     assert.equal((await getRow(victim)).status, "pending");
   });
@@ -416,7 +430,7 @@ describe("payment", () => {
 
     const row = await getRow(id);
     assert.equal((await counter()) - before, 1, "exactly one hall ticket number issued");
-    assert.match(row.hall_ticket_no, HALL_TICKET);
+    assertHallTicket(row.hall_ticket_no);
     assert.equal(mock.transfers.get(payment.id).length, 1, "exactly one transfer");
     assert.equal(row.transfer_id, mock.transfers.get(payment.id)[0].id);
   });
@@ -442,7 +456,7 @@ describe("payment", () => {
     assert.equal(first.status, 500, "non-2xx makes Razorpay redeliver with its own backoff");
     let row = await getRow(id);
     assert.equal(row.status, "paid");
-    assert.match(row.hall_ticket_no, HALL_TICKET);
+    assertHallTicket(row.hall_ticket_no);
     assert.equal(row.transfer_status, "failed");
     assert.equal(row.transfer_id, null);
     assert.ok(row.transfer_last_error);
@@ -513,8 +527,8 @@ describe("payment", () => {
     const numbers = await Promise.all(responses.map(async (r) => (assert.equal(r.status, 200), (await r.json()).hall_ticket_no)));
 
     assert.equal(new Set(numbers).size, 20, "all 20 numbers are distinct");
-    for (const n of numbers) assert.match(n, HALL_TICKET);
-    const sequence = numbers.map((n) => Number(n.slice(-5))).sort((a, b) => a - b);
+    for (const n of numbers) assertHallTicket(n);
+    const sequence = numbers.map((n) => Number(n.slice(4))).sort((a, b) => a - b);
     assert.deepEqual(sequence, Array.from({ length: 20 }, (_, i) => before + 1 + i), "no gaps, no repeats");
 
     const { data } = await db.from("scholarship_registrations").select("hall_ticket_no, transfer_amount_paise, transfer_id").in("id", ids);

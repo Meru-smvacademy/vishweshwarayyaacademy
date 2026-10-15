@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SNT_EXAM } from "@/content/scholarship";
+import { SNT_KN } from "@/content/scholarship-kn";
 import { SNT_BATCH, SNT_PRODUCT, sntTicketPath, type SntStatus } from "@/lib/snt/constants";
 
 const NAVY = "#0F1E3C";
@@ -16,6 +17,7 @@ const SUCCESS = "#1E7A46";
 
 const DISPLAY = "var(--font-playfair-display), Georgia, serif";
 const SANS = "var(--font-outfit), system-ui, sans-serif";
+const KANNADA = "var(--font-noto-kannada), system-ui, sans-serif";
 
 const CHECKOUT_SCRIPT = "https://checkout.razorpay.com/v1/checkout.js";
 const POLL_INTERVAL_MS = 2500;
@@ -231,9 +233,16 @@ export default function SntRegistrationStatus({
               </p>
               <div className="mb-6 rounded-xl px-4 py-4" style={{ border: `1.5px solid ${GOLD}`, backgroundColor: STRIP_BG }}>
                 <p className="text-xs font-medium uppercase tracking-widest" style={{ color: GOLD, letterSpacing: "0.1em" }}>
-                  Hall Ticket No.
+                  Hall Ticket Number
                 </p>
-                <p className="mt-1 text-3xl font-semibold" style={{ color: NAVY, fontFamily: "var(--font-geist-mono), monospace" }}>
+                <p lang="kn" className="text-xs" style={{ color: MUTED, fontFamily: KANNADA }}>
+                  {SNT_KN.hallTicketNumber}
+                </p>
+                <p
+                  translate="no"
+                  className="mt-2 select-all text-[26px] font-semibold sm:text-3xl"
+                  style={{ color: NAVY, fontFamily: "var(--font-geist-mono), monospace", letterSpacing: "0.12em" }}
+                >
                   {hallTicketNo}
                 </p>
               </div>

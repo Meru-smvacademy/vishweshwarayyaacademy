@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Changed
+- SNT hall ticket numbers are now exactly 10 digits — the exam year (`SNT_EXAM.examYear`, set to 2027) followed by a 6-digit sequence, e.g. `2027000001` — issued only on payment confirmation from a locked per-year row (`snt_hall_ticket_sequences`, migration `0009_snt_numeric_hall_ticket.sql`, which replaces `snt_hall_ticket_counters` and refuses to run while old `SNT26-…` rows exist). Shown on the hall ticket PDF in a bordered box labelled "HALL TICKET NUMBER / ಹಾಲ್ ಟಿಕೆಟ್ ಸಂಖ್ಯೆ", one digit per cell for OMR copying, and on the status page, admin list and export.
+- `/scholarship/apply` shows Kannada beneath every English label, option, helper line, button, error, consent text, fee line, exam-centre block and notice; the registration-closed page too. All Kannada strings are in `src/content/scholarship-kn.ts` (draft wording — to be reviewed by the office).
+- Noto Sans Kannada is self-hosted for the web (`src/app/fonts/noto-sans-kannada`, loaded only where Kannada appears) and embedded in the hall ticket PDF. Added `regenerator-runtime` — `@pdf-lib/fontkit`'s Kannada shaper needs it as a global.
 - Fonts are self-hosted with `next/font/local` instead of `next/font/google`, so builds no longer fetch Google Fonts (intermittent Vercel build failures in `src/app/layout.tsx`). All 20 families keep their weights, styles, CSS variables and fallback metrics; the woff2 files (Google Fonts latin + latin-ext subsets, OFL licences alongside) are in `src/app/fonts`.
 
 ## [0.4.0] - 2026-10-14
