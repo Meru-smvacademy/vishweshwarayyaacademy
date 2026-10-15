@@ -24,7 +24,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: "/philosophy", priority: 0.5, changeFrequency: "monthly" },
   { path: "/results", priority: 0.6, changeFrequency: "monthly" },
   { path: "/scholarship", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/scholarship/apply", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/snt", priority: 0.7, changeFrequency: "monthly" },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

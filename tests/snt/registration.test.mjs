@@ -538,9 +538,28 @@ describe("payment", () => {
   });
 });
 
+describe("registration address", () => {
+  test("/snt and /scholarship/apply both serve the form directly, with /snt as canonical", async () => {
+    for (const path of ["/snt", "/scholarship/apply"]) {
+      // A QR scan arrives with no referrer and must get the page itself, not a redirect.
+      const response = await fetch(`${BASE}${path}`, { redirect: "manual", headers: { referer: "" } });
+      assert.equal(response.status, 200, path);
+      const html = await response.text();
+      assert.match(html, /Exam Centre/, path);
+      assert.match(html, /<link rel="canonical" href="[^"]*\/snt"\s*\/?>/, path);
+    }
+  });
+
+  test("sitemap lists /snt and not the older address", async () => {
+    const xml = await (await fetch(`${BASE}/sitemap.xml`)).text();
+    assert.match(xml, /<loc>[^<]*\/snt<\/loc>/);
+    assert.doesNotMatch(xml, /\/scholarship\/apply/);
+  });
+});
+
 describe("admin", () => {
   test("application page shows the single exam centre with its address", async () => {
-    const html = await (await fetch(`${BASE}/scholarship/apply`)).text();
+    const html = await (await fetch(`${BASE}/snt`)).text();
     assert.match(html, /Exam Centre/);
     assert.match(html, /Sir M V NEET &amp; JEE Academy/);
     for (const line of ["Khazi Complex, Opposite Bayyapur Hospital", "Raichur Bypass Road, Lingasugur", "Raichur District, Karnataka 584122"]) {
@@ -551,7 +570,7 @@ describe("admin", () => {
   });
 
   test("application page has no closing date and announces spot registration", async () => {
-    const html = await (await fetch(`${BASE}/scholarship/apply`)).text();
+    const html = await (await fetch(`${BASE}/snt`)).text();
     assert.match(html, /Registration is open until the exam begins\. Spot registration is allowed on the exam day at the centre\./);
     assert.doesNotMatch(html, /last date|closing date|closes on/i);
     assert.doesNotMatch(html, /Registration for this exam has closed/);

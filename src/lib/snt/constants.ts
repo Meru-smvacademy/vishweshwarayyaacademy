@@ -25,6 +25,10 @@ export const SNT_CONSENT_TEXT =
 
 export const SNT_RULES_PDF_PATH = "/api/scholarship/rules";
 
+// Public address of the registration form (posters, QR codes, canonical URL).
+// /scholarship/apply serves the same page for older links.
+export const SNT_REGISTRATION_PATH = "/snt";
+
 export function sntRegistrationPath(id: string): string {
   return `/scholarship/registration/${id}`;
 }

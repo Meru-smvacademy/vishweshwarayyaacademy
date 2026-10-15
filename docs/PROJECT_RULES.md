@@ -95,7 +95,8 @@ The full page set (build order is governed separately — see §12). This is the
 /results/stories/[slug]            Success story detail
 /scholarship                       SNT Scholarship overview
 /scholarship/eligibility           Eligibility & pattern
-/scholarship/apply                 Paid SNT exam registration form
+/snt                               Paid SNT exam registration form (canonical; posters/QR)
+/scholarship/apply                 Same page as /snt for older links (canonical → /snt)
 /scholarship/registration/[id]     Registration status, Pay now, hall ticket download (noindex)
 /scholarship/status                Status lookup (noindex)
 /gallery                           Gallery hub
@@ -173,7 +174,7 @@ The SNT (Scholarship-cum-Nurture Test) is the academy's highest-intent acquisiti
 
 **Structure (as built, Module 7):** `/scholarship` is a single consolidated informational page — Introduction, About SNT Scholarship, Vision, Objectives, Eligibility, Scholarship Categories, Selection Process, Scholarship Benefits, Required Documents, Important Dates, FAQ, and Contact — built verbatim from `docs/SCHOLARSHIP_FOUNDATION.md`. `/scholarship/eligibility` and `/scholarship/status` from the original plan below were not built — Eligibility lives on the main page instead.
 
-**SNT exam registration (as built, Module 17):** `/scholarship/apply` is a paid registration for the SNT Scholarship Exam. On submit the registration is saved as `pending` in `scholarship_registrations` (migration 0007); the student then pays ₹500 and receives a 10-digit hall ticket number (exam year + 6-digit sequence, e.g. `2027000001`; migration 0009) and a 2-page A4 hall-ticket PDF. `/scholarship/registration/[id]` is the per-registration status page (Pay now while pending/failed; download while paid). Admin: `/admin/scholarship`.
+**SNT exam registration (as built, Module 17):** `/snt` (also served at `/scholarship/apply` for older links; both declare `/snt` as canonical, and only `/snt` is in the sitemap) is a paid registration for the SNT Scholarship Exam. On submit the registration is saved as `pending` in `scholarship_registrations` (migration 0007); the student then pays ₹500 and receives a 10-digit hall ticket number (exam year + 6-digit sequence, e.g. `2027000001`; migration 0009) and a 2-page A4 hall-ticket PDF. `/scholarship/registration/[id]` is the per-registration status page (Pay now while pending/failed; download while paid). Admin: `/admin/scholarship`.
 
 **Original planned structure (superseded for now by the single-page build above):**
 ```

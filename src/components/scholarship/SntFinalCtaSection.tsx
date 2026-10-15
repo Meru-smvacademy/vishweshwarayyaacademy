@@ -132,7 +132,7 @@ export default function SntFinalCtaSection() {
         </p>
 
         <Link
-          href="/scholarship/apply"
+          href="/snt"
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           onClick={handleClick}
