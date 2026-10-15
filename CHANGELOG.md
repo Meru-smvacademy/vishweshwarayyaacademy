@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+- Fonts are self-hosted with `next/font/local` instead of `next/font/google`, so builds no longer fetch Google Fonts (intermittent Vercel build failures in `src/app/layout.tsx`). All 20 families keep their weights, styles, CSS variables and fallback metrics; the woff2 files (Google Fonts latin + latin-ext subsets, OFL licences alongside) are in `src/app/fonts`.
+
 ## [0.4.0] - 2026-10-14
 
 ### Added

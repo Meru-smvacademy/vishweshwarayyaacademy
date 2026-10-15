@@ -52,7 +52,7 @@ Non-negotiable qualities:
 
 | Role | Font | Notes |
 |---|---|---|
-| UI / Body | **Geist Sans** (already wired via `next/font/google` in `layout.tsx`) | All paragraph text, nav, forms, cards |
+| UI / Body | **Geist Sans** (self-hosted via `next/font/local` in `layout.tsx`, files in `src/app/fonts`) | All paragraph text, nav, forms, cards |
 | Monospace | **Geist Mono** | Reference numbers, application IDs, code-like data only |
 | Display / Hero headings (optional, Phase 2) | A single serif (e.g. Fraunces or Playfair Display) may be introduced later for hero moments only | Do not add a second font family without a stated reason — every extra font is extra weight on a 4G connection |
 
@@ -72,6 +72,7 @@ Non-negotiable qualities:
 - Maximum 2 font families, maximum 3 weights per family, total font payload ≤ 90 KB.
 - Line length for body copy: 60–75 characters (`max-w-prose` or equivalent).
 - Font loading uses `next/font` exclusively — no external `<link>` font tags, no FOUT/CLS from late-loading fonts.
+- Fonts are self-hosted with `next/font/local` (woff2 files committed in `src/app/fonts`, latin + latin-ext). Do not use `next/font/google`: it fetches from Google at build time and makes builds fail when that fetch fails.
 
 ---
 
