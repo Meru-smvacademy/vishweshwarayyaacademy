@@ -141,6 +141,64 @@ export const FAQS: ScholarshipFaqItem[] = [
   { question: "Can students from any school apply?", answer: null },
 ];
 
+// ---------------------------------------------------------------------------
+// SNT Scholarship Exam — details printed on the hall ticket and shown on the
+// registration pages. Every value marked TODO is a placeholder that the office
+// must replace before registrations open.
+// ---------------------------------------------------------------------------
+
+// The database accepts both campus names, so a second exam centre can be
+// added later as content plus a form selector, without a migration.
+export type SntExamCentre = {
+  /** Stored in scholarship_registrations.centre; must be one the database allows. */
+  value: "Lingasugur" | "Sindhanur";
+  name: string;
+  addressLines: string[];
+};
+
+export const SNT_EXAM = {
+  name: "SNT SCHOLARSHIP EXAM",
+  academyName: "Sir M Vishweshwarayya NEET | JEE Academy",
+  campusNames: "Lingasugur Campus  ·  Sindhanur Campus",
+  feeRupees: 500,
+  // Hall ticket numbers are this year followed by a 6-digit sequence, e.g.
+  // 2027000001. Each year has its own sequence, starting again at 000001.
+  examYear: 2027,
+  // Machine-readable on purpose: registration closes automatically at exam
+  // date + reporting time (IST). While examDate is null, registration stays
+  // open and pages/hall tickets show "To be announced".
+  examDate: null as string | null, // TODO: exam date as "YYYY-MM-DD", e.g. "2026-03-15"
+  reportingTime: null as string | null, // TODO: reporting time as 24-hour "HH:MM" IST, e.g. "09:00"
+  duration: "1 hour",
+  // There is no last date: spot entry is allowed on exam day at the centre.
+  registrationNotice:
+    "Registration is open until the exam begins. Spot registration is allowed on the exam day at the centre.",
+  registrationClosedMessage: "Registration for this exam has closed.",
+  scholarshipDetails:
+    "TODO: scholarship / prize details (e.g. ranks 1–10: 100% tuition waiver; ranks 11–50: 50%).",
+  // Single exam centre: every registration is assigned this centre server-side.
+  centre: {
+    value: "Lingasugur",
+    name: "Sir M V NEET & JEE Academy",
+    addressLines: [
+      "Khazi Complex, Opposite Bayyapur Hospital",
+      "Raichur Bypass Road, Lingasugur",
+      "Raichur District, Karnataka 584122",
+    ],
+  } satisfies SntExamCentre,
+  documentsNotice:
+    "Bring to the exam hall: (1) this hall ticket, (2) school/college ID card, (3) Aadhaar card. If you do not have a school/college ID card, bring a certificate from your Head Master stating that you are studying in that class. Students without these documents may not be allowed to write the exam.",
+};
+
+// Fails the build if the exam date and the hall-ticket year disagree.
+if (SNT_EXAM.examDate && !SNT_EXAM.examDate.startsWith(`${SNT_EXAM.examYear}-`)) {
+  throw new Error(`SNT_EXAM.examDate (${SNT_EXAM.examDate}) is not in SNT_EXAM.examYear (${SNT_EXAM.examYear}).`);
+}
+
+export function findSntExamCentre(value: string): SntExamCentre | null {
+  return SNT_EXAM.centre.value === value ? SNT_EXAM.centre : null;
+}
+
 export const CONTACT = {
   intro: "For scholarship enquiries, application support, or admission guidance, please contact:",
   closing:

@@ -1,0 +1,191 @@
+/* Fallback faces used while the self-hosted fonts load. The metrics are the
+   ones next/font/google generated for each family, so layout is unchanged. */
+
+@font-face {
+  font-family: "Geist Fallback";
+  src: local("Arial");
+  ascent-override: 95.94%;
+  descent-override: 28.16%;
+  line-gap-override: 0.00%;
+  size-adjust: 104.76%;
+}
+
+@font-face {
+  font-family: "Geist Mono Fallback";
+  src: local("Arial");
+  ascent-override: 74.67%;
+  descent-override: 21.92%;
+  line-gap-override: 0.00%;
+  size-adjust: 134.59%;
+}
+
+@font-face {
+  font-family: "Manrope Fallback";
+  src: local("Arial");
+  ascent-override: 103.31%;
+  descent-override: 29.07%;
+  line-gap-override: 0.00%;
+  size-adjust: 103.19%;
+}
+
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0.00%;
+  size-adjust: 107.12%;
+}
+
+@font-face {
+  font-family: "Outfit Fallback";
+  src: local("Arial");
+  ascent-override: 100.18%;
+  descent-override: 26.05%;
+  line-gap-override: 0.00%;
+  size-adjust: 99.82%;
+}
+
+@font-face {
+  font-family: "Playfair Display Fallback";
+  src: local("Times New Roman");
+  ascent-override: 97.25%;
+  descent-override: 22.56%;
+  line-gap-override: 0.00%;
+  size-adjust: 111.26%;
+}
+
+@font-face {
+  font-family: "Poppins Fallback";
+  src: local("Arial");
+  ascent-override: 93.62%;
+  descent-override: 31.21%;
+  line-gap-override: 8.92%;
+  size-adjust: 112.16%;
+}
+
+@font-face {
+  font-family: "Fraunces Fallback";
+  src: local("Times New Roman");
+  ascent-override: 84.71%;
+  descent-override: 22.09%;
+  line-gap-override: 0.00%;
+  size-adjust: 115.45%;
+}
+
+@font-face {
+  font-family: "Work Sans Fallback";
+  src: local("Arial");
+  ascent-override: 83.09%;
+  descent-override: 21.71%;
+  line-gap-override: 0.00%;
+  size-adjust: 111.93%;
+}
+
+@font-face {
+  font-family: "DM Sans Fallback";
+  src: local("Arial");
+  ascent-override: 94.90%;
+  descent-override: 29.66%;
+  line-gap-override: 0.00%;
+  size-adjust: 104.53%;
+}
+
+@font-face {
+  font-family: "Source Sans 3 Fallback";
+  src: local("Arial");
+  ascent-override: 109.21%;
+  descent-override: 42.66%;
+  line-gap-override: 0.00%;
+  size-adjust: 93.76%;
+}
+
+@font-face {
+  font-family: "DM Mono Fallback";
+  src: local("Arial");
+  ascent-override: 73.71%;
+  descent-override: 23.03%;
+  line-gap-override: 0.00%;
+  size-adjust: 134.59%;
+}
+
+@font-face {
+  font-family: "Barlow Condensed Fallback";
+  src: local("Arial");
+  ascent-override: 130.73%;
+  descent-override: 26.15%;
+  line-gap-override: 0.00%;
+  size-adjust: 76.49%;
+}
+
+@font-face {
+  font-family: "JetBrains Mono Fallback";
+  src: local("Arial");
+  ascent-override: 75.79%;
+  descent-override: 22.29%;
+  line-gap-override: 0.00%;
+  size-adjust: 134.59%;
+}
+
+@font-face {
+  font-family: "DM Serif Display Fallback";
+  src: local("Times New Roman");
+  ascent-override: 94.37%;
+  descent-override: 30.51%;
+  line-gap-override: 0.00%;
+  size-adjust: 109.78%;
+}
+
+@font-face {
+  font-family: "Instrument Sans Fallback";
+  src: local("Arial");
+  ascent-override: 94.42%;
+  descent-override: 24.33%;
+  line-gap-override: 0.00%;
+  size-adjust: 102.74%;
+}
+
+@font-face {
+  font-family: "Instrument Serif Fallback";
+  src: local("Times New Roman");
+  ascent-override: 117.94%;
+  descent-override: 36.93%;
+  line-gap-override: 0.00%;
+  size-adjust: 83.94%;
+}
+
+@font-face {
+  font-family: "Lora Fallback";
+  src: local("Times New Roman");
+  ascent-override: 87.33%;
+  descent-override: 23.78%;
+  line-gap-override: 0.00%;
+  size-adjust: 115.20%;
+}
+
+@font-face {
+  font-family: "EB Garamond Fallback";
+  src: local("Times New Roman");
+  ascent-override: 106.26%;
+  descent-override: 31.44%;
+  line-gap-override: 0.00%;
+  size-adjust: 94.77%;
+}
+
+@font-face {
+  font-family: "Cinzel Fallback";
+  src: local("Times New Roman");
+  ascent-override: 71.31%;
+  descent-override: 27.18%;
+  line-gap-override: 0.00%;
+  size-adjust: 136.86%;
+}
+
+@font-face {
+  font-family: "Noto Sans Kannada Fallback";
+  src: local("Arial");
+  ascent-override: 75.45%;
+  descent-override: 50.36%;
+  line-gap-override: 0.00%;
+  size-adjust: 107.22%;
+}

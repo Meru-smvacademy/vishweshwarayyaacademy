@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import ScholarshipApplicationForm from "@/components/scholarship/ScholarshipApplicationForm";
-import { pageMetadata } from "@/lib/seo";
+import SntRegistrationPage, { sntRegistrationMetadata } from "@/components/scholarship/SntRegistrationPage";
 
-export const metadata: Metadata = pageMetadata({
-  title: "Apply for SNT Scholarship — Vishweshwarayya NEET | JEE Academy",
-  description:
-    "Apply for the SNT Scholarship at Sir M Vishweshwarayya NEET | JEE Academy — submit your details for the NEET or JEE scholarship examination.",
-  path: "/scholarship/apply",
-});
+// Same page as /snt, kept for links and posters already in circulation;
+// its canonical tag points at /snt.
+export const metadata: Metadata = sntRegistrationMetadata;
+
+// Re-checked every minute so the form disappears soon after the exam begins;
+// the register route enforces the same cut-off on every submission.
+export const revalidate = 60;
 
 export default function ScholarshipApplicationPage() {
-  return <ScholarshipApplicationForm />;
+  return <SntRegistrationPage />;
 }

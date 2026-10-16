@@ -79,3 +79,36 @@ export type ScholarshipApplication = {
   created_at: string;
   updated_at: string;
 };
+
+export type SntRegistration = {
+  id: string;
+  hall_ticket_no: string | null;
+  student_name: string;
+  applying_for: string;
+  education_completed: string;
+  medium: string;
+  school_name: string;
+  native_place: string;
+  phone: string;
+  whatsapp: string;
+  parent_name: string;
+  dob: string;
+  academic_year: string;
+  centre: string;
+  photo_path: string;
+  consent_given: boolean;
+  consent_at: string;
+  status: "pending" | "paid" | "failed";
+  amount_paise: number;
+  order_id: string | null;
+  payment_id: string | null;
+  transfer_id: string | null;
+  razorpay_fee_paise: number | null;
+  razorpay_tax_paise: number | null;
+  transfer_amount_paise: number | null;
+  transfer_status: "pending" | "processing" | "done" | "failed" | null;
+  transfer_attempts: number;
+  transfer_last_error: string | null;
+  created_at: string;
+  paid_at: string | null;
+};

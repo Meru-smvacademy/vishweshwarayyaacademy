@@ -52,7 +52,7 @@ Non-negotiable qualities:
 
 | Role | Font | Notes |
 |---|---|---|
-| UI / Body | **Geist Sans** (already wired via `next/font/google` in `layout.tsx`) | All paragraph text, nav, forms, cards |
+| UI / Body | **Geist Sans** (self-hosted via `next/font/local` in `layout.tsx`, files in `src/app/fonts`) | All paragraph text, nav, forms, cards |
 | Monospace | **Geist Mono** | Reference numbers, application IDs, code-like data only |
 | Display / Hero headings (optional, Phase 2) | A single serif (e.g. Fraunces or Playfair Display) may be introduced later for hero moments only | Do not add a second font family without a stated reason — every extra font is extra weight on a 4G connection |
 
@@ -72,6 +72,7 @@ Non-negotiable qualities:
 - Maximum 2 font families, maximum 3 weights per family, total font payload ≤ 90 KB.
 - Line length for body copy: 60–75 characters (`max-w-prose` or equivalent).
 - Font loading uses `next/font` exclusively — no external `<link>` font tags, no FOUT/CLS from late-loading fonts.
+- Fonts are self-hosted with `next/font/local` (woff2 files committed in `src/app/fonts`, latin + latin-ext). Do not use `next/font/google`: it fetches from Google at build time and makes builds fail when that fetch fails.
 
 ---
 
@@ -94,7 +95,9 @@ The full page set (build order is governed separately — see §12). This is the
 /results/stories/[slug]            Success story detail
 /scholarship                       SNT Scholarship overview
 /scholarship/eligibility           Eligibility & pattern
-/scholarship/apply                 Application form
+/snt                               Paid SNT exam registration form (canonical; posters/QR)
+/scholarship/apply                 Same page as /snt for older links (canonical → /snt)
+/scholarship/registration/[id]     Registration status, Pay now, hall ticket download (noindex)
 /scholarship/status                Status lookup (noindex)
 /gallery                           Gallery hub
 /gallery/[albumSlug]                Album detail
@@ -169,7 +172,9 @@ If deeper integration (API sync, SSO, embedded widgets) is ever needed, it is a 
 
 The SNT (Scholarship-cum-Nurture Test) is the academy's highest-intent acquisition funnel — a test as the entry point, admissions counselling as the outcome.
 
-**Structure (as built, Module 7):** `/scholarship` is a single consolidated informational page — Introduction, About SNT Scholarship, Vision, Objectives, Eligibility, Scholarship Categories, Selection Process, Scholarship Benefits, Required Documents, Important Dates, FAQ, and Contact — built verbatim from `docs/SCHOLARSHIP_FOUNDATION.md`. `/scholarship/eligibility`, `/scholarship/apply`, and `/scholarship/status` from the original plan below were not built — Eligibility lives on the main page instead, and Apply/Status are deferred until an actual application form and lead-pipeline integration are scoped.
+**Structure (as built, Module 7):** `/scholarship` is a single consolidated informational page — Introduction, About SNT Scholarship, Vision, Objectives, Eligibility, Scholarship Categories, Selection Process, Scholarship Benefits, Required Documents, Important Dates, FAQ, and Contact — built verbatim from `docs/SCHOLARSHIP_FOUNDATION.md`. `/scholarship/eligibility` and `/scholarship/status` from the original plan below were not built — Eligibility lives on the main page instead.
+
+**SNT exam registration (as built, Module 17):** `/snt` (also served at `/scholarship/apply` for older links; both declare `/snt` as canonical, and only `/snt` is in the sitemap) is a paid registration for the SNT Scholarship Exam. On submit the registration is saved as `pending` in `scholarship_registrations` (migration 0007); the student then pays ₹500 and receives a 10-digit hall ticket number (exam year + 6-digit sequence, e.g. `2027000001`; migration 0009) and a 2-page A4 hall-ticket PDF. `/scholarship/registration/[id]` is the per-registration status page (Pay now while pending/failed; download while paid). Admin: `/admin/scholarship`.
 
 **Original planned structure (superseded for now by the single-page build above):**
 ```
@@ -182,7 +187,14 @@ The SNT (Scholarship-cum-Nurture Test) is the academy's highest-intent acquisiti
 **Rules:**
 - The application form (once built) captures the same core identity fields as the general enquiry form (name, phone, class, target exam) plus academic record — it feeds the same lead pipeline, not a separate silo.
 - Award tiers/slabs are content, not hard-coded numbers in components — they must be editable without a code deploy once the admin module exists.
-- DPDP consent (and guardian consent for minors) is mandatory before submission — no exceptions.
+- DPDP consent (and guardian consent for minors) is mandatory before submission — no exceptions. For SNT registrations this is the required consent checkbox, stored as `consent_given` + `consent_at`; the database rejects any row without it.
+- **Payments:** sirmv.academy talks to Razorpay directly (`RAZORPAY_KEY_ID`/`RAZORPAY_KEY_SECRET`, server-only). `POST /api/scholarship/order` creates the order with the amount fixed in config. A registration becomes paid only via this site's signed Razorpay webhook `POST /api/scholarship/webhook`, which re-reads the payment and order from Razorpay before acting; the browser polls and never decides the outcome. Events for other products on the same Razorpay account are ignored.
+- **Settlement:** after capture, the net amount — amount paid minus Razorpay's fee (`payment.fee`, which already includes GST) — is transferred via Route to `SNT_ROUTE_ACCOUNT_ID`. No commission or other deduction. Transfers are exactly-once (existing transfers are detected before creating one), retried with backoff, and any unresolved transfer is listed on `/admin/scholarship` with a retry button. Never log keys or signatures.
+- A hall ticket number and PDF exist only for a captured payment. Numbers are exactly 10 digits: `SNT_EXAM.examYear` followed by a 6-digit zero-padded sequence (`2027000001`). They are issued inside one database transaction from a locked per-year row in `snt_hall_ticket_sequences`, so they are unique and gapless; each exam year starts again at `000001`. The PDF prints the number one digit per box for copying into the OMR sheet.
+- **Kannada:** every label, option, helper line, button and error on `/scholarship/apply` shows English first with Kannada beneath (options read "English / ಕನ್ನಡ"). All Kannada text lives in `src/content/scholarship-kn.ts` so the office can correct it without touching components; error messages are matched by their exact English text. Kannada uses self-hosted Noto Sans Kannada (web: `src/app/fonts/noto-sans-kannada`, not preloaded; PDF: `src/assets/fonts/NotoSansKannada-*.ttf`, embedded with `subset: true`, which Kannada shaping requires).
+- Student photos live in the private `snt-photos` bucket and are served only through signed URLs or server-rendered PDFs. Aadhaar numbers are never collected.
+- There is no last date of registration — spot entry is allowed on exam day. Registration closes only when the exam begins (`SNT_EXAM.examDate` + `reportingTime`, IST); the register and order routes enforce it, and it stays open while `examDate` is unset.
+- Exam details and rules are content, not code: `src/content/scholarship.ts` (`SNT_EXAM`) and `src/content/scholarship-rules.ts`.
 - `/scholarship/status` is a lookup surface only: reference number + phone, `noindex`, no listing/enumeration of other applicants.
 - Every applicant, awarded or not, is a warm lead — the page copy and downstream flow must never treat "not awarded" as a dead end.
 
@@ -315,6 +327,7 @@ These rules govern how AI-assisted development (Claude Code or any other assista
 | 14 (About) | About (`/about`) — number reused by the user's own instruction for this module; kept distinct from the blocked Tribute entry above rather than renumbering it | ✅ Approved |
 | 15 | Privacy Policy (`/legal/privacy`) | ✅ Built — pending approval; see `docs/CONTENT_CHECKLIST.md` item 19 |
 | 16 | Terms & Conditions (`/legal/terms`) | ✅ Built — pending approval; see `docs/CONTENT_CHECKLIST.md` item 20 |
+| 17 | SNT exam paid registration + hall tickets (`/scholarship/apply`, `/admin/scholarship`) | ✅ Approved — branch `snt-scholarship`; exam dates, centre addresses, prize details and rules text are TODO placeholders in `src/content/` |
 | 5 | Results & Success Stories (`/results`) | ⏸ Intentionally on hold — pending verified admission data in `docs/RESULTS_FOUNDATION.md` |
 
 **Implementation phase: complete**, except Module 5 (Results) and Module 14/Tribute, both deliberately blocked pending real, verified content — see `docs/RESULTS_FOUNDATION.md` and `docs/TRIBUTE_FOUNDATION.md`. Modules 3, 4, 7–13, 14/About, 15, and 16 were built from dedicated source-of-truth documents or content supplied directly in-conversation per rule 2 — see `docs/CONTENT_CHECKLIST.md` for content fields still pending correction or real data within otherwise-approved modules. Note also that several nav/footer links (`/results`, `/results/stories`, `/tribute`, and the four `/courses/[slug]` deep links) point to pages not yet built — this is expected at this stage of the build order, not a defect. `/contact`, `/about/infrastructure`, `/hostel`, `/about`, `/legal/privacy`, and now `/legal/terms` are resolved as of Modules 11–13, 14/About, 15, and 16.

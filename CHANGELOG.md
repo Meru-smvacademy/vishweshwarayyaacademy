@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+- The SNT exam registration form is now served at `/snt` (a real route, so QR scans with no referrer work). `/scholarship/apply` serves the same page for links already in circulation; both set `/snt` as the canonical URL, the sitemap lists `/snt` instead of `/scholarship/apply`, and the scholarship page's Apply button links to `/snt`. The status and hall-ticket routes are unchanged and are the same whichever address the parent started from.
+- `/scholarship/apply`, the registration status page and the closed page: text darkened for outdoor readability. All English text uses the form's navy ink (16.5:1 on white), Kannada lines `--scholarship-navy-light` (11.5:1), placeholders and empty selects `--muted` (6.0:1); input underlines are 2px `--muted` (navy on focus, red on error); gold is no longer used for text. Every text/background pair passes WCAG AA (lowest 5.05:1). Colour and border weight only — no layout, spacing or size changes.
+- SNT hall ticket numbers are now exactly 10 digits — the exam year (`SNT_EXAM.examYear`, set to 2027) followed by a 6-digit sequence, e.g. `2027000001` — issued only on payment confirmation from a locked per-year row (`snt_hall_ticket_sequences`, migration `0009_snt_numeric_hall_ticket.sql`, which replaces `snt_hall_ticket_counters` and refuses to run while old `SNT26-…` rows exist). Shown on the hall ticket PDF in a bordered box labelled "HALL TICKET NUMBER / ಹಾಲ್ ಟಿಕೆಟ್ ಸಂಖ್ಯೆ", one digit per cell for OMR copying, and on the status page, admin list and export.
+- `/scholarship/apply` shows Kannada beneath every English label, option, helper line, button, error, consent text, fee line, exam-centre block and notice; the registration-closed page too. All Kannada strings are in `src/content/scholarship-kn.ts` (draft wording — to be reviewed by the office).
+- Noto Sans Kannada is self-hosted for the web (`src/app/fonts/noto-sans-kannada`, loaded only where Kannada appears) and embedded in the hall ticket PDF. Added `regenerator-runtime` — `@pdf-lib/fontkit`'s Kannada shaper needs it as a global.
+- Fonts are self-hosted with `next/font/local` instead of `next/font/google`, so builds no longer fetch Google Fonts (intermittent Vercel build failures in `src/app/layout.tsx`). All 20 families keep their weights, styles, CSS variables and fallback metrics; the woff2 files (Google Fonts latin + latin-ext subsets, OFL licences alongside) are in `src/app/fonts`.
+
+## [0.4.0] - 2026-10-14
+
+### Added
+- SNT Scholarship Exam paid registration (Module 17) on the existing `/scholarship/apply` page — existing fields and design kept; added student passport photo (JPG/PNG, max 4 MB, resized client-side to 600×800, previewed), parent/guardian name, WhatsApp number (defaults to phone), date of birth, medium of studying (Kannada/English/Urdu/Other), a rules-and-regulations checkbox linking to the rules PDF, and a required parent/guardian consent checkbox. No Aadhaar numbers are collected. There is a single exam centre (Lingasugur), set server-side from `SNT_EXAM.centre` and shown with its address on the application page, the confirmation page and the hall ticket.
+- `scholarship_registrations` table, private `snt-photos` storage bucket, hall-ticket counter and payment-outcome functions (`supabase/migrations/0007_snt_scholarship_registrations.sql`). All writes go through server routes; admins have read-only access.
+- Direct Razorpay integration: `POST /api/scholarship/order` creates the order (amount fixed in config, receipt = registration id, notes product/batch/registration). This site's signed webhook `POST /api/scholarship/webhook` is the only place a registration becomes paid or failed; it re-reads the payment and order from Razorpay, ignores non-SNT events, and is idempotent on the Razorpay event id. Hall ticket numbers (`SNT26-00001`…) are issued only on a captured payment, transactionally, unique and gapless.
+- Net settlement via Razorpay Route (migration 0008): after capture, amount paid minus Razorpay's fee (incl. GST) is transferred to the academy's linked account (`SNT_ROUTE_ACCOUNT_ID`) exactly once, with retries; no commission. Fee, GST, transferred amount and transfer id are stored per registration, shown in admin with totals and in the export; unresolved transfers are listed with a retry button.
+- No last date of registration: spot entry is allowed on exam day. Registration and new payments close automatically when the exam begins (`examDate` + `reportingTime`, IST, in `src/content/scholarship.ts`); while `examDate` is unset, registration stays open.
+- `/scholarship/registration/[id]` — status page with Pay now (pending/failed) and hall-ticket download (paid). 2-page A4 hall-ticket PDF at `/api/scholarship/ticket/[id]` (paid only); rules PDF at `/api/scholarship/rules`, both rendered from `src/content/scholarship-rules.ts`.
+- `/admin/scholarship` — photo thumbnails, hall ticket numbers, payment status, consent, filters (status, class, medium), search, totals with medium/class counts, centre column, CSV export (Excel-ready) including payment, order and transfer ids, and ticket re-download.
+- `tests/snt` integration suite (`npm run test:snt`) with a mock of the Razorpay API: success with correct net transfer, tampered amount, failed payment, duplicate webhook event, non-SNT webhook ignored, transfer failure and retry, 20 concurrent payments, oversized and non-image photos, consent enforcement, webhook signature checks.
+- Dependencies: `pdf-lib`, `@pdf-lib/fontkit`; bundled Noto Sans/Serif fonts (OFL) for the PDF.
+
+### Known issues
+- Exam date, reporting time, duration, scholarship/prize details, centre addresses and all rules text are TODO placeholders in `src/content/scholarship.ts` and `src/content/scholarship-rules.ts`.
+- End-to-end Razorpay test-mode checkout has not been exercised against real Razorpay (only against a local mock of its API).
+- Razorpay Route charges its own transfer fee to the account holding the API keys (not to the academy); that account needs balance to cover it.
+- The site header overflows horizontally by 2px at 1280px width (pre-existing, all pages).
+
 ## [0.3.0] - 2026-08-03
 
 **Implementation phase complete**, except Module 5 (Results & Success Stories), which remains intentionally on hold until verified admission data is supplied in `docs/RESULTS_FOUNDATION.md`.

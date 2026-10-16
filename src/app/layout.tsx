@@ -1,152 +1,286 @@
 import type { Metadata } from "next";
-import {
-  Barlow_Condensed,
-  Cinzel,
-  DM_Mono,
-  DM_Sans,
-  DM_Serif_Display,
-  EB_Garamond,
-  Fraunces,
-  Geist,
-  Geist_Mono,
-  Instrument_Sans,
-  Instrument_Serif,
-  Inter,
-  JetBrains_Mono,
-  Lora,
-  Manrope,
-  Outfit,
-  Playfair_Display,
-  Poppins,
-  Source_Sans_3,
-  Work_Sans,
-} from "next/font/google";
+import localFont from "next/font/local";
 import PublicChrome from "@/components/layout/PublicChrome";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 import "./globals.css";
+import "./fonts/fallbacks.css";
 
-const geistSans = Geist({
+// Fonts are self-hosted (src/app/fonts) so builds never depend on fetching
+// Google Fonts. Files are the Google Fonts latin + latin-ext subsets, with the
+// family names, weights, styles and fallback metrics (src/app/fonts/fallbacks.css)
+// that next/font/google produced.
+
+const geistSans = localFont({
+  src: [
+    { path: "./fonts/geist/geist.woff2", weight: "100 900", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Geist" }],
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  fallback: ['"Geist Fallback"'],
+  adjustFontFallback: false,
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: [
+    { path: "./fonts/geist-mono/geist-mono.woff2", weight: "100 900", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Geist Mono" }],
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  fallback: ['"Geist Mono Fallback"'],
+  adjustFontFallback: false,
 });
 
-const manrope = Manrope({
+const manrope = localFont({
+  src: [
+    { path: "./fonts/manrope/manrope.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/manrope/manrope.woff2", weight: "700", style: "normal" },
+    { path: "./fonts/manrope/manrope.woff2", weight: "800", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Manrope" }],
   variable: "--font-manrope",
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  fallback: ['"Manrope Fallback"'],
+  adjustFontFallback: false,
 });
 
-const inter = Inter({
+const inter = localFont({
+  src: [
+    { path: "./fonts/inter/inter.woff2", weight: "300", style: "normal" },
+    { path: "./fonts/inter/inter.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/inter/inter.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/inter/inter.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/inter/inter.woff2", weight: "700", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Inter" }],
   variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  fallback: ['"Inter Fallback"'],
+  adjustFontFallback: false,
 });
 
-const outfit = Outfit({
+const outfit = localFont({
+  src: [
+    { path: "./fonts/outfit/outfit.woff2", weight: "300", style: "normal" },
+    { path: "./fonts/outfit/outfit.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/outfit/outfit.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/outfit/outfit.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/outfit/outfit.woff2", weight: "700", style: "normal" },
+    { path: "./fonts/outfit/outfit.woff2", weight: "900", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Outfit" }],
   variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "900"],
+  fallback: ['"Outfit Fallback"'],
+  adjustFontFallback: false,
 });
 
-const playfairDisplay = Playfair_Display({
+const playfairDisplay = localFont({
+  src: [
+    { path: "./fonts/playfair-display/playfair-display.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/playfair-display/playfair-display.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/playfair-display/playfair-display.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/playfair-display/playfair-display.woff2", weight: "700", style: "normal" },
+    { path: "./fonts/playfair-display/playfair-display.woff2", weight: "800", style: "normal" },
+    { path: "./fonts/playfair-display/playfair-display-italic.woff2", weight: "400", style: "italic" },
+    { path: "./fonts/playfair-display/playfair-display-italic.woff2", weight: "500", style: "italic" },
+    { path: "./fonts/playfair-display/playfair-display-italic.woff2", weight: "600", style: "italic" },
+    { path: "./fonts/playfair-display/playfair-display-italic.woff2", weight: "700", style: "italic" },
+    { path: "./fonts/playfair-display/playfair-display-italic.woff2", weight: "800", style: "italic" },
+  ],
+  declarations: [{ prop: "font-family", value: "Playfair Display" }],
   variable: "--font-playfair-display",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  style: ["normal", "italic"],
+  fallback: ['"Playfair Display Fallback"'],
+  adjustFontFallback: false,
 });
 
-const poppins = Poppins({
+const poppins = localFont({
+  src: [
+    { path: "./fonts/poppins/poppins-300.woff2", weight: "300", style: "normal" },
+    { path: "./fonts/poppins/poppins-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/poppins/poppins-500.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/poppins/poppins-600.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/poppins/poppins-700.woff2", weight: "700", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Poppins" }],
   variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  fallback: ['"Poppins Fallback"'],
+  adjustFontFallback: false,
 });
 
-const fraunces = Fraunces({
+const fraunces = localFont({
+  src: [
+    { path: "./fonts/fraunces/fraunces.woff2", weight: "100 900", style: "normal" },
+    { path: "./fonts/fraunces/fraunces-italic.woff2", weight: "100 900", style: "italic" },
+  ],
+  declarations: [{ prop: "font-family", value: "Fraunces" }],
   variable: "--font-fraunces",
-  subsets: ["latin"],
-  weight: "variable",
-  style: ["normal", "italic"],
+  fallback: ['"Fraunces Fallback"'],
+  adjustFontFallback: false,
 });
 
-const workSans = Work_Sans({
+const workSans = localFont({
+  src: [
+    { path: "./fonts/work-sans/work-sans.woff2", weight: "300", style: "normal" },
+    { path: "./fonts/work-sans/work-sans.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/work-sans/work-sans.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/work-sans/work-sans.woff2", weight: "600", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Work Sans" }],
   variable: "--font-work-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  fallback: ['"Work Sans Fallback"'],
+  adjustFontFallback: false,
 });
 
-const dmSans = DM_Sans({
+const dmSans = localFont({
+  src: [
+    { path: "./fonts/dm-sans/dm-sans.woff2", weight: "300", style: "normal" },
+    { path: "./fonts/dm-sans/dm-sans.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/dm-sans/dm-sans.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/dm-sans/dm-sans.woff2", weight: "600", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "DM Sans" }],
   variable: "--font-dm-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  fallback: ['"DM Sans Fallback"'],
+  adjustFontFallback: false,
 });
 
-const sourceSans3 = Source_Sans_3({
+const sourceSans3 = localFont({
+  src: [
+    { path: "./fonts/source-sans-3/source-sans-3.woff2", weight: "300", style: "normal" },
+    { path: "./fonts/source-sans-3/source-sans-3.woff2", weight: "600", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Source Sans 3" }],
   variable: "--font-source-sans-3",
-  subsets: ["latin"],
-  weight: ["300", "600"],
+  fallback: ['"Source Sans 3 Fallback"'],
+  adjustFontFallback: false,
 });
 
-const dmMono = DM_Mono({
+const dmMono = localFont({
+  src: [
+    { path: "./fonts/dm-mono/dm-mono-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/dm-mono/dm-mono-500.woff2", weight: "500", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "DM Mono" }],
   variable: "--font-dm-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  fallback: ['"DM Mono Fallback"'],
+  adjustFontFallback: false,
 });
 
-const barlowCondensed = Barlow_Condensed({
+const barlowCondensed = localFont({
+  src: [
+    { path: "./fonts/barlow-condensed/barlow-condensed-300.woff2", weight: "300", style: "normal" },
+    { path: "./fonts/barlow-condensed/barlow-condensed-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/barlow-condensed/barlow-condensed-500.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/barlow-condensed/barlow-condensed-600.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/barlow-condensed/barlow-condensed-700.woff2", weight: "700", style: "normal" },
+    { path: "./fonts/barlow-condensed/barlow-condensed-800.woff2", weight: "800", style: "normal" },
+    { path: "./fonts/barlow-condensed/barlow-condensed-900.woff2", weight: "900", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Barlow Condensed" }],
   variable: "--font-barlow-condensed",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  fallback: ['"Barlow Condensed Fallback"'],
+  adjustFontFallback: false,
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const jetbrainsMono = localFont({
+  src: [
+    { path: "./fonts/jetbrains-mono/jetbrains-mono.woff2", weight: "300", style: "normal" },
+    { path: "./fonts/jetbrains-mono/jetbrains-mono.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/jetbrains-mono/jetbrains-mono.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/jetbrains-mono/jetbrains-mono.woff2", weight: "600", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "JetBrains Mono" }],
   variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  fallback: ['"JetBrains Mono Fallback"'],
+  adjustFontFallback: false,
 });
 
-const dmSerifDisplay = DM_Serif_Display({
+const dmSerifDisplay = localFont({
+  src: [
+    { path: "./fonts/dm-serif-display/dm-serif-display-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/dm-serif-display/dm-serif-display-400-italic.woff2", weight: "400", style: "italic" },
+  ],
+  declarations: [{ prop: "font-family", value: "DM Serif Display" }],
   variable: "--font-dm-serif-display",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+  fallback: ['"DM Serif Display Fallback"'],
+  adjustFontFallback: false,
 });
 
-const instrumentSans = Instrument_Sans({
+const instrumentSans = localFont({
+  src: [
+    { path: "./fonts/instrument-sans/instrument-sans.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/instrument-sans/instrument-sans.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/instrument-sans/instrument-sans.woff2", weight: "600", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Instrument Sans" }],
   variable: "--font-instrument-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  fallback: ['"Instrument Sans Fallback"'],
+  adjustFontFallback: false,
 });
 
-const instrumentSerif = Instrument_Serif({
+const instrumentSerif = localFont({
+  src: [
+    { path: "./fonts/instrument-serif/instrument-serif-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/instrument-serif/instrument-serif-400-italic.woff2", weight: "400", style: "italic" },
+  ],
+  declarations: [{ prop: "font-family", value: "Instrument Serif" }],
   variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+  fallback: ['"Instrument Serif Fallback"'],
+  adjustFontFallback: false,
 });
 
-const lora = Lora({
+const lora = localFont({
+  src: [
+    { path: "./fonts/lora/lora.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/lora/lora.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/lora/lora.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/lora/lora-italic.woff2", weight: "400", style: "italic" },
+    { path: "./fonts/lora/lora-italic.woff2", weight: "500", style: "italic" },
+    { path: "./fonts/lora/lora-italic.woff2", weight: "600", style: "italic" },
+  ],
+  declarations: [{ prop: "font-family", value: "Lora" }],
   variable: "--font-lora",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
+  fallback: ['"Lora Fallback"'],
+  adjustFontFallback: false,
 });
 
-const ebGaramond = EB_Garamond({
+const ebGaramond = localFont({
+  src: [
+    { path: "./fonts/eb-garamond/eb-garamond.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/eb-garamond/eb-garamond.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/eb-garamond/eb-garamond.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/eb-garamond/eb-garamond-italic.woff2", weight: "400", style: "italic" },
+    { path: "./fonts/eb-garamond/eb-garamond-italic.woff2", weight: "500", style: "italic" },
+    { path: "./fonts/eb-garamond/eb-garamond-italic.woff2", weight: "600", style: "italic" },
+  ],
+  declarations: [{ prop: "font-family", value: "EB Garamond" }],
   variable: "--font-eb-garamond",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
+  fallback: ['"EB Garamond Fallback"'],
+  adjustFontFallback: false,
 });
 
-const cinzel = Cinzel({
+const cinzel = localFont({
+  src: [
+    { path: "./fonts/cinzel/cinzel.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/cinzel/cinzel.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/cinzel/cinzel.woff2", weight: "600", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Cinzel" }],
   variable: "--font-cinzel",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  fallback: ['"Cinzel Fallback"'],
+  adjustFontFallback: false,
+});
+
+// Kannada (SNT registration form, hall ticket status). Not preloaded: only the
+// pages that show Kannada text download it.
+const notoSansKannada = localFont({
+  src: [
+    { path: "./fonts/noto-sans-kannada/noto-sans-kannada.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/noto-sans-kannada/noto-sans-kannada.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/noto-sans-kannada/noto-sans-kannada.woff2", weight: "600", style: "normal" },
+  ],
+  declarations: [{ prop: "font-family", value: "Noto Sans Kannada" }],
+  variable: "--font-noto-kannada",
+  fallback: ['"Noto Sans Kannada Fallback"'],
+  adjustFontFallback: false,
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -179,7 +313,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${inter.variable} ${outfit.variable} ${playfairDisplay.variable} ${fraunces.variable} ${workSans.variable} ${dmSans.variable} ${sourceSans3.variable} ${dmMono.variable} ${barlowCondensed.variable} ${jetbrainsMono.variable} ${dmSerifDisplay.variable} ${instrumentSans.variable} ${instrumentSerif.variable} ${lora.variable} ${ebGaramond.variable} ${cinzel.variable} ${poppins.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${inter.variable} ${outfit.variable} ${playfairDisplay.variable} ${fraunces.variable} ${workSans.variable} ${dmSans.variable} ${sourceSans3.variable} ${dmMono.variable} ${barlowCondensed.variable} ${jetbrainsMono.variable} ${dmSerifDisplay.variable} ${instrumentSans.variable} ${instrumentSerif.variable} ${lora.variable} ${ebGaramond.variable} ${cinzel.variable} ${poppins.variable} ${notoSansKannada.variable} antialiased`}
       >
         <a
           href="#main-content"
