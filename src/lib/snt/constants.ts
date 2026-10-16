@@ -16,7 +16,16 @@ export const SNT_PHOTO_TYPES = ["image/jpeg", "image/png"];
 // The SNT form offers only these; older rows may still hold other values
 // (see SCHOLARSHIP_PATHWAYS / EDUCATION_COMPLETED_OPTIONS for the admin filters).
 export const SNT_APPLYING_FOR_OPTIONS = ["NEET Achievement"];
+// The stored value stays "Class 10" (the database allows only 'Class 10' and
+// 'Class 12'); students see the label below. The column name
+// education_completed is historical: it holds the class the student is
+// currently studying in.
 export const SNT_EDUCATION_OPTIONS = ["Class 10"];
+const SNT_CLASS_LABELS: Record<string, string> = { "Class 10": "10th Standard (SSLC)" };
+
+export function sntClassLabel(value: string): string {
+  return SNT_CLASS_LABELS[value] ?? value;
+}
 
 // Medium of studying — the office uses medium-wise counts to set question papers.
 export const SNT_MEDIUMS = ["Kannada", "English", "Urdu", "Other"] as const;

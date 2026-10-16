@@ -170,6 +170,15 @@ export const SNT_EXAM = {
   examDate: null as string | null, // TODO: exam date as "YYYY-MM-DD", e.g. "2026-03-15"
   reportingTime: null as string | null, // TODO: reporting time as 24-hour "HH:MM" IST, e.g. "09:00"
   duration: "1 hour",
+  // Who may register. Shown at the top of the form, on /scholarship and in the
+  // hall-ticket rules.
+  eligibilityNotice:
+    "Only students currently appearing for the 10th standard (SSLC) examination are eligible for this scholarship exam.",
+  // Age limits, counted on the exam day. Kept separate from examDate so the
+  // rule applies even while the public exam date is still "To be announced".
+  // If either changes, update the matching error text in sntRegistration.ts
+  // and scholarship-kn.ts.
+  ageRule: { on: "2027-01-03", minAge: 12, maxAge: 20 },
   // There is no last date: spot entry is allowed on exam day at the centre.
   registrationNotice:
     "Registration is open until the exam begins. Spot registration is allowed on the exam day at the centre.",

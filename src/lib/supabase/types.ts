@@ -85,6 +85,7 @@ export type SntRegistration = {
   hall_ticket_no: string | null;
   student_name: string;
   applying_for: string;
+  /** Class the student is currently studying in (historical column name); see sntClassLabel. */
   education_completed: string;
   medium: string;
   school_name: string;

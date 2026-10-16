@@ -6,6 +6,7 @@ import regeneratorRuntime from "regenerator-runtime";
 import { PDFDocument, rgb, type PDFFont, type PDFImage, type PDFPage, type RGB } from "pdf-lib";
 import { SNT_EXAM, findSntExamCentre } from "@/content/scholarship";
 import { formatSntExamDate, formatSntReportingTime } from "@/lib/snt/examSchedule";
+import { sntClassLabel } from "@/lib/snt/constants";
 import { isHallTicketNumber } from "@/lib/snt/hallTicketNumber";
 import { SNT_KN } from "@/content/scholarship-kn";
 import { SCHOLARSHIP_RULES, SCHOLARSHIP_RULES_FOOTNOTE, SCHOLARSHIP_RULES_TITLE } from "@/content/scholarship-rules";
@@ -247,7 +248,7 @@ function drawFront(page: PDFPage, fonts: Fonts, registration: SntRegistration, p
     { label: "Parent / Guardian", value: registration.parent_name },
     { label: "Date of Birth", value: formatDob(registration.dob) },
     { label: "Applying For", value: registration.applying_for },
-    { label: "Education Completed", value: registration.education_completed },
+    { label: "Currently Studying In", value: sntClassLabel(registration.education_completed) },
     { label: "Medium of Studying", value: registration.medium },
     { label: "School / College", value: registration.school_name },
     { label: "Native Place", value: registration.native_place },

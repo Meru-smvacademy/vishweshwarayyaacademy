@@ -1,21 +1,30 @@
-// Unit tests for reading a typed date of birth. Loads the TypeScript module
+// Unit tests for reading a typed date of birth. Loads the TypeScript modules
 // directly (Node 22.18+ strips types), so no app or database is needed.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { formatDobInWords, parseDob } from "../../src/lib/snt/dateOfBirth.ts";
+import { SNT_EXAM } from "../../src/content/scholarship.ts";
 
-// Reference date for 2-digit years (stands in for the exam date).
-const EXAM = new Date("2027-03-15T00:00:00Z");
+// The same window the registration form and API use.
+const WINDOW = {
+  on: new Date(`${SNT_EXAM.ageRule.on}T00:00:00Z`),
+  minAge: SNT_EXAM.ageRule.minAge,
+  maxAge: SNT_EXAM.ageRule.maxAge,
+};
 const iso = (text) => {
-  const result = parseDob(text, EXAM);
+  const result = parseDob(text, WINDOW);
   assert.equal(result.ok, true, `expected "${text}" to parse, got ${JSON.stringify(result)}`);
   return result.iso;
 };
 const reason = (text) => {
-  const result = parseDob(text, EXAM);
+  const result = parseDob(text, WINDOW);
   assert.equal(result.ok, false, `expected "${text}" to be rejected, got ${JSON.stringify(result)}`);
   return result.reason;
 };
+
+test("the age rule is 12–20 years on the exam day, 3 January 2027", () => {
+  assert.deepEqual(SNT_EXAM.ageRule, { on: "2027-01-03", minAge: 12, maxAge: 20 });
+});
 
 test("reads the day first, never the month", () => {
   assert.equal(iso("03-01-2010"), "2010-01-03");
@@ -37,17 +46,32 @@ test("accepts / - . and spaces as separators, and single-digit day or month", ()
 test("accepts no separator: DDMMYYYY and DDMMYY", () => {
   assert.equal(iso("03012010"), "2010-01-03");
   assert.equal(iso("030110"), "2010-01-03");
-  assert.equal(iso("25121995"), "1995-12-25");
+  assert.equal(iso("25122010"), "2010-12-25");
 });
 
-test("places a 2-digit year in 19xx or 20xx so the age at the exam is 8–40", () => {
+test("accepts ages 12 to 20 on 3 January 2027, inclusive, and rejects the rest", () => {
+  // Turns 12 on the exam day.
+  assert.equal(iso("03-01-2015"), "2015-01-03");
+  // One day short of 12.
+  assert.equal(reason("04-01-2015"), "age");
+  // Still 20 on the exam day (turns 21 the day after).
+  assert.equal(iso("04-01-2006"), "2006-01-04");
+  // Turns 21 on the exam day.
+  assert.equal(reason("03-01-2006"), "age");
+  assert.equal(reason("01-01-1995"), "age");
+  assert.equal(reason("01-01-2020"), "age");
+});
+
+test("places a 2-digit year in 19xx or 20xx so the student is 12–20 on the exam day", () => {
   assert.equal(iso("03-01-10"), "2010-01-03");
   assert.equal(iso("15/06/08"), "2008-06-15");
-  assert.equal(iso("01.01.95"), "1995-01-01");
-  assert.equal(iso("01-01-90"), "1990-01-01");
-  // Neither 1950 nor 2050 gives a plausible age.
+  assert.equal(iso("01.01.12"), "2012-01-01");
+  assert.equal(iso("030115"), "2015-01-03");
+  // The old 8–40 window accepted these; neither century fits 12–20.
+  assert.equal(reason("01-01-95"), "age");
+  assert.equal(reason("01-01-90"), "age");
+  assert.equal(reason("01-01-17"), "age");
   assert.equal(reason("01-01-50"), "age");
-  assert.equal(reason("01-01-25"), "age");
 });
 
 test("rejects impossible dates", () => {
@@ -59,8 +83,8 @@ test("rejects impossible dates", () => {
   assert.equal(reason("10-00-2010"), "impossible");
   assert.equal(reason("31022010"), "impossible");
   assert.equal(reason("29-02-2010"), "impossible");
+  assert.equal(reason("31-02-10"), "impossible");
   assert.equal(iso("29-02-2008"), "2008-02-29");
-  // 2-digit year: 29 February only exists in the century that is a leap year.
   assert.equal(iso("29-02-12"), "2012-02-29");
 });
 
@@ -73,7 +97,7 @@ test("rejects text that is not a date, and reports an empty field as empty", () 
 });
 
 test("formats the parsed date in words in English and Kannada", () => {
-  const result = parseDob("03-01-2010", EXAM);
+  const result = parseDob("03-01-2010", WINDOW);
   assert.equal(formatDobInWords(result), "3 January 2010");
   const kannadaMonths = ["ಜನವರಿ", "ಫೆಬ್ರವರಿ", "ಮಾರ್ಚ್", "ಏಪ್ರಿಲ್", "ಮೇ", "ಜೂನ್", "ಜುಲೈ", "ಆಗಸ್ಟ್", "ಸೆಪ್ಟೆಂಬರ್", "ಅಕ್ಟೋಬರ್", "ನವೆಂಬರ್", "ಡಿಸೆಂಬರ್"];
   assert.equal(formatDobInWords(result, kannadaMonths), "3 ಜನವರಿ 2010");

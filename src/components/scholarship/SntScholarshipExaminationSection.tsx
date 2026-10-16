@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { SNT_EXAM } from "@/content/scholarship";
+import { SNT_KN } from "@/content/scholarship-kn";
 
 const INK = "#0C1B2E";
 const INK_DEEP = "#081320";
@@ -13,6 +15,7 @@ const BORDER_STRONG = "rgba(235, 230, 218, 0.18)";
 
 const DISPLAY = "var(--font-playfair-display), serif";
 const BODY = "var(--font-inter), sans-serif";
+const KANNADA = "var(--font-noto-kannada), system-ui, sans-serif";
 
 const PATHWAYS = [
   { stream: "NEET", variant: "Achievement" },
@@ -95,18 +98,26 @@ export default function SntScholarshipExaminationSection() {
           </div>
 
           <div style={{ paddingBottom: "6px" }}>
-            <p
-              style={{
-                fontSize: "13px",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: CREAM_MUTED,
-                fontWeight: 500,
-                marginBottom: "20px",
-              }}
-            >
-              Class 10 &amp; Class 12 Passed Students
-            </p>
+            <div style={{ marginBottom: "20px", maxWidth: "400px" }}>
+              <p
+                style={{
+                  fontSize: "13px",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: CREAM_MUTED,
+                  fontWeight: 500,
+                  margin: "0 0 8px",
+                }}
+              >
+                Eligibility
+              </p>
+              <p style={{ fontSize: "15px", lineHeight: 1.55, color: CREAM, fontWeight: 500, margin: 0 }}>
+                {SNT_EXAM.eligibilityNotice}
+              </p>
+              <p lang="kn" style={{ fontFamily: KANNADA, fontSize: "13.5px", lineHeight: 1.6, color: CREAM_MUTED, margin: "6px 0 0" }}>
+                {SNT_KN.eligibilityNotice}
+              </p>
+            </div>
             <p
               style={{
                 fontSize: "17px",

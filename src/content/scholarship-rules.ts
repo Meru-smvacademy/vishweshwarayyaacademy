@@ -10,9 +10,12 @@
 // Noto Sans Kannada) in src/assets/fonts — the current PDF fonts have no
 // Kannada glyphs.
 
+import { SNT_EXAM } from "@/content/scholarship";
+
 export const SCHOLARSHIP_RULES_TITLE = "Rules and Regulations";
 
 export const SCHOLARSHIP_RULES: string[] = [
+  `Eligibility: ${SNT_EXAM.eligibilityNotice}`,
   "Bring this hall ticket, your school/college ID card and your Aadhaar card to the exam hall. If you do not have a school/college ID card, bring a certificate from your Head Master stating the class you are studying in. Students without these documents may not be allowed to write the exam.",
   "Report at the exam centre 30 minutes before the reporting time printed on this hall ticket. Students arriving after the exam begins will not be admitted.",
   "Bring your own blue or black ball pen and a writing pad. Nothing will be shared in the hall.",

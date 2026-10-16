@@ -19,6 +19,7 @@ import {
   SNT_PHOTO_MIN_SIDE,
   SNT_PHOTO_TYPES,
   SNT_RULES_PDF_PATH,
+  sntClassLabel,
   sntRegistrationPath,
 } from "@/lib/snt/constants";
 import { ACADEMIC_YEARS, DEFAULT_ACADEMIC_YEAR } from "@/lib/validation/scholarshipApplication";
@@ -53,7 +54,7 @@ const initialValues: SntRegistrationValues = {
   studentName: "",
   // A single programme is still shown as a dropdown, already selected.
   applyingFor: SNT_APPLYING_FOR_OPTIONS.length === 1 ? SNT_APPLYING_FOR_OPTIONS[0] : "",
-  educationCompleted: "",
+  educationCompleted: SNT_EDUCATION_OPTIONS.length === 1 ? SNT_EDUCATION_OPTIONS[0] : "",
   schoolCollegeName: "",
   nativePlace: "",
   phone: "",
@@ -379,6 +380,22 @@ export default function ScholarshipApplicationForm() {
           className="overflow-hidden rounded-2xl shadow-sm sm:rounded-3xl"
           style={{ backgroundColor: "#FFFFFF", border: `1px solid ${CARD_BORDER}` }}
         >
+          <div
+            className="px-6 py-5 sm:px-10"
+            style={{ backgroundColor: STRIP_BG, borderBottom: `1px solid ${CARD_BORDER}`, borderLeft: `4px solid ${GOLD}` }}
+          >
+            <p
+              className="text-xs font-medium uppercase tracking-widest"
+              style={{ fontFamily: SANS, color: NAVY, letterSpacing: "0.1em" }}
+            >
+              Eligibility
+            </p>
+            <Kn>{SNT_KN.eligibilityTitle}</Kn>
+            <p style={{ fontFamily: SANS, color: NAVY }} className="mt-2 text-base font-medium leading-snug">
+              {SNT_EXAM.eligibilityNotice}
+            </p>
+            <Kn className="mt-1 text-sm">{SNT_KN.eligibilityNotice}</Kn>
+          </div>
           <div className="grid grid-cols-1 gap-x-8 gap-y-7 px-6 py-8 sm:grid-cols-2 sm:px-10 sm:py-10">
             <div className="sm:col-span-2">
               <span
@@ -502,7 +519,7 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div>
-              <Field label="Education Completed" labelKn={SNT_KN.labels.educationCompleted} htmlFor="educationCompleted" isFocused={focused === "educationCompleted"} error={errors.educationCompleted}>
+              <Field label="Currently Studying In" labelKn={SNT_KN.labels.currentClass} htmlFor="educationCompleted" isFocused={focused === "educationCompleted"} error={errors.educationCompleted}>
                 <select
                   id="educationCompleted"
                   value={values.educationCompleted}
@@ -514,11 +531,11 @@ export default function ScholarshipApplicationForm() {
                   aria-invalid={Boolean(errors.educationCompleted)}
                 >
                   <option value="" disabled hidden>
-                    {optionLabel("Select class", SNT_KN.selectPrompts.educationCompleted)}
+                    {optionLabel("Select class", SNT_KN.selectPrompts.currentClass)}
                   </option>
                   {SNT_EDUCATION_OPTIONS.map((option) => (
                     <option key={option} value={option}>
-                      {optionLabel(option)}
+                      {optionLabel(sntClassLabel(option))}
                     </option>
                   ))}
                 </select>

@@ -1,5 +1,5 @@
 import { SNT_EXAM } from "@/content/scholarship";
-import { ageOn, parseDob, type DobParseResult } from "@/lib/snt/dateOfBirth";
+import { parseDob, type DobParseResult } from "@/lib/snt/dateOfBirth";
 import { SNT_APPLYING_FOR_OPTIONS, SNT_EDUCATION_OPTIONS, SNT_MEDIUMS } from "@/lib/snt/constants";
 import {
   normalizePhone,
@@ -21,26 +21,26 @@ export type SntRegistrationFieldErrors = ScholarshipApplicationFieldErrors &
   Partial<Record<"parentName" | "medium" | "whatsapp" | "dob" | "rulesAccepted" | "consentGiven" | "photo", string>>;
 
 const PHONE_PATTERN = /^[6-9]\d{9}$/;
-const MIN_AGE_YEARS = 10;
-const MAX_AGE_YEARS = 30;
-
 export const DOB_ERRORS = {
   empty: "Enter the date of birth.",
   format: "Type the date of birth as DD-MM-YYYY, day first.",
   impossible: "This date does not exist. Check the day and the month.",
-  age: "Check the date of birth — it looks incorrect.",
+  // Must match SNT_EXAM.ageRule (and its Kannada in scholarship-kn.ts).
+  age: "The student must be 12 to 20 years old on 3 January 2027. Check the date of birth.",
 } as const;
 
-/** Reads the typed date of birth, day first; 2-digit years are placed relative to the exam date. */
-export function parseSntDob(value: string, today: Date = new Date()): DobParseResult {
-  const reference = SNT_EXAM.examDate ? new Date(`${SNT_EXAM.examDate}T00:00:00Z`) : today;
-  return parseDob(value, reference);
+const AGE_WINDOW = {
+  on: new Date(`${SNT_EXAM.ageRule.on}T00:00:00Z`),
+  minAge: SNT_EXAM.ageRule.minAge,
+  maxAge: SNT_EXAM.ageRule.maxAge,
+};
+
+/** Reads the typed date of birth, day first, and checks the age on the exam day. */
+export function parseSntDob(value: string): DobParseResult {
+  return parseDob(value, AGE_WINDOW);
 }
 
-export function validateSntRegistration(
-  values: SntRegistrationValues,
-  today: Date = new Date(),
-): SntRegistrationFieldErrors {
+export function validateSntRegistration(values: SntRegistrationValues): SntRegistrationFieldErrors {
   const errors: SntRegistrationFieldErrors = validateScholarshipApplication(values);
 
   if (values.parentName.trim().length < 2) {
@@ -60,18 +60,13 @@ export function validateSntRegistration(
     errors.applyingFor = "Select the scholarship pathway you're applying for.";
   }
 
-  if (values.educationCompleted && !SNT_EDUCATION_OPTIONS.includes(values.educationCompleted)) {
-    errors.educationCompleted = "Select the education completed.";
+  if (!SNT_EDUCATION_OPTIONS.includes(values.educationCompleted)) {
+    errors.educationCompleted = "Select the class you are currently studying in.";
   }
 
-  const dob = parseSntDob(values.dob, today);
+  const dob = parseSntDob(values.dob);
   if (!dob.ok) {
     errors.dob = DOB_ERRORS[dob.reason];
-  } else {
-    const age = ageOn(dob.year, dob.month, dob.day, today);
-    if (age < MIN_AGE_YEARS || age > MAX_AGE_YEARS) {
-      errors.dob = DOB_ERRORS.age;
-    }
   }
 
   if (values.rulesAccepted !== true) {

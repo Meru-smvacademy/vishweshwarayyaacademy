@@ -29,6 +29,9 @@ export const SNT_KN = {
   registrationClosed: "ಈ ಪರೀಕ್ಷೆಗೆ ನೋಂದಣಿ ಮುಕ್ತಾಯವಾಗಿದೆ.",
   registrationClosedDetail:
     "ಎಸ್‌ಎನ್‌ಟಿ ವಿದ್ಯಾರ್ಥಿವೇತನ ಪರೀಕ್ಷೆ ಪ್ರಾರಂಭವಾಗಿದೆ. ನೀವು ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಿದ್ದರೆ, ನಿಮಗೆ ದೊರೆತ ಲಿಂಕ್ ಬಳಸಿ ಹಾಲ್ ಟಿಕೆಟ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿಕೊಳ್ಳಿ.",
+  eligibilityTitle: "ಅರ್ಹತೆ",
+  eligibilityNotice:
+    "ಪ್ರಸ್ತುತ 10ನೇ ತರಗತಿ (ಎಸ್‌ಎಸ್‌ಎಲ್‌ಸಿ) ಪರೀಕ್ಷೆಗೆ ಹಾಜರಾಗುತ್ತಿರುವ ವಿದ್ಯಾರ್ಥಿಗಳು ಮಾತ್ರ ಈ ವಿದ್ಯಾರ್ಥಿವೇತನ ಪರೀಕ್ಷೆಗೆ ಅರ್ಹರು.",
   aboutScholarship: "ಎಸ್‌ಎನ್‌ಟಿ ವಿದ್ಯಾರ್ಥಿವೇತನದ ಬಗ್ಗೆ",
 
   // Field labels
@@ -37,7 +40,7 @@ export const SNT_KN = {
     studentName: "ವಿದ್ಯಾರ್ಥಿಯ ಹೆಸರು",
     parentName: "ತಂದೆ / ತಾಯಿ / ಪಾಲಕರ ಹೆಸರು",
     applyingFor: "ಅರ್ಜಿ ಸಲ್ಲಿಸುತ್ತಿರುವ ಕೋರ್ಸ್",
-    educationCompleted: "ಪೂರ್ಣಗೊಳಿಸಿದ ಶಿಕ್ಷಣ",
+    currentClass: "ಪ್ರಸ್ತುತ ಓದುತ್ತಿರುವ ತರಗತಿ",
     medium: "ಓದುತ್ತಿರುವ ಮಾಧ್ಯಮ",
     schoolCollegeName: "ಶಾಲೆ / ಕಾಲೇಜಿನ ಹೆಸರು",
     nativePlace: "ಸ್ವಂತ ಊರು",
@@ -50,7 +53,7 @@ export const SNT_KN = {
   // First (empty) choice in each dropdown
   selectPrompts: {
     applyingFor: "ಕೋರ್ಸ್ ಆಯ್ಕೆಮಾಡಿ",
-    educationCompleted: "ತರಗತಿ ಆಯ್ಕೆಮಾಡಿ",
+    currentClass: "ತರಗತಿ ಆಯ್ಕೆಮಾಡಿ",
     medium: "ಮಾಧ್ಯಮ ಆಯ್ಕೆಮಾಡಿ",
   },
 
@@ -60,8 +63,7 @@ export const SNT_KN = {
     "NEET Long-Term": "ನೀಟ್ ಲಾಂಗ್-ಟರ್ಮ್",
     "JEE Achievement": "ಜೆಇಇ ಅಚೀವ್‌ಮೆಂಟ್",
     "JEE Long-Term": "ಜೆಇಇ ಲಾಂಗ್-ಟರ್ಮ್",
-    "Class 10": "10ನೇ ತರಗತಿ",
-    "Class 12": "12ನೇ ತರಗತಿ (ದ್ವಿತೀಯ ಪಿಯುಸಿ)",
+    "10th Standard (SSLC)": "10ನೇ ತರಗತಿ (ಎಸ್‌ಎಸ್‌ಎಲ್‌ಸಿ)",
     Kannada: "ಕನ್ನಡ",
     English: "ಇಂಗ್ಲಿಷ್",
     Urdu: "ಉರ್ದು",
@@ -101,7 +103,7 @@ export const SNT_KN = {
   errors: {
     "Enter the student's full name.": "ವಿದ್ಯಾರ್ಥಿಯ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.",
     "Select the scholarship pathway you're applying for.": "ನೀವು ಅರ್ಜಿ ಸಲ್ಲಿಸುತ್ತಿರುವ ಕೋರ್ಸ್ ಆಯ್ಕೆಮಾಡಿ.",
-    "Select the education completed.": "ಪೂರ್ಣಗೊಳಿಸಿದ ಶಿಕ್ಷಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+    "Select the class you are currently studying in.": "ನೀವು ಪ್ರಸ್ತುತ ಓದುತ್ತಿರುವ ತರಗತಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
     "Enter the school or college name.": "ಶಾಲೆ ಅಥವಾ ಕಾಲೇಜಿನ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.",
     "Enter the native place.": "ಸ್ವಂತ ಊರಿನ ಹೆಸರನ್ನು ನಮೂದಿಸಿ.",
     "Enter a valid 10-digit mobile number.": "ಸರಿಯಾದ 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.",
@@ -111,7 +113,8 @@ export const SNT_KN = {
     "Enter a valid 10-digit WhatsApp number, or leave it empty.":
       "ಸರಿಯಾದ 10 ಅಂಕಿಯ ವಾಟ್ಸಾಪ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ, ಅಥವಾ ಖಾಲಿ ಬಿಡಿ.",
     "Enter the date of birth.": "ಹುಟ್ಟಿದ ದಿನಾಂಕವನ್ನು ನಮೂದಿಸಿ.",
-    "Check the date of birth — it looks incorrect.": "ಹುಟ್ಟಿದ ದಿನಾಂಕವನ್ನು ಪರಿಶೀಲಿಸಿ — ಅದು ತಪ್ಪಾಗಿರುವಂತಿದೆ.",
+    "The student must be 12 to 20 years old on 3 January 2027. Check the date of birth.":
+      "3 ಜನವರಿ 2027 ರಂದು ವಿದ್ಯಾರ್ಥಿಯ ವಯಸ್ಸು 12 ರಿಂದ 20 ವರ್ಷಗಳ ನಡುವೆ ಇರಬೇಕು. ಹುಟ್ಟಿದ ದಿನಾಂಕವನ್ನು ಪರಿಶೀಲಿಸಿ.",
     "Type the date of birth as DD-MM-YYYY, day first.":
       "ಹುಟ್ಟಿದ ದಿನಾಂಕವನ್ನು ದಿನ-ತಿಂಗಳು-ವರ್ಷ (DD-MM-YYYY) ರೂಪದಲ್ಲಿ, ಮೊದಲು ದಿನ ಬರೆಯಿರಿ.",
     "This date does not exist. Check the day and the month.":
