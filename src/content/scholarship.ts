@@ -98,17 +98,14 @@ export const BENEFITS: string[] = [
   "Continuous academic guidance and mentoring.",
 ];
 
-export const DOCUMENTS_INTRO =
-  "Applicants are required to submit the following documents during the scholarship application process:";
+export const DOCUMENTS_INTRO = "Bring the following documents to the scholarship exam:";
 
+// The same list is printed on the hall ticket and in the rules (SNT_EXAM.documentsToBring).
 export const DOCUMENTS: string[] = [
-  "SSLC (Class 10) Hall Ticket",
-  "Recent Passport Size Photograph",
-  "Aadhaar Card (if required for verification)",
+  "School or college ID card",
+  "Aadhaar card",
+  "A Head Master's certificate instead, if the student has no ID card",
 ];
-
-export const DOCUMENTS_NOTE =
-  "Additional documents, if any, will be communicated during the admission process.";
 
 export const DATES_INTRO: ContentBlock[] = [
   {
@@ -196,8 +193,11 @@ export const SNT_EXAM = {
       "Raichur District, Karnataka 584122",
     ],
   } satisfies SntExamCentre,
+  // The only documents to bring (with the hall ticket itself). Kannada in
+  // scholarship-kn.ts (documentsToBring), in the same order.
+  documentsToBring: DOCUMENTS,
   documentsNotice:
-    "Bring to the exam hall: (1) this hall ticket, (2) school/college ID card, (3) Aadhaar card. If you do not have a school/college ID card, bring a certificate from your Head Master stating that you are studying in that class. Students without these documents may not be allowed to write the exam.",
+    "Bring this hall ticket and these documents to the exam hall: (1) school or college ID card, (2) Aadhaar card, (3) a Head Master's certificate instead, if the student has no ID card. Students without these documents may not be allowed to write the exam.",
 };
 
 // Fails the build if the exam date and the hall-ticket year disagree.

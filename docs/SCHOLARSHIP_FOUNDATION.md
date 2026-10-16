@@ -109,13 +109,11 @@ Benefits may include:
 
 ## Required Documents
 
-Applicants are required to submit the following documents during the scholarship application process:
+Bring the following documents to the scholarship exam:
 
-- SSLC (Class 10) Hall Ticket
-- Recent Passport Size Photograph
-- Aadhaar Card (if required for verification)
-
-*Additional documents, if any, will be communicated during the admission process.*
+- School or college ID card
+- Aadhaar card
+- A Head Master's certificate instead, if the student has no ID card
 
 ---
 

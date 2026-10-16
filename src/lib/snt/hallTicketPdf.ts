@@ -290,11 +290,16 @@ function drawFront(page: PDFPage, fonts: Fonts, registration: SntRegistration, p
 
   // Notice box.
   const noticeLines = wrapText(SNT_EXAM.documentsNotice, fonts.bold, 9, CONTENT_WIDTH - 24);
-  const noticeHeight = 26 + noticeLines.length * 12.5;
+  const noticeKnLines = wrapText(SNT_KN.documentsNotice, fonts.kannada, 8.5, CONTENT_WIDTH - 24);
+  const noticeHeight = 30 + noticeLines.length * 12.5 + noticeKnLines.length * 12.5;
   page.drawRectangle({ x: MARGIN, y: y - noticeHeight, width: CONTENT_WIDTH, height: noticeHeight, color: NOTICE_BG, borderColor: GOLD, borderWidth: 2 });
   page.drawText("NOTICE", { x: MARGIN + 12, y: y - 16, size: 10, font: fonts.display, color: GOLD });
   noticeLines.forEach((line, i) => {
     page.drawText(line, { x: MARGIN + 12, y: y - 31 - i * 12.5, size: 9, font: fonts.bold, color: NAVY });
+  });
+  noticeKnLines.forEach((line, i) => {
+    const knY = y - 35 - noticeLines.length * 12.5 - i * 12.5;
+    page.drawText(line, { x: MARGIN + 12, y: knY, size: 8.5, font: fonts.kannada, color: NAVY });
   });
 
   // Signatures sit on a fixed baseline near the bottom of the page.
@@ -322,8 +327,12 @@ function drawRules(doc: PDFDocument, fonts: Fonts) {
   const lineHeight = 14.5;
   const indent = 24;
   SCHOLARSHIP_RULES.forEach((rule, index) => {
-    const lines = wrapText(rule, fonts.regular, size, CONTENT_WIDTH - indent);
-    if (y - lines.length * lineHeight < 70) {
+    const en = typeof rule === "string" ? rule : rule.en;
+    const kn = typeof rule === "string" ? null : rule.kn;
+    const lines = wrapText(en, fonts.regular, size, CONTENT_WIDTH - indent);
+    const knLines = kn ? wrapText(kn, fonts.kannada, 9, CONTENT_WIDTH - indent) : [];
+    const height = lines.length * lineHeight + knLines.length * 13.5;
+    if (y - height < 70) {
       page = doc.addPage(A4);
       y = A4[1] - MARGIN - 10;
     }
@@ -331,7 +340,10 @@ function drawRules(doc: PDFDocument, fonts: Fonts) {
     lines.forEach((line, i) => {
       page.drawText(line, { x: MARGIN + indent, y: y - i * lineHeight, size, font: fonts.regular, color: NAVY });
     });
-    y -= lines.length * lineHeight + 8;
+    knLines.forEach((line, i) => {
+      page.drawText(line, { x: MARGIN + indent, y: y - lines.length * lineHeight - i * 13.5, size: 9, font: fonts.kannada, color: NAVY });
+    });
+    y -= height + 8;
   });
 
   if (SCHOLARSHIP_RULES_FOOTNOTE) {

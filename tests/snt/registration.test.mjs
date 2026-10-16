@@ -569,9 +569,13 @@ describe("admin", () => {
     assert.doesNotMatch(html, /Select centre/);
   });
 
-  test("application page has no closing date and announces spot registration", async () => {
+  test("application page announces the 10:30 AM exam-day cut-off and spot registration until then", async () => {
     const html = await (await fetch(`${BASE}/snt`)).text();
-    assert.match(html, /Registration is open until the exam begins\. Spot registration is allowed on the exam day at the centre\./);
+    // Registration closes at the reporting time on exam day (SNT_EXAM.examDate + reportingTime, IST).
+    assert.match(
+      html,
+      /Registration closes at 10:30 AM on Sunday, 3 January 2027, the reporting time\. Spot registration is allowed at the centre on the exam day until then\./,
+    );
     assert.doesNotMatch(html, /last date|closing date|closes on/i);
     assert.doesNotMatch(html, /Registration for this exam has closed/);
   });

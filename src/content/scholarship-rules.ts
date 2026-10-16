@@ -11,6 +11,7 @@
 // Kannada glyphs.
 
 import { SNT_EXAM } from "@/content/scholarship";
+import { SNT_KN } from "@/content/scholarship-kn";
 import { formatSntTime } from "@/lib/snt/examSchedule";
 
 // "by 10:30 AM, 30 minutes before the exam begins at 11:00 AM" — filled in
@@ -26,9 +27,12 @@ const reportingRule =
 
 export const SCHOLARSHIP_RULES_TITLE = "Rules and Regulations";
 
-export const SCHOLARSHIP_RULES: string[] = [
+// A rule is a plain English string, or { en, kn } to print a Kannada line under it.
+export type ScholarshipRule = string | { en: string; kn: string };
+
+export const SCHOLARSHIP_RULES: ScholarshipRule[] = [
   `Eligibility: ${SNT_EXAM.eligibilityNotice}`,
-  "Bring this hall ticket, your school/college ID card and your Aadhaar card to the exam hall. If you do not have a school/college ID card, bring a certificate from your Head Master stating the class you are studying in. Students without these documents may not be allowed to write the exam.",
+  { en: SNT_EXAM.documentsNotice, kn: SNT_KN.documentsNotice },
   `${reportingRule} Students arriving after the exam begins will not be admitted.`,
   "Bring your own blue or black ball pen and a writing pad. Nothing will be shared in the hall.",
   "Mobile phones, smart watches, calculators, bluetooth devices, books and notes are not allowed inside the exam hall.",

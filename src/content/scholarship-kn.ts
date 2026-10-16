@@ -35,6 +35,16 @@ export const SNT_KN = {
   registrationClosedDetail: (date: string, time: string) =>
     `ನೋಂದಣಿ ${date} ರಂದು ${time}ಕ್ಕೆ (ಪರೀಕ್ಷೆಗೆ ಹಾಜರಾಗಬೇಕಾದ ಸಮಯ) ಮುಕ್ತಾಯವಾಗಿದೆ. ನೀವು ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಿದ್ದರೆ, ನಿಮಗೆ ದೊರೆತ ಲಿಂಕ್ ಬಳಸಿ ಹಾಲ್ ಟಿಕೆಟ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿಕೊಳ್ಳಿ.`,
 
+  // Documents to bring: hall ticket NOTICE box and the documents rule. Same
+  // order as DOCUMENTS in scholarship.ts.
+  documentsToBring: [
+    "ಶಾಲೆ ಅಥವಾ ಕಾಲೇಜಿನ ಗುರುತಿನ ಚೀಟಿ",
+    "ಆಧಾರ್ ಕಾರ್ಡ್",
+    "ಗುರುತಿನ ಚೀಟಿ ಇಲ್ಲದಿದ್ದರೆ, ಅದರ ಬದಲಿಗೆ ಮುಖ್ಯೋಪಾಧ್ಯಾಯರ ಪ್ರಮಾಣಪತ್ರ",
+  ],
+  documentsNotice:
+    "ಈ ಹಾಲ್ ಟಿಕೆಟ್ ಮತ್ತು ಈ ದಾಖಲೆಗಳನ್ನು ಪರೀಕ್ಷಾ ಕೊಠಡಿಗೆ ತನ್ನಿ: (1) ಶಾಲೆ ಅಥವಾ ಕಾಲೇಜಿನ ಗುರುತಿನ ಚೀಟಿ, (2) ಆಧಾರ್ ಕಾರ್ಡ್, (3) ಗುರುತಿನ ಚೀಟಿ ಇಲ್ಲದಿದ್ದರೆ, ಅದರ ಬದಲಿಗೆ ಮುಖ್ಯೋಪಾಧ್ಯಾಯರ ಪ್ರಮಾಣಪತ್ರ. ಈ ದಾಖಲೆಗಳಿಲ್ಲದ ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಪರೀಕ್ಷೆ ಬರೆಯಲು ಅವಕಾಶ ನೀಡದಿರಬಹುದು.",
+
   // Exam details (registration page, /scholarship, status page, hall ticket)
   examDetailsTitle: "ಪರೀಕ್ಷೆಯ ವಿವರಗಳು",
   examDetailLabels: {
