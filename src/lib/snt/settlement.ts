@@ -40,17 +40,45 @@ async function attemptTransfer(paymentId: string, accountId: string) {
   return { transferId, amount, fee: payment.fee, tax: payment.tax ?? 0 };
 }
 
+// The database functions that claim, record and fail a transfer for one
+// registrations table. The exam and the sports meet each have their own set;
+// the transfer logic itself is shared.
+type TransferRpcs = { claim: string; record: string; failure: string; label: string };
+
+const SNT_TRANSFER_RPCS: TransferRpcs = {
+  claim: "snt_claim_transfer",
+  record: "snt_record_transfer",
+  failure: "snt_record_transfer_failure",
+  label: "SNT",
+};
+
+const SPORTS_TRANSFER_RPCS: TransferRpcs = {
+  claim: "sports_claim_transfer",
+  record: "sports_record_transfer",
+  failure: "sports_record_transfer_failure",
+  label: "SNT Sports",
+};
+
 /**
- * Transfers the net amount of one captured SNT payment to the academy's Route
- * account, exactly once. Retries with backoff inside the call; if it still
- * fails, the failure is recorded so the admin page lists it and the webhook
- * can report an error (Razorpay then redelivers the event with its own backoff).
+ * Transfers the net amount of one captured SNT exam payment to the academy's
+ * Route account, exactly once. Retries with backoff inside the call; if it
+ * still fails, the failure is recorded so the admin page lists it and the
+ * webhook can report an error (Razorpay then redelivers the event with its own backoff).
  */
-export async function settleSntTransfer(registrationId: string): Promise<SettlementResult> {
+export function settleSntTransfer(registrationId: string): Promise<SettlementResult> {
+  return settleRouteTransfer(registrationId, SNT_TRANSFER_RPCS);
+}
+
+/** The same, for one captured SNT Sports Meet payment (sports_registrations). */
+export function settleSportsTransfer(registrationId: string): Promise<SettlementResult> {
+  return settleRouteTransfer(registrationId, SPORTS_TRANSFER_RPCS);
+}
+
+async function settleRouteTransfer(registrationId: string, rpcs: TransferRpcs): Promise<SettlementResult> {
   const supabase = createAdminClient();
   const accountId = process.env.SNT_ROUTE_ACCOUNT_ID;
 
-  const { data: claimed, error: claimError } = await supabase.rpc("snt_claim_transfer", {
+  const { data: claimed, error: claimError } = await supabase.rpc(rpcs.claim, {
     p_registration_id: registrationId,
   });
   if (claimError) throw new Error(`could not claim transfer: ${claimError.message}`);
@@ -63,7 +91,7 @@ export async function settleSntTransfer(registrationId: string): Promise<Settlem
       if (delay) await sleep(delay);
       try {
         const result = await attemptTransfer(claim.payment_id, accountId);
-        const { error } = await supabase.rpc("snt_record_transfer", {
+        const { error } = await supabase.rpc(rpcs.record, {
           p_registration_id: registrationId,
           p_transfer_id: result.transferId,
           p_fee_paise: result.fee,
@@ -78,7 +106,7 @@ export async function settleSntTransfer(registrationId: string): Promise<Settlem
     }
   }
 
-  await supabase.rpc("snt_record_transfer_failure", { p_registration_id: registrationId, p_error: lastError });
-  console.error("SNT Route transfer failed:", { registrationId, error: lastError });
+  await supabase.rpc(rpcs.failure, { p_registration_id: registrationId, p_error: lastError });
+  console.error(`${rpcs.label} Route transfer failed:`, { registrationId, error: lastError });
   return { outcome: "failed", error: lastError };
 }

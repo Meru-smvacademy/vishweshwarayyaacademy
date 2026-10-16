@@ -15,7 +15,7 @@ import {
 export type SntExamDetail = { label: string; labelKn: string; value: string; valueKn: string };
 
 /** "ಭಾನುವಾರ, 3 ಜನವರಿ 2027" (weekday first, like "Sunday, 3 January 2027") */
-function kannadaDate(isoDate: string): string {
+export function kannadaDate(isoDate: string): string {
   const [year, month, day] = isoDate.split("-").map(Number);
   // Midday IST is the same calendar day in UTC, so getUTCDay is the IST weekday.
   const weekday = new Date(`${isoDate}T12:00:00+05:30`).getUTCDay();
@@ -23,7 +23,7 @@ function kannadaDate(isoDate: string): string {
 }
 
 /** "ಬೆಳಿಗ್ಗೆ 10:30", "ಮಧ್ಯಾಹ್ನ 12:00" */
-function kannadaTime(time: string): string {
+export function kannadaTime(time: string): string {
   const [hours, minutes] = time.split(":").map(Number);
   const part =
     hours < 12 ? SNT_KN.dayParts.morning

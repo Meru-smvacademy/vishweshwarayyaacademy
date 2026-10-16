@@ -10,5 +10,5 @@ export const config = {
   // /courses/*, /results, /contact, /admission-enquiry, /scholarship/*,
   // /gallery, /about/infrastructure, /legal/*, /api/*, etc.) never match
   // this pattern and are unaffected by this middleware.
-  matcher: ["/admin/dashboard/:path*", "/admin/scholarship/:path*"],
+  matcher: ["/admin/dashboard/:path*", "/admin/scholarship/:path*", "/admin/sports/:path*"],
 };

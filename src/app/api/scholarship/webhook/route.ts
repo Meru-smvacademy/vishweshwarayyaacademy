@@ -12,6 +12,8 @@ import {
 } from "@/lib/snt/razorpay";
 import { getSntRegistration, isUuid } from "@/lib/snt/registrations";
 import { settleSntTransfer } from "@/lib/snt/settlement";
+import { SPORTS_PRODUCT } from "@/lib/sports/constants";
+import { handleSportsWebhook } from "@/lib/sports/webhook";
 
 export const runtime = "nodejs";
 
@@ -27,8 +29,9 @@ function ok(body: Record<string, unknown> = { received: true }) {
 /**
  * This site's own Razorpay webhook. It is the ONLY place a registration
  * becomes paid or failed; the browser never decides the outcome. Events for
- * other products on the same Razorpay account (e.g. Conecta) are acknowledged
- * and ignored without side effects.
+ * the SNT Sports Meet (notes.product "SNT_SPORTS") go to sports_registrations;
+ * events for any other product on the same Razorpay account (e.g. Conecta)
+ * are acknowledged and ignored without side effects.
  */
 export async function POST(request: Request) {
   const rawBody = await request.text();
@@ -49,6 +52,16 @@ export async function POST(request: Request) {
   const notes = (entity?.notes ?? {}) as Record<string, unknown>;
   const paymentId = typeof entity?.id === "string" ? entity.id : "";
   const orderId = typeof entity?.order_id === "string" ? entity.order_id : "";
+
+  if (notes.product === SPORTS_PRODUCT) {
+    return handleSportsWebhook({
+      eventType,
+      eventId: request.headers.get(RAZORPAY_EVENT_ID_HEADER),
+      notes,
+      paymentId,
+      orderId,
+    });
+  }
 
   if (!HANDLED_EVENTS.has(eventType) || notes.product !== SNT_PRODUCT || !isUuid(notes.registration_id) || !paymentId) {
     return ok();

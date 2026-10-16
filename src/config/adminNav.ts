@@ -27,6 +27,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       { id: "enquiries", label: "Enquiries", href: "/admin/dashboard/enquiries" },
       { id: "scholarships", label: "Scholarship Applications", href: "/admin/dashboard/scholarships" },
       { id: "snt-registrations", label: "SNT Exam Registrations", href: "/admin/scholarship" },
+      { id: "sports-registrations", label: "SNT Sports Meet", href: "/admin/sports" },
     ],
   },
   {

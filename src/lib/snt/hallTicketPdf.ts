@@ -16,27 +16,29 @@ import type { SntRegistration } from "@/lib/supabase/types";
 // expecting this global; without it, drawing Kannada text throws.
 (globalThis as { regeneratorRuntime?: unknown }).regeneratorRuntime ??= regeneratorRuntime;
 
-const A4: [number, number] = [595.28, 841.89];
-const MARGIN = 40;
-const CONTENT_WIDTH = A4[0] - MARGIN * 2;
+// The layout primitives below are exported for the SNT Sports Meet entry card
+// (src/lib/sports/entryCardPdf.ts); every default keeps the hall ticket as it was.
+export const A4: [number, number] = [595.28, 841.89];
+export const MARGIN = 40;
+export const CONTENT_WIDTH = A4[0] - MARGIN * 2;
 
-function hex(value: string): RGB {
+export function hex(value: string): RGB {
   const n = parseInt(value.slice(1), 16);
   return rgb(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
 }
 
 // Same palette as the public application form.
-const NAVY = hex("#0F1E3C");
-const GOLD = hex("#C4922A");
-const MUTED = hex("#6B7A90");
-const RULE = hex("#DDD6CC");
-const CREAM = hex("#F9F6F0");
-const NOTICE_BG = hex("#FFF8E8");
-const PAID_GREEN = hex("#1E7A46");
-const PAID_BG = hex("#EEF7F1");
-const WHITE = rgb(1, 1, 1);
+export const NAVY = hex("#0F1E3C");
+export const GOLD = hex("#C4922A");
+export const MUTED = hex("#6B7A90");
+export const RULE = hex("#DDD6CC");
+export const CREAM = hex("#F9F6F0");
+export const NOTICE_BG = hex("#FFF8E8");
+export const PAID_GREEN = hex("#1E7A46");
+export const PAID_BG = hex("#EEF7F1");
+export const WHITE = rgb(1, 1, 1);
 
-type Fonts = { regular: PDFFont; bold: PDFFont; display: PDFFont; kannada: PDFFont; kannadaBold: PDFFont };
+export type Fonts = { regular: PDFFont; bold: PDFFont; display: PDFFont; kannada: PDFFont; kannadaBold: PDFFont };
 
 const FONT_DIR = path.join(process.cwd(), "src", "assets", "fonts");
 let fontBytesCache: Promise<Buffer[]> | null = null;
@@ -52,7 +54,7 @@ function loadFontBytes() {
   return fontBytesCache;
 }
 
-async function createDocument(title: string): Promise<{ doc: PDFDocument; fonts: Fonts }> {
+export async function createDocument(title: string): Promise<{ doc: PDFDocument; fonts: Fonts }> {
   const doc = await PDFDocument.create();
   doc.registerFontkit(fontkit);
   const [regular, bold, display, kannada, kannadaBold] = await loadFontBytes();
@@ -71,7 +73,7 @@ async function createDocument(title: string): Promise<{ doc: PDFDocument; fonts:
   return { doc, fonts };
 }
 
-function wrapText(text: string, font: PDFFont, size: number, maxWidth: number): string[] {
+export function wrapText(text: string, font: PDFFont, size: number, maxWidth: number): string[] {
   const lines: string[] = [];
   for (const paragraph of text.split("\n")) {
     let line = "";
@@ -97,24 +99,24 @@ function wrapText(text: string, font: PDFFont, size: number, maxWidth: number): 
   return lines;
 }
 
-function drawCentered(page: PDFPage, text: string, font: PDFFont, size: number, y: number, color: RGB) {
+export function drawCentered(page: PDFPage, text: string, font: PDFFont, size: number, y: number, color: RGB) {
   const width = font.widthOfTextAtSize(text, size);
   page.drawText(text, { x: (A4[0] - width) / 2, y, size, font, color });
 }
 
-function drawHeader(page: PDFPage, fonts: Fonts, subtitle: string): number {
+export function drawHeader(page: PDFPage, fonts: Fonts, subtitle: string, heading: string = SNT_EXAM.name): number {
   const bandHeight = 92;
   const top = A4[1];
   page.drawRectangle({ x: 0, y: top - bandHeight, width: A4[0], height: bandHeight, color: NAVY });
   page.drawRectangle({ x: 0, y: top - bandHeight - 3, width: A4[0], height: 3, color: GOLD });
-  drawCentered(page, SNT_EXAM.name, fonts.display, 22, top - 36, WHITE);
+  drawCentered(page, heading, fonts.display, 22, top - 36, WHITE);
   drawCentered(page, SNT_EXAM.academyName, fonts.bold, 11, top - 56, GOLD);
   drawCentered(page, SNT_EXAM.campusNames, fonts.regular, 9.5, top - 71, WHITE);
   drawCentered(page, subtitle, fonts.regular, 8, top - 85, hex("#C9D2E0"));
   return top - bandHeight - 3;
 }
 
-function formatDob(iso: string): string {
+export function formatDob(iso: string): string {
   const [year, month, day] = iso.split("-").map(Number);
   return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString("en-IN", {
     day: "2-digit",
@@ -124,7 +126,7 @@ function formatDob(iso: string): string {
   });
 }
 
-function formatIst(iso: string): string {
+export function formatIst(iso: string): string {
   return new Date(iso).toLocaleString("en-IN", {
     day: "2-digit",
     month: "short",
@@ -136,7 +138,7 @@ function formatIst(iso: string): string {
   });
 }
 
-function drawPhoto(page: PDFPage, image: PDFImage, fonts: Fonts, x: number, yTop: number) {
+export function drawPhoto(page: PDFPage, image: PDFImage, fonts: Fonts, x: number, yTop: number) {
   const frameWidth = 112;
   const frameHeight = 144;
   const pad = 4;
@@ -170,9 +172,9 @@ function drawPhoto(page: PDFPage, image: PDFImage, fonts: Fonts, x: number, yTop
 }
 
 // labelKn / valueKn add a Kannada line under the English label / value.
-type Row = { label: string; value: string; labelKn?: string; valueKn?: string };
+export type Row = { label: string; value: string; labelKn?: string; valueKn?: string };
 
-function drawDetailRows(page: PDFPage, fonts: Fonts, rows: Row[], x: number, yTop: number, width: number) {
+export function drawDetailRows(page: PDFPage, fonts: Fonts, rows: Row[], x: number, yTop: number, width: number) {
   const labelWidth = 128;
   const size = 9.5;
   const lineHeight = 12.5;
@@ -211,14 +213,22 @@ function drawDetailRows(page: PDFPage, fonts: Fonts, rows: Row[], x: number, yTo
  * The hall ticket number in a bordered box, one digit per equal-width cell, so
  * it can be copied digit by digit into the OMR sheet's bubbles.
  */
-function drawHallTicketNumber(page: PDFPage, fonts: Fonts, number: string, x: number, yTop: number, width: number) {
+export function drawHallTicketNumber(
+  page: PDFPage,
+  fonts: Fonts,
+  number: string,
+  x: number,
+  yTop: number,
+  width: number,
+  label: { english: string; kannada: string } = { english: "HALL TICKET NUMBER / ", kannada: SNT_KN.hallTicketNumber },
+) {
   const height = 84;
   const pad = 12;
   page.drawRectangle({ x, y: yTop - height, width, height, color: CREAM, borderColor: NAVY, borderWidth: 1.5 });
 
-  const english = "HALL TICKET NUMBER / ";
+  const english = label.english;
   page.drawText(english, { x: x + pad, y: yTop - 17, size: 8.5, font: fonts.bold, color: GOLD });
-  page.drawText(SNT_KN.hallTicketNumber, {
+  page.drawText(label.kannada, {
     x: x + pad + fonts.bold.widthOfTextAtSize(english, 8.5),
     y: yTop - 17,
     size: 9,

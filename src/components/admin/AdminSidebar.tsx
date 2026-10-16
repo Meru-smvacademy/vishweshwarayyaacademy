@@ -32,6 +32,7 @@ const ICON_MAP: Record<string, typeof DashboardIcon> = {
   enquiries: EnquiryIcon,
   scholarships: ScholarIcon,
   "snt-registrations": ScholarIcon,
+  "sports-registrations": ScholarIcon,
   staff: StaffIcon,
   settings: SettingsIcon,
 };

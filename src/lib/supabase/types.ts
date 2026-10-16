@@ -113,3 +113,39 @@ export type SntRegistration = {
   created_at: string;
   paid_at: string | null;
 };
+
+/** SNT Sports Meet registration (supabase/migrations/0011_snt_sports_meet.sql). */
+export type SportsRegistration = {
+  id: string;
+  entry_card_no: string | null;
+  student_name: string;
+  dob: string;
+  school_name: string;
+  native_place: string;
+  phone: string;
+  whatsapp: string;
+  parent_name: string;
+  sport: "Volleyball" | "Throw Ball" | "Athletics";
+  athletics_event: string | null;
+  level_represented: "District" | "State" | "National";
+  photo_path: string;
+  sports_certificate_path: string | null;
+  fitness_certificate_path: string | null;
+  certificate_declared: boolean;
+  fitness_declared: boolean;
+  consent_given: boolean;
+  consent_at: string;
+  status: "pending" | "paid" | "failed";
+  amount_paise: number;
+  order_id: string | null;
+  payment_id: string | null;
+  transfer_id: string | null;
+  razorpay_fee_paise: number | null;
+  razorpay_tax_paise: number | null;
+  transfer_amount_paise: number | null;
+  transfer_status: "pending" | "processing" | "done" | "failed" | null;
+  transfer_attempts: number;
+  transfer_last_error: string | null;
+  created_at: string;
+  paid_at: string | null;
+};
