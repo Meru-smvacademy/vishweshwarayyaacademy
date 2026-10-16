@@ -185,7 +185,7 @@ export default function ScholarshipFilters({
             pushParams({ educationCompleted: event.target.value });
           }}
           style={selectStyle}
-          aria-label="Filter by education completed"
+          aria-label="Filter by class currently studying in"
         >
           <option value="" style={optionStyle}>
             All classes

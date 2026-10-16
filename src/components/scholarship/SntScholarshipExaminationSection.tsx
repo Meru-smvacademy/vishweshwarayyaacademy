@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SNT_EXAM } from "@/content/scholarship";
 import { SNT_KN } from "@/content/scholarship-kn";
+import { sntExamDetails } from "@/lib/snt/examDetails";
 
 const INK = "#0C1B2E";
 const INK_DEEP = "#081320";
@@ -16,6 +17,8 @@ const BORDER_STRONG = "rgba(235, 230, 218, 0.18)";
 const DISPLAY = "var(--font-playfair-display), serif";
 const BODY = "var(--font-inter), sans-serif";
 const KANNADA = "var(--font-noto-kannada), system-ui, sans-serif";
+
+const EXAM_DETAILS = sntExamDetails();
 
 const PATHWAYS = [
   { stream: "NEET", variant: "Achievement" },
@@ -133,6 +136,49 @@ export default function SntScholarshipExaminationSection() {
               examinations through Vishweshwarayya Academy.
             </p>
           </div>
+        </div>
+
+        {/* Exam details */}
+        <div style={{ paddingTop: "56px", paddingBottom: "56px", borderBottom: `1px solid ${BORDER}` }}>
+          <div style={{ display: "flex", alignItems: "baseline", marginBottom: "28px" }}>
+            <p
+              style={{
+                fontSize: "11px",
+                letterSpacing: "0.16em",
+                color: CREAM_MUTED,
+                fontWeight: 500,
+                textTransform: "uppercase",
+                margin: 0,
+              }}
+            >
+              Exam Details
+              <span lang="kn" style={{ display: "block", fontFamily: KANNADA, letterSpacing: "normal", textTransform: "none", fontSize: "12px", marginTop: "4px" }}>
+                {SNT_KN.examDetailsTitle}
+              </span>
+            </p>
+            <div style={{ height: "1px", flex: 1, margin: "0 0 0 24px", background: BORDER }} />
+          </div>
+          <dl
+            className="snt-exam-details-grid"
+            style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "32px", margin: 0 }}
+          >
+            {EXAM_DETAILS.map((detail) => (
+              <div key={detail.label}>
+                <dt style={{ fontSize: "11px", letterSpacing: "0.14em", textTransform: "uppercase", color: GOLD, fontWeight: 500 }}>
+                  {detail.label}
+                  <span lang="kn" style={{ display: "block", fontFamily: KANNADA, letterSpacing: "normal", textTransform: "none", fontSize: "12px", color: CREAM_MUTED, marginTop: "4px" }}>
+                    {detail.labelKn}
+                  </span>
+                </dt>
+                <dd style={{ margin: "12px 0 0", fontFamily: DISPLAY, fontSize: "22px", lineHeight: 1.25, color: CREAM }}>
+                  {detail.value}
+                  <span lang="kn" style={{ display: "block", fontFamily: KANNADA, fontSize: "13.5px", lineHeight: 1.6, color: CREAM_MUTED, marginTop: "6px" }}>
+                    {detail.valueKn}
+                  </span>
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
 
         {/* Pathways */}
@@ -387,6 +433,9 @@ export default function SntScholarshipExaminationSection() {
 
       <style>{`
         @media (max-width: 900px) {
+          .snt-exam-details-grid {
+            grid-template-columns: 1fr 1fr !important;
+          }
           .snt-exam-header {
             grid-template-columns: 1fr !important;
             gap: 32px !important;
@@ -413,6 +462,9 @@ export default function SntScholarshipExaminationSection() {
           }
         }
         @media (max-width: 560px) {
+          .snt-exam-details-grid {
+            grid-template-columns: 1fr !important;
+          }
           .snt-exam-pathways-grid {
             grid-template-columns: 1fr !important;
           }

@@ -40,14 +40,14 @@ export const OBJECTIVES: string[] = [
 export const ELIGIBILITY_INTRO: ContentBlock[] = [
   {
     type: "p",
-    text: "The SNT Scholarship is open to students who have successfully completed **Class 10** or **Class 12** and aspire to prepare for competitive examinations through Vishweshwarayya Academy.",
+    text: "The SNT Scholarship Examination is open only to students **currently appearing for the 10th standard (SSLC) examination** who aspire to prepare for competitive examinations through Vishweshwarayya Academy.",
   },
   { type: "p", text: "Selection is based on performance in the **SNT Scholarship Examination**." },
 ];
 
 export const ELIGIBILITY_CATEGORIES: string[] = [
-  "Students who have completed Class 10 and are seeking admission to the NEET/JEE Achievement Program.",
-  "Students who have completed Class 12 and are seeking admission to the NEET Long-Term Program.",
+  "Students currently appearing for the 10th standard (SSLC) examination and seeking admission to the NEET Achievement Program.",
+  "Students aged 12 to 20 years on the exam day, 3 January 2027.",
 ];
 
 export const ELIGIBILITY_NOTE =
@@ -103,8 +103,6 @@ export const DOCUMENTS_INTRO =
 
 export const DOCUMENTS: string[] = [
   "SSLC (Class 10) Hall Ticket",
-  "NEET Hall Ticket (for Class 12/Long-Term applicants)",
-  "NEET Application Form (for Class 12/Long-Term applicants)",
   "Recent Passport Size Photograph",
   "Aadhaar Card (if required for verification)",
 ];
@@ -165,23 +163,26 @@ export const SNT_EXAM = {
   // 2027000001. Each year has its own sequence, starting again at 000001.
   examYear: 2027,
   // Machine-readable on purpose: registration closes automatically at exam
-  // date + reporting time (IST). While examDate is null, registration stays
-  // open and pages/hall tickets show "To be announced".
-  examDate: null as string | null, // TODO: exam date as "YYYY-MM-DD", e.g. "2026-03-15"
-  reportingTime: null as string | null, // TODO: reporting time as 24-hour "HH:MM" IST, e.g. "09:00"
+  // date + reporting time, India Standard Time (Sunday 3 January 2027,
+  // 10:30 AM IST). Spot entry is allowed right up to that moment. Set either
+  // back to null and registration stays open and pages/hall tickets show
+  // "To be announced".
+  examDate: "2027-01-03" as string | null, // "YYYY-MM-DD", IST
+  reportingTime: "10:30" as string | null, // 24-hour "HH:MM", IST
+  examStartTime: "11:00" as string | null, // 24-hour "HH:MM", IST
+  examEndTime: "12:00" as string | null, // 24-hour "HH:MM", IST
   duration: "1 hour",
   // Who may register. Shown at the top of the form, on /scholarship and in the
   // hall-ticket rules.
   eligibilityNotice:
     "Only students currently appearing for the 10th standard (SSLC) examination are eligible for this scholarship exam.",
-  // Age limits, counted on the exam day. Kept separate from examDate so the
-  // rule applies even while the public exam date is still "To be announced".
-  // If either changes, update the matching error text in sntRegistration.ts
-  // and scholarship-kn.ts.
+  // Age limits, counted on the exam day (must equal examDate; checked below).
+  // If any of these change, update the matching error text in
+  // sntRegistration.ts and scholarship-kn.ts.
   ageRule: { on: "2027-01-03", minAge: 12, maxAge: 20 },
-  // There is no last date: spot entry is allowed on exam day at the centre.
-  registrationNotice:
-    "Registration is open until the exam begins. Spot registration is allowed on the exam day at the centre.",
+  // There is no earlier last date: spot entry is allowed at the centre on the
+  // exam day until the reporting time. The "closes at" sentences are built
+  // from examDate + reportingTime in src/lib/snt/examDetails.ts.
   registrationClosedMessage: "Registration for this exam has closed.",
   scholarshipDetails:
     "TODO: scholarship / prize details (e.g. ranks 1–10: 100% tuition waiver; ranks 11–50: 50%).",
@@ -202,6 +203,11 @@ export const SNT_EXAM = {
 // Fails the build if the exam date and the hall-ticket year disagree.
 if (SNT_EXAM.examDate && !SNT_EXAM.examDate.startsWith(`${SNT_EXAM.examYear}-`)) {
   throw new Error(`SNT_EXAM.examDate (${SNT_EXAM.examDate}) is not in SNT_EXAM.examYear (${SNT_EXAM.examYear}).`);
+}
+
+// Fails the build if the age rule is counted on a different day from the exam.
+if (SNT_EXAM.examDate && SNT_EXAM.ageRule.on !== SNT_EXAM.examDate) {
+  throw new Error(`SNT_EXAM.ageRule.on (${SNT_EXAM.ageRule.on}) must equal SNT_EXAM.examDate (${SNT_EXAM.examDate}).`);
 }
 
 export function findSntExamCentre(value: string): SntExamCentre | null {

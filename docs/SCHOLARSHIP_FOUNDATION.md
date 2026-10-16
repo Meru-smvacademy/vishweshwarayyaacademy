@@ -53,14 +53,14 @@ To build a future where every deserving student, regardless of financial backgro
 
 ## Eligibility
 
-The SNT Scholarship is open to students who have successfully completed **Class 10** or **Class 12** and aspire to prepare for competitive examinations through Sir M V Academy.
+The SNT Scholarship Examination is open only to students **currently appearing for the 10th standard (SSLC) examination** who aspire to prepare for competitive examinations through Sir M V Academy.
 
 Selection is based on performance in the **SNT Scholarship Examination**.
 
 Eligible Categories:
 
-- Students who have completed **Class 10** and are seeking admission to the **NEET/JEE Achievement Program**.
-- Students who have completed **Class 12** and are seeking admission to the **NEET Long-Term Program**.
+- Students currently appearing for the **10th standard (SSLC)** examination and seeking admission to the **NEET Achievement Program**.
+- Students aged **12 to 20 years** on the exam day, **3 January 2027**.
 - Admission under the scholarship is granted only to students who qualify through the SNT Scholarship Examination and the selection process.
 ---
 
@@ -112,8 +112,6 @@ Benefits may include:
 Applicants are required to submit the following documents during the scholarship application process:
 
 - SSLC (Class 10) Hall Ticket
-- NEET Hall Ticket (for Class 12/Long-Term applicants)
-- NEET Application Form (for Class 12/Long-Term applicants)
 - Recent Passport Size Photograph
 - Aadhaar Card (if required for verification)
 

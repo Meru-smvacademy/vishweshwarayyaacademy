@@ -129,7 +129,7 @@ export default function ScholarshipDetail({ application }: { application: Schola
           </a>
         </ReadOnlyField>
         <ReadOnlyField label="Applying For">{application.applying_for}</ReadOnlyField>
-        <ReadOnlyField label="Education Completed">{application.education_completed}</ReadOnlyField>
+        <ReadOnlyField label="Currently Studying In">{application.education_completed}</ReadOnlyField>
         <ReadOnlyField label="School / College">{application.school_college_name}</ReadOnlyField>
         <ReadOnlyField label="Native Place">{application.native_place}</ReadOnlyField>
         <ReadOnlyField label="Academic Year">{application.academic_year}</ReadOnlyField>

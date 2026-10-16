@@ -8,6 +8,7 @@ import { SNT_EXAM } from "@/content/scholarship";
 import { SNT_KN, kannadaFor } from "@/content/scholarship-kn";
 import SntRegistrationClosed from "@/components/scholarship/SntRegistrationClosed";
 import { formatDobInWords } from "@/lib/snt/dateOfBirth";
+import { sntExamDetails, sntRegistrationNotice } from "@/lib/snt/examDetails";
 import {
   SNT_APPLYING_FOR_OPTIONS,
   SNT_CONSENT_TEXT,
@@ -69,6 +70,9 @@ const initialValues: SntRegistrationValues = {
 };
 
 type SubmitState = "idle" | "submitting" | "error" | "closed";
+
+const examDetails = sntExamDetails();
+const registrationNotice = sntRegistrationNotice();
 
 type PreparedPhoto = { blob: Blob; previewUrl: string };
 
@@ -364,12 +368,32 @@ export default function ScholarshipApplicationForm() {
                 <Kn key={line}>{line}</Kn>
               ))}
             </address>
+            <dl
+              className="mt-3 grid grid-cols-1 gap-x-6 gap-y-3 pt-3 sm:grid-cols-2"
+              style={{ borderTop: `1px solid ${CARD_BORDER}` }}
+            >
+              {examDetails.map((detail) => (
+                <div key={detail.label}>
+                  <dt
+                    className="text-xs font-medium uppercase tracking-widest"
+                    style={{ fontFamily: SANS, color: NAVY, letterSpacing: "0.1em" }}
+                  >
+                    {detail.label}
+                    <Kn>{detail.labelKn}</Kn>
+                  </dt>
+                  <dd style={{ fontFamily: SANS, color: NAVY }} className="mt-1 text-base font-medium">
+                    {detail.value}
+                    <Kn>{detail.valueKn}</Kn>
+                  </dd>
+                </div>
+              ))}
+            </dl>
             <p
               style={{ fontFamily: SANS, color: NAVY, borderTop: `1px solid ${CARD_BORDER}` }}
               className="mt-3 pt-3 text-sm leading-relaxed"
             >
-              {SNT_EXAM.registrationNotice}
-              <Kn className="mt-1">{SNT_KN.registrationNotice}</Kn>
+              {registrationNotice.en}
+              <Kn className="mt-1">{registrationNotice.kn}</Kn>
             </p>
           </div>
         </div>

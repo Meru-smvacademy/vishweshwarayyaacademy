@@ -24,11 +24,33 @@ export const SNT_KN = {
     "ರಾಯಚೂರು ಬೈಪಾಸ್ ರಸ್ತೆ, ಲಿಂಗಸುಗೂರು",
     "ರಾಯಚೂರು ಜಿಲ್ಲೆ, ಕರ್ನಾಟಕ 584122",
   ],
-  registrationNotice:
+  // Shown while no exam date or reporting time is set.
+  registrationNoticeOpen:
     "ಪರೀಕ್ಷೆ ಪ್ರಾರಂಭವಾಗುವವರೆಗೂ ನೋಂದಣಿ ತೆರೆದಿರುತ್ತದೆ. ಪರೀಕ್ಷೆಯ ದಿನ ಕೇಂದ್ರದಲ್ಲೇ ಸ್ಥಳದಲ್ಲೇ ನೋಂದಣಿ ಮಾಡಿಕೊಳ್ಳಲು ಅವಕಾಶವಿದೆ.",
+  // `date` is e.g. "ಭಾನುವಾರ, 3 ಜನವರಿ 2027" and `time` e.g. "ಬೆಳಿಗ್ಗೆ 10:30" — both
+  // are filled in from SNT_EXAM, so keep the ${...} parts when editing.
+  registrationNotice: (date: string, time: string) =>
+    `ನೋಂದಣಿ ${date} ರಂದು ${time}ಕ್ಕೆ (ಪರೀಕ್ಷೆಗೆ ಹಾಜರಾಗಬೇಕಾದ ಸಮಯ) ಮುಕ್ತಾಯವಾಗುತ್ತದೆ. ಪರೀಕ್ಷೆಯ ದಿನ ಆ ಸಮಯದವರೆಗೂ ಕೇಂದ್ರದಲ್ಲೇ ಸ್ಥಳದಲ್ಲೇ ನೋಂದಣಿ ಮಾಡಿಕೊಳ್ಳಲು ಅವಕಾಶವಿದೆ.`,
   registrationClosed: "ಈ ಪರೀಕ್ಷೆಗೆ ನೋಂದಣಿ ಮುಕ್ತಾಯವಾಗಿದೆ.",
-  registrationClosedDetail:
-    "ಎಸ್‌ಎನ್‌ಟಿ ವಿದ್ಯಾರ್ಥಿವೇತನ ಪರೀಕ್ಷೆ ಪ್ರಾರಂಭವಾಗಿದೆ. ನೀವು ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಿದ್ದರೆ, ನಿಮಗೆ ದೊರೆತ ಲಿಂಕ್ ಬಳಸಿ ಹಾಲ್ ಟಿಕೆಟ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿಕೊಳ್ಳಿ.",
+  registrationClosedDetail: (date: string, time: string) =>
+    `ನೋಂದಣಿ ${date} ರಂದು ${time}ಕ್ಕೆ (ಪರೀಕ್ಷೆಗೆ ಹಾಜರಾಗಬೇಕಾದ ಸಮಯ) ಮುಕ್ತಾಯವಾಗಿದೆ. ನೀವು ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಿದ್ದರೆ, ನಿಮಗೆ ದೊರೆತ ಲಿಂಕ್ ಬಳಸಿ ಹಾಲ್ ಟಿಕೆಟ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿಕೊಳ್ಳಿ.`,
+
+  // Exam details (registration page, /scholarship, status page, hall ticket)
+  examDetailsTitle: "ಪರೀಕ್ಷೆಯ ವಿವರಗಳು",
+  examDetailLabels: {
+    examDate: "ಪರೀಕ್ಷೆಯ ದಿನಾಂಕ",
+    reportingTime: "ಹಾಜರಾಗಬೇಕಾದ ಸಮಯ",
+    examTime: "ಪರೀಕ್ಷೆಯ ಸಮಯ",
+    duration: "ಪರೀಕ್ಷೆಯ ಅವಧಿ",
+  },
+  duration: "1 ಗಂಟೆ",
+  toBeAnnounced: "ಶೀಘ್ರದಲ್ಲೇ ಪ್ರಕಟಿಸಲಾಗುವುದು",
+  // Sunday first, as JavaScript counts days.
+  weekdays: ["ಭಾನುವಾರ", "ಸೋಮವಾರ", "ಮಂಗಳವಾರ", "ಬುಧವಾರ", "ಗುರುವಾರ", "ಶುಕ್ರವಾರ", "ಶನಿವಾರ"],
+  // Written before the clock time: "ಬೆಳಿಗ್ಗೆ 10:30", "ಮಧ್ಯಾಹ್ನ 12:00".
+  dayParts: { morning: "ಬೆಳಿಗ್ಗೆ", afternoon: "ಮಧ್ಯಾಹ್ನ", evening: "ಸಂಜೆ", night: "ರಾತ್ರಿ" },
+  examTimeRange: (start: string, end: string) => `${start} ರಿಂದ ${end} ರವರೆಗೆ`,
+
   eligibilityTitle: "ಅರ್ಹತೆ",
   eligibilityNotice:
     "ಪ್ರಸ್ತುತ 10ನೇ ತರಗತಿ (ಎಸ್‌ಎಸ್‌ಎಲ್‌ಸಿ) ಪರೀಕ್ಷೆಗೆ ಹಾಜರಾಗುತ್ತಿರುವ ವಿದ್ಯಾರ್ಥಿಗಳು ಮಾತ್ರ ಈ ವಿದ್ಯಾರ್ಥಿವೇತನ ಪರೀಕ್ಷೆಗೆ ಅರ್ಹರು.",

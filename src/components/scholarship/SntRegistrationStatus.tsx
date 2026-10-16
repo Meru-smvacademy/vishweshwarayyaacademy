@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { SNT_EXAM } from "@/content/scholarship";
 import { SNT_KN } from "@/content/scholarship-kn";
 import { SNT_BATCH, SNT_PRODUCT, sntTicketPath, type SntStatus } from "@/lib/snt/constants";
+import { sntExamDetails } from "@/lib/snt/examDetails";
 
 const NAVY = "#0F1E3C";
 const GOLD = "#C4922A";
@@ -61,6 +62,8 @@ function loadCheckout(): Promise<void> {
 
 type Phase = "idle" | "starting" | "checkout" | "verifying" | "slow";
 
+const examDetails = sntExamDetails();
+
 function CentreInfo({ name, addressLines }: { name: string; addressLines: string[] }) {
   return (
     <div className="mb-6 rounded-xl px-4 py-3 text-left" style={{ border: `1px solid ${CARD_BORDER}`, backgroundColor: STRIP_BG }}>
@@ -79,6 +82,24 @@ function CentreInfo({ name, addressLines }: { name: string; addressLines: string
           ))}
         </address>
       )}
+      <dl className="mt-3 grid grid-cols-1 gap-x-4 gap-y-2 pt-3 sm:grid-cols-2" style={{ borderTop: `1px solid ${CARD_BORDER}` }}>
+        {examDetails.map((detail) => (
+          <div key={detail.label}>
+            <dt className="text-xs font-medium uppercase tracking-widest" style={{ color: NAVY, letterSpacing: "0.1em" }}>
+              {detail.label}
+              <span lang="kn" className="block text-xs font-normal" style={{ color: SOFT, fontFamily: KANNADA, letterSpacing: "normal", textTransform: "none" }}>
+                {detail.labelKn}
+              </span>
+            </dt>
+            <dd className="mt-0.5 text-sm font-medium" style={{ color: NAVY }}>
+              {detail.value}
+              <span lang="kn" className="block text-xs font-normal" style={{ color: SOFT, fontFamily: KANNADA }}>
+                {detail.valueKn}
+              </span>
+            </dd>
+          </div>
+        ))}
+      </dl>
     </div>
   );
 }
@@ -104,6 +125,7 @@ export default function SntRegistrationStatus({
   const [hallTicketNo, setHallTicketNo] = useState(initialHallTicketNo);
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [registrationClosed, setRegistrationClosed] = useState(false);
   const pollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoStarted = useRef(false);
 
@@ -149,6 +171,7 @@ export default function SntRegistrationStatus({
 
   const payNow = useCallback(async () => {
     setError(null);
+    setRegistrationClosed(false);
     setPhase("starting");
 
     try {
@@ -161,6 +184,13 @@ export default function SntRegistrationStatus({
 
       if (response.status === 409) {
         await fetchStatus();
+        setPhase("idle");
+        return;
+      }
+      if (response.status === 403 && data.closed) {
+        // Only new payment attempts stop at the reporting time; a checkout
+        // opened before then still completes through the webhook.
+        setRegistrationClosed(true);
         setPhase("idle");
         return;
       }
@@ -320,6 +350,14 @@ export default function SntRegistrationStatus({
               {error && (
                 <p role="alert" className="mt-4 text-sm" style={{ color: ERROR }}>
                   {error}
+                </p>
+              )}
+              {registrationClosed && (
+                <p role="alert" className="mt-4 text-sm" style={{ color: ERROR }}>
+                  {SNT_EXAM.registrationClosedMessage}
+                  <span lang="kn" className="block" style={{ fontFamily: KANNADA }}>
+                    {SNT_KN.registrationClosed}
+                  </span>
                 </p>
               )}
 

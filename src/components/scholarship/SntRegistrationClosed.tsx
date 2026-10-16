@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SNT_EXAM } from "@/content/scholarship";
 import { SNT_KN } from "@/content/scholarship-kn";
+import { sntRegistrationClosedDetail } from "@/lib/snt/examDetails";
 
 const NAVY = "#0F1E3C";
 const GOLD = "#C4922A";
@@ -13,6 +14,7 @@ const SANS = "var(--font-outfit), system-ui, sans-serif";
 const KANNADA = "var(--font-noto-kannada), system-ui, sans-serif";
 
 export default function SntRegistrationClosed() {
+  const detail = sntRegistrationClosedDetail();
   return (
     <div style={{ fontFamily: SANS, backgroundColor: CREAM }} className="flex min-h-screen items-center justify-center px-4 py-12">
       <div className="mx-auto max-w-md text-center">
@@ -24,10 +26,9 @@ export default function SntRegistrationClosed() {
           </span>
         </h1>
         <p style={{ color: NAVY }} className="mb-8 text-base leading-relaxed">
-          The SNT Scholarship Exam has begun. If you have already registered, use the link you received to download your
-          hall ticket.
+          {detail.en}
           <span lang="kn" className="mt-1 block text-sm" style={{ fontFamily: KANNADA, color: KN_INK }}>
-            {SNT_KN.registrationClosedDetail}
+            {detail.kn}
           </span>
         </p>
         <Link

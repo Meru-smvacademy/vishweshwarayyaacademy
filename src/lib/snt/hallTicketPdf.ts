@@ -5,7 +5,7 @@ import fontkit from "@pdf-lib/fontkit";
 import regeneratorRuntime from "regenerator-runtime";
 import { PDFDocument, rgb, type PDFFont, type PDFImage, type PDFPage, type RGB } from "pdf-lib";
 import { SNT_EXAM, findSntExamCentre } from "@/content/scholarship";
-import { formatSntExamDate, formatSntReportingTime } from "@/lib/snt/examSchedule";
+import { sntExamDetails } from "@/lib/snt/examDetails";
 import { sntClassLabel } from "@/lib/snt/constants";
 import { isHallTicketNumber } from "@/lib/snt/hallTicketNumber";
 import { SNT_KN } from "@/content/scholarship-kn";
@@ -169,7 +169,8 @@ function drawPhoto(page: PDFPage, image: PDFImage, fonts: Fonts, x: number, yTop
   return frameHeight + 12;
 }
 
-type Row = { label: string; value: string };
+// labelKn / valueKn add a Kannada line under the English label / value.
+type Row = { label: string; value: string; labelKn?: string; valueKn?: string };
 
 function drawDetailRows(page: PDFPage, fonts: Fonts, rows: Row[], x: number, yTop: number, width: number) {
   const labelWidth = 128;
@@ -178,14 +179,28 @@ function drawDetailRows(page: PDFPage, fonts: Fonts, rows: Row[], x: number, yTo
   let y = yTop;
   rows.forEach((row, index) => {
     const lines = wrapText(row.value || "—", fonts.bold, size, width - labelWidth - 12);
-    const height = Math.max(1, lines.length) * lineHeight + 6;
+    const valueLines = Math.max(1, lines.length) + (row.valueKn ? 1 : 0);
+    const labelLines = row.labelKn ? 2 : 1;
+    const height = Math.max(valueLines, labelLines) * lineHeight + 6;
     if (index % 2 === 0) {
       page.drawRectangle({ x, y: y - height, width, height, color: CREAM });
     }
     page.drawText(row.label.toUpperCase(), { x: x + 6, y: y - 13, size: 7.5, font: fonts.regular, color: MUTED });
+    if (row.labelKn) {
+      page.drawText(row.labelKn, { x: x + 6, y: y - 13 - lineHeight, size: 7.5, font: fonts.kannada, color: MUTED });
+    }
     lines.forEach((line, i) => {
       page.drawText(line, { x: x + labelWidth, y: y - 13 - i * lineHeight, size, font: fonts.bold, color: NAVY });
     });
+    if (row.valueKn) {
+      page.drawText(row.valueKn, {
+        x: x + labelWidth,
+        y: y - 13 - Math.max(1, lines.length) * lineHeight,
+        size: 8.5,
+        font: fonts.kannada,
+        color: NAVY,
+      });
+    }
     y -= height;
   });
   page.drawRectangle({ x, y, width, height: yTop - y, borderColor: RULE, borderWidth: 0.75 });
@@ -235,13 +250,12 @@ function drawFront(page: PDFPage, fonts: Fonts, registration: SntRegistration, p
   drawHallTicketNumber(page, fonts, registration.hall_ticket_no ?? "", MARGIN, y, boxWidth);
 
   const centre = findSntExamCentre(registration.centre);
-  const examRows: Row[] = [
-    { label: "Exam Date", value: formatSntExamDate(SNT_EXAM) },
-    { label: "Reporting Time", value: formatSntReportingTime(SNT_EXAM) },
-  ];
-  drawDetailRows(page, fonts, examRows, MARGIN, y - 92, boxWidth);
+  // Date, reporting time and exam time beside the photo; duration is in the rows below.
+  const examRows: Row[] = sntExamDetails().filter((detail) => detail.label !== "Duration");
+  const examHeight = drawDetailRows(page, fonts, examRows, MARGIN, y - 92, boxWidth);
 
-  y -= 168;
+  // Below the photo frame (144) and the exam box, whichever ends lower.
+  y -= Math.max(168, 92 + examHeight + 12);
 
   const rows: Row[] = [
     { label: "Student Name", value: registration.student_name },
@@ -256,7 +270,7 @@ function drawFront(page: PDFPage, fonts: Fonts, registration: SntRegistration, p
     { label: "Academic Year", value: registration.academic_year },
     { label: "Exam Centre", value: centre?.name ?? registration.centre },
     { label: "Centre Address", value: centre?.addressLines.join("\n") ?? "" },
-    { label: "Exam Duration", value: SNT_EXAM.duration },
+    { label: "Exam Duration", value: SNT_EXAM.duration, labelKn: SNT_KN.examDetailLabels.duration, valueKn: SNT_KN.duration },
   ];
   y -= drawDetailRows(page, fonts, rows, MARGIN, y, CONTENT_WIDTH) + 12;
 
