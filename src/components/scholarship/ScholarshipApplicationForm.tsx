@@ -7,8 +7,11 @@ import { useRouter } from "next/navigation";
 import { SNT_EXAM } from "@/content/scholarship";
 import { SNT_KN, kannadaFor } from "@/content/scholarship-kn";
 import SntRegistrationClosed from "@/components/scholarship/SntRegistrationClosed";
+import { formatDobInWords } from "@/lib/snt/dateOfBirth";
 import {
+  SNT_APPLYING_FOR_OPTIONS,
   SNT_CONSENT_TEXT,
+  SNT_EDUCATION_OPTIONS,
   SNT_MEDIUMS,
   SNT_PHOTO_MAX_BYTES,
   SNT_PHOTO_MAX_HEIGHT,
@@ -18,13 +21,10 @@ import {
   SNT_RULES_PDF_PATH,
   sntRegistrationPath,
 } from "@/lib/snt/constants";
+import { ACADEMIC_YEARS, DEFAULT_ACADEMIC_YEAR } from "@/lib/validation/scholarshipApplication";
 import {
-  ACADEMIC_YEARS,
-  DEFAULT_ACADEMIC_YEAR,
-  EDUCATION_COMPLETED_OPTIONS,
-  SCHOLARSHIP_PATHWAYS,
-} from "@/lib/validation/scholarshipApplication";
-import {
+  DOB_ERRORS,
+  parseSntDob,
   validateSntRegistration,
   type SntRegistrationFieldErrors,
   type SntRegistrationValues,
@@ -51,7 +51,8 @@ const KANNADA = "var(--font-noto-kannada), system-ui, sans-serif";
 
 const initialValues: SntRegistrationValues = {
   studentName: "",
-  applyingFor: "",
+  // A single programme is still shown as a dropdown, already selected.
+  applyingFor: SNT_APPLYING_FOR_OPTIONS.length === 1 ? SNT_APPLYING_FOR_OPTIONS[0] : "",
   educationCompleted: "",
   schoolCollegeName: "",
   nativePlace: "",
@@ -171,6 +172,7 @@ function Field({
   htmlFor,
   isFocused,
   error,
+  hint,
   children,
 }: {
   label: string;
@@ -178,6 +180,7 @@ function Field({
   htmlFor: string;
   isFocused: boolean;
   error?: string;
+  hint?: ReactNode;
   children: ReactNode;
 }) {
   return (
@@ -196,6 +199,7 @@ function Field({
       >
         {children}
       </div>
+      {hint}
       {error && <ErrorText message={error} />}
     </div>
   );
@@ -235,6 +239,16 @@ export default function ScholarshipApplicationForm() {
       setErrors((prev) => ({ ...prev, photo: (error as Error).message }));
     } finally {
       setIsPreparingPhoto(false);
+    }
+  }
+
+  const parsedDob = parseSntDob(values.dob);
+
+  function handleDobBlur() {
+    setFocused(null);
+    // Explain a wrong date as soon as the student leaves the field, not only on submit.
+    if (values.dob.trim() && !parsedDob.ok) {
+      setErrors((prev) => ({ ...prev, dob: DOB_ERRORS[parsedDob.reason] }));
     }
   }
 
@@ -477,7 +491,7 @@ export default function ScholarshipApplicationForm() {
                   <option value="" disabled hidden>
                     {optionLabel("Select scholarship", SNT_KN.selectPrompts.applyingFor)}
                   </option>
-                  {SCHOLARSHIP_PATHWAYS.map((option) => (
+                  {SNT_APPLYING_FOR_OPTIONS.map((option) => (
                     <option key={option} value={option}>
                       {optionLabel(option)}
                     </option>
@@ -502,7 +516,7 @@ export default function ScholarshipApplicationForm() {
                   <option value="" disabled hidden>
                     {optionLabel("Select class", SNT_KN.selectPrompts.educationCompleted)}
                   </option>
-                  {EDUCATION_COMPLETED_OPTIONS.map((option) => (
+                  {SNT_EDUCATION_OPTIONS.map((option) => (
                     <option key={option} value={option}>
                       {optionLabel(option)}
                     </option>
@@ -572,16 +586,47 @@ export default function ScholarshipApplicationForm() {
             </div>
 
             <div>
-              <Field label="Date of Birth" labelKn={SNT_KN.labels.dob} htmlFor="dob" isFocused={focused === "dob"} error={errors.dob}>
+              <Field
+                label="Date of Birth"
+                labelKn={SNT_KN.labels.dob}
+                htmlFor="dob"
+                isFocused={focused === "dob"}
+                error={errors.dob}
+                hint={
+                  <div id="dob-hint" style={{ fontFamily: SANS, color: NAVY }} className="text-xs font-light leading-snug">
+                    <p>DD-MM-YYYY · day first, e.g. 03-01-2010 is 3 January 2010</p>
+                    <Kn className="text-xs">{SNT_KN.dobHelp}</Kn>
+                    <p aria-live="polite" className="mt-1 text-sm font-medium">
+                      {parsedDob.ok && (
+                        <>
+                          {formatDobInWords(parsedDob)}
+                          {" / "}
+                          <span lang="kn" style={{ fontFamily: KANNADA }}>
+                            {formatDobInWords(parsedDob, SNT_KN.months)}
+                          </span>
+                        </>
+                      )}
+                    </p>
+                  </div>
+                }
+              >
                 <input
                   id="dob"
-                  type="date"
+                  type="text"
+                  placeholder="DD-MM-YYYY"
                   value={values.dob}
-                  onChange={(e) => updateField("dob", e.target.value)}
+                  onChange={(e) => {
+                    updateField("dob", e.target.value);
+                    if (errors.dob && parseSntDob(e.target.value).ok) {
+                      setErrors((prev) => ({ ...prev, dob: undefined }));
+                    }
+                  }}
                   onFocus={() => setFocused("dob")}
-                  onBlur={() => setFocused(null)}
-                  className="w-full bg-transparent text-base font-light"
-                  style={{ fontFamily: SANS, color: values.dob ? NAVY : SOFT_INK }}
+                  onBlur={handleDobBlur}
+                  className="w-full bg-transparent text-base font-light placeholder:text-muted"
+                  style={{ fontFamily: SANS, color: NAVY }}
+                  autoComplete="off"
+                  aria-describedby="dob-hint"
                   aria-invalid={Boolean(errors.dob)}
                 />
               </Field>

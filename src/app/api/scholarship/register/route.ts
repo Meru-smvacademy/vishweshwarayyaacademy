@@ -6,7 +6,7 @@ import { isSntRegistrationOpen } from "@/lib/snt/examSchedule";
 import { SNT_AMOUNT_PAISE, SNT_PHOTO_BUCKET, SNT_PHOTO_MAX_BYTES } from "@/lib/snt/constants";
 import { validatePhotoBytes } from "@/lib/snt/imageValidation";
 import { isLikelyBot, normalizePhone } from "@/lib/validation/scholarshipApplication";
-import { resolveWhatsapp, validateSntRegistration, type SntRegistrationValues } from "@/lib/validation/sntRegistration";
+import { parseSntDob, resolveWhatsapp, validateSntRegistration, type SntRegistrationValues } from "@/lib/validation/sntRegistration";
 
 export const runtime = "nodejs";
 
@@ -71,7 +71,8 @@ export async function POST(request: Request) {
     errors.photo = photoCheck.error;
   }
 
-  if (Object.keys(errors).length > 0 || !photoBytes || !photoCheck?.ok) {
+  const dob = parseSntDob(values.dob);
+  if (Object.keys(errors).length > 0 || !photoBytes || !photoCheck?.ok || !dob.ok) {
     return NextResponse.json({ errors }, { status: 422 });
   }
 
@@ -100,7 +101,8 @@ export async function POST(request: Request) {
     phone: normalizePhone(values.phone),
     whatsapp: resolveWhatsapp(values),
     parent_name: values.parentName.trim(),
-    dob: values.dob,
+    // Stored as an ISO date, never as the text the student typed.
+    dob: dob.iso,
     academic_year: values.academicYear,
     // Never taken from the browser: there is one exam centre, fixed in content.
     centre: SNT_EXAM.centre.value,

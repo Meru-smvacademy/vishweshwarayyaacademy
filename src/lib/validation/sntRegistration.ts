@@ -1,4 +1,6 @@
-import { SNT_MEDIUMS } from "@/lib/snt/constants";
+import { SNT_EXAM } from "@/content/scholarship";
+import { ageOn, parseDob, type DobParseResult } from "@/lib/snt/dateOfBirth";
+import { SNT_APPLYING_FOR_OPTIONS, SNT_EDUCATION_OPTIONS, SNT_MEDIUMS } from "@/lib/snt/constants";
 import {
   normalizePhone,
   validateScholarshipApplication,
@@ -19,24 +21,20 @@ export type SntRegistrationFieldErrors = ScholarshipApplicationFieldErrors &
   Partial<Record<"parentName" | "medium" | "whatsapp" | "dob" | "rulesAccepted" | "consentGiven" | "photo", string>>;
 
 const PHONE_PATTERN = /^[6-9]\d{9}$/;
-const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const MIN_AGE_YEARS = 10;
 const MAX_AGE_YEARS = 30;
 
-function parseIsoDate(value: string): Date | null {
-  if (!DATE_PATTERN.test(value)) return null;
-  const date = new Date(`${value}T00:00:00Z`);
-  // Rejects dates like 2010-02-31 that Date would silently roll over.
-  return Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== value ? null : date;
-}
+export const DOB_ERRORS = {
+  empty: "Enter the date of birth.",
+  format: "Type the date of birth as DD-MM-YYYY, day first.",
+  impossible: "This date does not exist. Check the day and the month.",
+  age: "Check the date of birth — it looks incorrect.",
+} as const;
 
-function ageInYears(dob: Date, today: Date): number {
-  let age = today.getUTCFullYear() - dob.getUTCFullYear();
-  const beforeBirthday =
-    today.getUTCMonth() < dob.getUTCMonth() ||
-    (today.getUTCMonth() === dob.getUTCMonth() && today.getUTCDate() < dob.getUTCDate());
-  if (beforeBirthday) age -= 1;
-  return age;
+/** Reads the typed date of birth, day first; 2-digit years are placed relative to the exam date. */
+export function parseSntDob(value: string, today: Date = new Date()): DobParseResult {
+  const reference = SNT_EXAM.examDate ? new Date(`${SNT_EXAM.examDate}T00:00:00Z`) : today;
+  return parseDob(value, reference);
 }
 
 export function validateSntRegistration(
@@ -57,13 +55,22 @@ export function validateSntRegistration(
     errors.whatsapp = "Enter a valid 10-digit WhatsApp number, or leave it empty.";
   }
 
-  const dob = parseIsoDate(values.dob);
-  if (!dob) {
-    errors.dob = "Enter the date of birth.";
+  // Only the programme and class the SNT form offers; the shared lists keep older values for the admin filters.
+  if (values.applyingFor && !SNT_APPLYING_FOR_OPTIONS.includes(values.applyingFor)) {
+    errors.applyingFor = "Select the scholarship pathway you're applying for.";
+  }
+
+  if (values.educationCompleted && !SNT_EDUCATION_OPTIONS.includes(values.educationCompleted)) {
+    errors.educationCompleted = "Select the education completed.";
+  }
+
+  const dob = parseSntDob(values.dob, today);
+  if (!dob.ok) {
+    errors.dob = DOB_ERRORS[dob.reason];
   } else {
-    const age = ageInYears(dob, today);
+    const age = ageOn(dob.year, dob.month, dob.day, today);
     if (age < MIN_AGE_YEARS || age > MAX_AGE_YEARS) {
-      errors.dob = "Check the date of birth — it looks incorrect.";
+      errors.dob = DOB_ERRORS.age;
     }
   }
 

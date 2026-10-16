@@ -78,8 +78,8 @@ async function makeJpeg(width, height) {
 function registrationForm(overrides = {}, photo = validPhoto, photoName = "photo.jpg", photoType = "image/jpeg") {
   const fields = {
     studentName: "Test Student",
-    applyingFor: "NEET Long-Term",
-    educationCompleted: "Class 12",
+    applyingFor: "NEET Achievement",
+    educationCompleted: "Class 10",
     medium: "Kannada",
     schoolCollegeName: "Govt PU College",
     nativePlace: "Lingasugur",
@@ -88,7 +88,7 @@ function registrationForm(overrides = {}, photo = validPhoto, photoName = "photo
     academicYear: "2026–27",
     companyWebsite: "",
     parentName: "Test Parent",
-    dob: "2008-06-15",
+    dob: "15-06-2008",
     rulesAccepted: "true",
     consentGiven: "true",
     ...overrides,

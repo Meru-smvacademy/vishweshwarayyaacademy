@@ -68,6 +68,14 @@ export const SNT_KN = {
     Other: "ಇತರೆ",
   } as Record<string, string>,
 
+  // Date of birth: helper under the field, and month names for the
+  // "3 January 2010 / 3 ಜನವರಿ 2010" confirmation shown once a valid date is typed.
+  dobHelp: "ಮೊದಲು ದಿನ, ನಂತರ ತಿಂಗಳು, ನಂತರ ವರ್ಷ: ದಿನ-ತಿಂಗಳು-ವರ್ಷ (DD-MM-YYYY). ಉದಾ: 03-01-2010 ಅಂದರೆ 3 ಜನವರಿ 2010.",
+  months: [
+    "ಜನವರಿ", "ಫೆಬ್ರವರಿ", "ಮಾರ್ಚ್", "ಏಪ್ರಿಲ್", "ಮೇ", "ಜೂನ್",
+    "ಜುಲೈ", "ಆಗಸ್ಟ್", "ಸೆಪ್ಟೆಂಬರ್", "ಅಕ್ಟೋಬರ್", "ನವೆಂಬರ್", "ಡಿಸೆಂಬರ್",
+  ],
+
   // Photo
   photoHelp: "ಇತ್ತೀಚಿನ ಪಾಸ್‌ಪೋರ್ಟ್ ಅಳತೆಯ ಭಾವಚಿತ್ರ · JPG ಅಥವಾ PNG · ಗರಿಷ್ಠ 4 MB. ಇದನ್ನು ಹಾಲ್ ಟಿಕೆಟ್‌ನಲ್ಲಿ ಮುದ್ರಿಸಲಾಗುತ್ತದೆ.",
   uploadPhoto: "ಭಾವಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
@@ -104,6 +112,10 @@ export const SNT_KN = {
       "ಸರಿಯಾದ 10 ಅಂಕಿಯ ವಾಟ್ಸಾಪ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ, ಅಥವಾ ಖಾಲಿ ಬಿಡಿ.",
     "Enter the date of birth.": "ಹುಟ್ಟಿದ ದಿನಾಂಕವನ್ನು ನಮೂದಿಸಿ.",
     "Check the date of birth — it looks incorrect.": "ಹುಟ್ಟಿದ ದಿನಾಂಕವನ್ನು ಪರಿಶೀಲಿಸಿ — ಅದು ತಪ್ಪಾಗಿರುವಂತಿದೆ.",
+    "Type the date of birth as DD-MM-YYYY, day first.":
+      "ಹುಟ್ಟಿದ ದಿನಾಂಕವನ್ನು ದಿನ-ತಿಂಗಳು-ವರ್ಷ (DD-MM-YYYY) ರೂಪದಲ್ಲಿ, ಮೊದಲು ದಿನ ಬರೆಯಿರಿ.",
+    "This date does not exist. Check the day and the month.":
+      "ಈ ದಿನಾಂಕ ಅಸ್ತಿತ್ವದಲ್ಲಿಲ್ಲ. ದಿನ ಮತ್ತು ತಿಂಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.",
     "Please read and accept the rules and regulations.": "ದಯವಿಟ್ಟು ನಿಯಮಗಳು ಮತ್ತು ನಿಬಂಧನೆಗಳನ್ನು ಓದಿ ಒಪ್ಪಿಕೊಳ್ಳಿ.",
     "Parent/guardian consent is required to register.": "ನೋಂದಣಿಗೆ ತಂದೆ/ತಾಯಿ/ಪಾಲಕರ ಒಪ್ಪಿಗೆ ಕಡ್ಡಾಯ.",
     "Upload the student's passport photo.": "ವಿದ್ಯಾರ್ಥಿಯ ಪಾಸ್‌ಪೋರ್ಟ್ ಅಳತೆಯ ಭಾವಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.",

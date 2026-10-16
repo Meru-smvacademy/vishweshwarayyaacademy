@@ -13,6 +13,11 @@ export const SNT_PHOTO_MAX_HEIGHT = 800;
 export const SNT_PHOTO_MIN_SIDE = 100;
 export const SNT_PHOTO_TYPES = ["image/jpeg", "image/png"];
 
+// The SNT form offers only these; older rows may still hold other values
+// (see SCHOLARSHIP_PATHWAYS / EDUCATION_COMPLETED_OPTIONS for the admin filters).
+export const SNT_APPLYING_FOR_OPTIONS = ["NEET Achievement"];
+export const SNT_EDUCATION_OPTIONS = ["Class 10"];
+
 // Medium of studying — the office uses medium-wise counts to set question papers.
 export const SNT_MEDIUMS = ["Kannada", "English", "Urdu", "Other"] as const;
 export type SntMedium = (typeof SNT_MEDIUMS)[number];
